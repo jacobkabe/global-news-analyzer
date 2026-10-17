@@ -226,3 +226,5 @@ __marimo__/
 .venv/
 .env
 data/raw/
+
+__pycache__/
