@@ -21,7 +21,16 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 - `rss.py`: BBC, Al Jazeera, NPR, Fox News via RSS (`feedparser`). `python src\collect\rss.py`.
   With `FULL_TEXT = False` (current setting) it saves only URL, title, summary and date, so `text` is NULL.
   Do not set `FULL_TEXT = True` before the teacher approves; `TERMS` still skips outlets marked "not allowed".
-- Sources: Guardian (API, full text) is the only source with full text. NYT (API, headline + abstract only) is planned.
+- `nyt.py`: NYT Article Search (`python src\collect\nyt.py 14` = last 14 days, saved day by day) or Archive
+  (`--archive 2026 9` = a whole month). Keeps only type "News" in World, U.S., Politics, Business, Science,
+  Climate, Health, Technology. Headline + abstract + lead paragraph only; waits 12 s between requests (rate limit).
+- `collect.py`: runs all sources (`python src\collect\collect.py`, or only some: `... guardian nyt`).
+  Each source has its own try/except and a log line in `data/raw/collect.log`; exit code 1 if a source failed.
+  Run it twice a day with Windows Task Scheduler on one team machine (RSS has no history; missed days are lost).
+- `save_articles()` stores dates as UTC (`2026-10-17T14:28:07Z`) and URLs without tracking parameters.
+  `python src\collect\db.py` applies this to old rows.
+- Error messages must never contain the API key: raise short messages (see `guardian.py`, `nyt.py`), not `raise_for_status()`.
+- Sources: Guardian (API, full text) is the only source with full text. NYT is headline + abstract only.
 - No outlet clearly allows scraping (BBC, Al Jazeera, Fox News: not allowed; NPR: unclear).
   Quotes and RSS URLs for 9 outlets: `docs/data-sources.md`. Check an outlet's terms of use before adding it.
 - Be polite to websites: wait ~1 second between requests, respect robots.txt (full-text downloads only).
