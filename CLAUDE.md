@@ -18,8 +18,13 @@ entities, headlines, coverage). Every label must be explainable ("why this label
   Use `save_articles(list_of_dicts)`; duplicates by URL are skipped.
 - `guardian.py`: Guardian Open Platform API, full text. `python src\collect\guardian.py 14` = last 14 days.
 - Every new collector returns dicts with the same keys and saves via `save_articles()`.
-- Planned sources: Guardian (API), NYT (API, headline + abstract only), BBC, Al Jazeera, NPR, Fox News (RSS + `trafilatura` for full text).
-- Be polite to websites: wait ~1 second between requests, respect robots.txt.
+- `rss.py`: BBC, Al Jazeera, NPR, Fox News via RSS (`feedparser`). `python src\collect\rss.py`.
+  With `FULL_TEXT = False` (current setting) it saves only URL, title, summary and date, so `text` is NULL.
+  Do not set `FULL_TEXT = True` before the teacher approves; `TERMS` still skips outlets marked "not allowed".
+- Sources: Guardian (API, full text) is the only source with full text. NYT (API, headline + abstract only) is planned.
+- No outlet clearly allows scraping (BBC, Al Jazeera, Fox News: not allowed; NPR: unclear).
+  Quotes and RSS URLs for 9 outlets: `docs/data-sources.md`. Check an outlet's terms of use before adding it.
+- Be polite to websites: wait ~1 second between requests, respect robots.txt (full-text downloads only).
 - Collection runs once a day (RSS has no history).
 
 ## Course rules (must follow)
