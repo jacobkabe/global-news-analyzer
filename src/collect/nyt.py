@@ -21,7 +21,11 @@ def get_json(url, params):
     """Call the NYT API and return the JSON answer. Waits and retries if we hit the rate limit."""
     params = dict(params, **{"api-key": os.getenv("NYT_API_KEY")})
     for attempt in range(3):
-        response = requests.get(url, params=params, timeout=60)
+        # Error messages of requests contain the full URL including our API key
+        try:
+            response = requests.get(url, params=params, timeout=60)
+        except requests.RequestException as e:
+            raise RuntimeError(f"NYT API request failed: {type(e).__name__}") from None
         if response.status_code == 429:
             print("  rate limit reached, waiting 60 seconds")
             time.sleep(60)

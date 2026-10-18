@@ -1,3 +1,5 @@
+import socket
+import sys
 import time
 from datetime import datetime, timezone
 from urllib.parse import urlparse
@@ -7,7 +9,7 @@ import feedparser
 import requests
 import trafilatura
 
-from db import get_connection, save_articles
+from db import clean_url, get_connection, save_articles
 
 FEEDS = {
     "bbc": "https://feeds.bbci.co.uk/news/world/rss.xml",
@@ -27,6 +29,9 @@ TERMS = {
 # Keep False until the teacher approves downloading full article text.
 # False = save only URL, title, summary and date (no article pages are downloaded).
 FULL_TEXT = False
+
+# feedparser has no timeout of its own: without this, a feed that never answers would block the run
+socket.setdefaulttimeout(30)
 
 
 def known_urls():
@@ -74,13 +79,19 @@ def fetch_feed(source, feed_url, known):
     articles = []
     feed = feedparser.parse(feed_url)
 
+    # feedparser does not raise errors: a dead or broken feed just looks like "no news"
+    if feed.get("status", 200) >= 400:
+        raise RuntimeError(f"{source}: feed returned HTTP {feed.status}")
+    if feed.bozo and not feed.entries:
+        raise RuntimeError(f"{source}: could not read feed ({type(feed.bozo_exception).__name__})")
+
     for entry in feed.entries:
-        url = entry.get("link")
+        url = clean_url(entry.get("link"))  # same address as save_articles() will store
         if not url or url in known:
             continue
 
         text = None
-        if FULL_TEXT and TERMS[source] != "not allowed":
+        if FULL_TEXT and TERMS.get(source, "not allowed") != "not allowed":
             if not allowed_by_robots(url):
                 print(f"  skipped (robots.txt): {url}")
                 continue
@@ -111,14 +122,29 @@ def fetch_feed(source, feed_url, known):
     return articles
 
 
+def collect_feed(source, feed_url, known):
+    """Read one feed and save its new articles. Returns (articles downloaded, new articles saved)."""
+    articles = fetch_feed(source, feed_url, known)
+    added = save_articles(articles)
+    known.update(a["url"] for a in articles)
+    return len(articles), added
+
+
 if __name__ == "__main__":
     known = known_urls()
     total = 0
+    failed = []
     for source, feed_url in FEEDS.items():
         print(f"{source}: reading {feed_url}")
-        articles = fetch_feed(source, feed_url, known)
-        added = save_articles(articles)
-        with_text = sum(1 for a in articles if a["text"])
-        print(f"{source}: {added} new articles saved ({with_text} with full text)")
+        try:
+            downloaded, added = collect_feed(source, feed_url, known)
+        except Exception as e:  # one broken feed must not stop the others
+            print(f"{source}: FAILED - {type(e).__name__}: {e}")
+            failed.append(source)
+            continue
+        print(f"{source}: {added} new articles saved")
         total += added
     print(f"Done. {total} new articles saved to the database.")
+    if failed:
+        print("Failed feeds:", ", ".join(failed))
+        sys.exit(1)

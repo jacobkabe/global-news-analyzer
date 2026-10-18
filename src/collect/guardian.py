@@ -19,18 +19,24 @@ def fetch_guardian(from_date, to_date):
     articles = []
     page = 1
     while True:
-        response = requests.get(API_URL, params={
-            "api-key": os.getenv("GUARDIAN_API_KEY"),
-            "section": SECTIONS,
-            "type": "article",
-            "from-date": from_date,
-            "to-date": to_date,
-            "show-fields": "trailText,bodyText",
-            "order-by": "oldest",
-            "page-size": 50,
-            "page": page,
-        }, timeout=30)
-        response.raise_for_status()
+        # Error messages of requests contain the full URL including our API key,
+        # so we raise our own short messages instead (never print the key).
+        try:
+            response = requests.get(API_URL, params={
+                "api-key": os.getenv("GUARDIAN_API_KEY"),
+                "section": SECTIONS,
+                "type": "article",
+                "from-date": from_date,
+                "to-date": to_date,
+                "show-fields": "trailText,bodyText",
+                "order-by": "oldest",
+                "page-size": 50,
+                "page": page,
+            }, timeout=30)
+        except requests.RequestException as e:
+            raise RuntimeError(f"Guardian API request failed: {type(e).__name__}") from None
+        if response.status_code != 200:
+            raise RuntimeError(f"Guardian API returned HTTP {response.status_code}")
         data = response.json()["response"]
 
         for a in data["results"]:
