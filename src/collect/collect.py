@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 import guardian
 import nyt
 import rss
-from db import save_articles
+from db import get_connection, save_articles
 
 load_dotenv()
 
@@ -47,16 +47,47 @@ def setup_log():
     logging.basicConfig(level=logging.INFO, handlers=[file_handler, console])
 
 
-def collect_guardian():
-    """Guardian articles of yesterday and today."""
+# A gap longer than this is filled in steps: this many days per run, oldest first, so the next run
+# continues where this one stopped. NYT: about 17 requests per day, and NYT allows 500 per day.
+MAX_GUARDIAN_DAYS = 90
+MAX_NYT_DAYS = 14
+
+
+def newest_date(source):
+    """Day of the newest article of this source in the database (UTC), or None if there is none."""
+    conn = get_connection()
+    newest = conn.execute("SELECT MAX(published_at) FROM articles WHERE source = ?", (source,)).fetchone()[0]
+    conn.close()
+    return date.fromisoformat(newest[:10]) if newest else None
+
+
+def catch_up_range(source, max_days):
+    """First and last day to fetch: from the newest article we already have up to today.
+    The newest day is fetched again because it may have been incomplete, and the range is
+    at least yesterday + today. Duplicates are skipped when saving."""
     today = date.today()
-    articles = guardian.fetch_guardian((today - timedelta(days=1)).isoformat(), today.isoformat())
+    newest = newest_date(source)
+    start = min(newest, today - timedelta(days=1)) if newest else today - timedelta(days=1)
+    end = min(today, start + timedelta(days=max_days))
+    if end < today:
+        logging.warning("%s: gap since %s is longer than %d days - fetching %s to %s now, the rest on the next runs",
+                        source, start, max_days, start, end)
+    else:
+        logging.info("%s: newest article is from %s - fetching %s to %s", source, newest, start, end)
+    return start, end
+
+
+def collect_guardian():
+    """Guardian articles since the newest one we have."""
+    start, end = catch_up_range("guardian", MAX_GUARDIAN_DAYS)
+    articles = guardian.fetch_guardian(start.isoformat(), end.isoformat())
     return len(articles), save_articles(articles)
 
 
 def collect_nyt():
-    """NYT news of yesterday and today (Article Search, about 7 minutes because of the rate limit)."""
-    return nyt.fetch_search(1)
+    """NYT news since the newest one we have (Article Search, about 3-4 minutes per day because of the rate limit)."""
+    start, end = catch_up_range("nyt", MAX_NYT_DAYS)
+    return nyt.fetch_search((end - start).days, last_day=end)
 
 
 def run_source(name, function):
