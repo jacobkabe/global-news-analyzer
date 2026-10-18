@@ -70,16 +70,17 @@ def fetch_archive(year, month):
     return articles
 
 
-def fetch_search(days_back=1):
-    """Download the news of the last days_back days (up to today) with the Article Search API.
+def fetch_search(days_back=1, last_day=None):
+    """Download the news of the days_back days before last_day, and of last_day itself
+    (last_day is today if not given), with the Article Search API.
     One search per day, 10 results per page, 12 seconds between requests (limit: ~5 per minute).
     Each day is saved to the database as soon as it is downloaded, so if the run is stopped
     only the day in progress is lost. Returns (articles downloaded, new articles saved)."""
     downloaded = 0
     added = 0
-    today = date.today()
+    last_day = last_day or date.today()
     for i in range(days_back, -1, -1):
-        day = today - timedelta(days=i)
+        day = last_day - timedelta(days=i)
         day_articles = []
         page = 0
         while True:

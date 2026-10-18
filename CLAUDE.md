@@ -25,6 +25,8 @@ entities, headlines, coverage). Every label must be explainable ("why this label
   (`--archive 2026 9` = a whole month). Keeps only type "News" in World, U.S., Politics, Business, Science,
   Climate, Health, Technology. Headline + abstract + lead paragraph only; waits 12 s between requests (rate limit).
 - `collect.py`: runs all sources (`python src\collect\collect.py`, or only some: `... guardian nyt`).
+  Guardian and NYT fetch everything since the newest article we already have (at least yesterday + today),
+  so a missed day or week is filled in on the next run. Long gaps are filled in steps (NYT 14 days, Guardian 90 days per run).
   Each source has its own try/except and a log line in `data/raw/collect.log`; exit code 1 if a source failed.
   Run it twice a day with Windows Task Scheduler on one team machine (RSS has no history; missed days are lost).
 - `save_articles()` stores dates as UTC (`2026-10-17T14:28:07Z`) and URLs without tracking parameters.
