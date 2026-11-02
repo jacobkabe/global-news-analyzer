@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 import guardian
 import nyt
 import rss
+import thenewsapi
 from db import get_connection, save_articles
 
 load_dotenv()
@@ -24,7 +25,7 @@ LOG_FILE = Path(__file__).resolve().parents[2] / "data" / "raw" / "collect.log"
 def scrub(text):
     """Hide API keys in a text before it is written to the log."""
     text = re.sub(r"(api-key=)[^&\s'\")]+", r"\1***", text)
-    for name in ("GUARDIAN_API_KEY", "NYT_API_KEY"):
+    for name in ("GUARDIAN_API_KEY", "NYT_API_KEY", "THENEWSAPI_API_KEY"):
         key = os.getenv(name)
         if key:
             text = text.replace(key, "***")
@@ -89,6 +90,18 @@ def collect_nyt():
     start, end = catch_up_range("nyt", MAX_NYT_DAYS)
     return nyt.fetch_search((end - start).days, last_day=end)
 
+def collect_thenewsapi():
+    """Collect recent articles from The News API."""
+    today = date.today()
+    start = today - timedelta(days=1)
+
+    articles = thenewsapi.fetch_thenewsapi(
+        start.isoformat(),
+        (today + timedelta(days=1)).isoformat(),
+    )
+
+    return len(articles), save_articles(articles)
+
 
 def run_source(name, function):
     """Run one source. A failure is logged and does not stop the other sources. Returns True if it worked."""
@@ -109,7 +122,10 @@ if __name__ == "__main__":
     # python src\collect\collect.py guardian nyt     only these sources (names: guardian, nyt, bbc, ...)
     setup_log()
     known = rss.known_urls()
-    sources = {"guardian": collect_guardian}
+    sources = {
+    "guardian": collect_guardian,
+    "thenewsapi": collect_thenewsapi,
+    }
     for source, feed_url in rss.FEEDS.items():
         sources[source] = lambda s=source, u=feed_url: rss.collect_feed(s, u, known)
     sources["nyt"] = collect_nyt  # last, because it is the slowest
