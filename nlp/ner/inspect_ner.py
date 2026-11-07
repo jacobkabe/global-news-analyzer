@@ -29,7 +29,7 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]   # nlp/ner/inspect_ner.py -> repo root
-DEFAULT_INPUT = os.environ.get("NEWS_CSV", str(ROOT / "data" / "news.csv"))
+DEFAULT_INPUT = os.environ.get("NEWS_CSV", str(ROOT / "data" / "raw" / "news.csv"))
 DEFAULT_OUTPUT_DIR = os.environ.get("NER_OUTPUT_DIR", str(ROOT / "data" / "raw" / "outputs"))
 NAME_LABELS = {"PERSON", "ORG", "GPE", "NORP", "LOC", "FAC"}
 

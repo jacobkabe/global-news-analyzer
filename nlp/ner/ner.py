@@ -40,7 +40,7 @@ from pathlib import Path
 
 import pandas as pd
 
-DEFAULT_INPUT = "/home/klaudi/Desktop/global-news-analyzer/data/news.csv"
+DEFAULT_INPUT = "data/raw/news.csv"   # made by src/collect/export_csv.py
 DEFAULT_OUTPUT_DIR = "data/raw/outputs"
 DEFAULT_MODEL = "en_core_web_sm"
 INPUT_TYPES = ("headline_lead", "headline_lead_sentcase", "fulltext")
