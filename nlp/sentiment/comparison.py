@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 import re
-from IPython.display import display
 
 # ============================================================
 # 1. CONFIGURATION
@@ -97,7 +96,7 @@ for model_name, df in model_results.items():
 
 print("\nAll model predictions combined successfully!")
 
-display(comparison_df.head(10))
+print(comparison_df.head(10))
 
 
 # ============================================================
@@ -132,8 +131,6 @@ for model_name in models:
 distribution_df = pd.DataFrame(distribution).T
 
 print(distribution_df)
-
-display(distribution_df)
 
 distribution_df.to_csv(
     results_dir + "sentiment_distribution_comparison.csv"
@@ -241,8 +238,6 @@ for model_1, column_1 in model_columns.items():
 agreement = agreement.round(2)
 
 print(agreement)
-
-display(agreement)
 
 agreement.to_csv(
     results_dir + "model_agreement.csv"
