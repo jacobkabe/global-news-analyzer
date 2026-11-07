@@ -1,0 +1,51 @@
+id,source,published_at,title,distilbert_sentiment,siebert_sentiment,roberta_sentiment,textblob_sentiment,vader_sentiment
+20,guardian,2026-10-16T08:14:53Z,Ofgem could force energy suppliers to pay rivals if they lure customers with cheaper deals,negative,negative,neutral,neutral,positive
+31,guardian,2026-10-16T11:07:08Z,First Thing: Three young children killed in Oregon elementary school shooting,negative,negative,negative,positive,negative
+181,guardian,2026-10-04T11:00:28Z,Court quashes block on mothers and children in Gaza joining families in UK,negative,positive,neutral,neutral,negative
+335,guardian,2026-10-06T13:52:08Z,What do we know about death of anti-plague institute worker in Russia and is there a wider risk?,negative,negative,neutral,neutral,negative
+368,guardian,2026-10-06T21:15:06Z,Badenoch denies plan for ‘British Iron Dome’ – after Tories use phrase in press release,negative,negative,negative,neutral,negative
+374,guardian,2026-10-06T23:11:27Z,New Zealand greenhouse gas levels hit record highs threatening catastrophic glacier melts,negative,negative,negative,positive,negative
+407,guardian,2026-10-07T11:23:31Z,"Royal Mail to cut up to 2,500 jobs amid restructure and fall in letter deliveries",negative,negative,negative,neutral,negative
+630,guardian,2026-10-10T06:00:51Z,"‘If voters aren’t better off by the next election, we’re screwed’: Labour insiders voice fears over budget",negative,negative,negative,positive,neutral
+962,guardian,2026-10-15T14:33:12Z,Tech market sell-off deepens amid fears over US inflation and AI debt,negative,negative,negative,neutral,negative
+989,guardian,2026-10-15T17:14:48Z,Thames Water asks for £2.4bn more to avoid going bust this year or early 2027,negative,positive,neutral,positive,negative
+1490,nyt,2026-10-02T09:02:11Z,"After 110 Years, a California Coastal Village Yields to Street Numbers",positive,negative,neutral,neutral,neutral
+1841,nyt,2026-09-02T09:03:54Z,Do Active Shooter Drills Help? Two Asian Nations Grapple With Gun Violence.,negative,negative,neutral,negative,negative
+1872,nyt,2026-09-02T20:57:44Z,Man Is Rescued From Inside Garbage Truck in San Francisco,positive,positive,neutral,neutral,positive
+1883,nyt,2026-09-03T01:45:24Z,Homeland Security Secretary’s Plane Makes Emergency Landing,positive,negative,neutral,neutral,negative
+1967,nyt,2026-09-04T09:03:23Z,"After Fighting Russia Fiercely, He Wants to Forge Ukraine’s Path to Peace",positive,positive,neutral,positive,positive
+1996,nyt,2026-09-04T15:47:21Z,"Gloria Steinem Stayed Positive, Even as the Manosphere Took Hold",positive,positive,positive,positive,positive
+2000,nyt,2026-09-04T16:29:02Z,"In a Last-Ditch Effort, Clancy Lawyer Takes His Case to a Higher Court",negative,positive,neutral,positive,neutral
+2357,nyt,2026-09-11T05:40:06Z,Trump’s Grand Midterm Convention Finale: ‘I’m a Little Bit Tired of Politics’,negative,positive,negative,negative,positive
+2438,nyt,2026-09-13T09:02:25Z,Inside the Impeachment Trial that Threatened to End Ken Paxton’s Political Career,negative,negative,negative,neutral,negative
+2505,nyt,2026-09-14T20:14:38Z,Russian Businessman Paid for Donald Trump Jr.’s Lavish Wedding After-Party,positive,negative,neutral,neutral,neutral
+2592,nyt,2026-09-16T09:02:09Z,The Liftoff Scenario That Terrifies A.I. Doomsayers,positive,positive,neutral,neutral,negative
+2638,nyt,2026-09-16T19:48:49Z,U.S. Charges Five Men in Russia-Backed Assassination Plots,negative,negative,negative,neutral,negative
+2799,nyt,2026-09-19T10:00:11Z,"A Half-Century On, Cycling’s World Championship Returns to Montreal",positive,positive,neutral,neutral,positive
+2913,nyt,2026-09-22T04:00:10Z,German Leaders Prepare to Deny Far Right Access to Secret War Plan,negative,negative,neutral,negative,negative
+3345,nyt,2026-09-29T09:01:15Z,"Bomb by Bomb, the Slow Death of My Hometown in Ukraine",negative,negative,negative,negative,negative
+3399,nyt,2026-09-29T22:32:12Z,Ad About Welfare Fraud Draws MAGA Backlash,negative,negative,negative,neutral,negative
+3790,nyt,2026-10-08T08:38:57Z,A Top Fed Official Casts Further Doubt on a Rate Rise This Month,positive,negative,neutral,positive,negative
+3874,nyt,2026-10-09T14:51:47Z,"Ending a Notable Career, Durbin Laments the Decline of Legislating",negative,positive,negative,positive,negative
+3945,nyt,2026-10-11T09:00:12Z,Where Every Tree Hides ‘an Enemy’: How I Watched China’s Paranoia Grow,negative,negative,neutral,neutral,negative
+4137,nyt,2026-10-14T22:42:21Z,There’s a New Great Pumpkin to Rule Them All,positive,positive,neutral,positive,positive
+4154,nyt,2026-10-15T04:01:15Z,"While Leo Recovers From Lung Surgery, the Church Runs on Autopilot",negative,negative,neutral,neutral,neutral
+4202,nyt,2026-10-15T20:03:19Z,Understanding a Home’s Fire Risk,positive,positive,neutral,neutral,negative
+4461,guardian,2026-08-31T16:10:40Z,How to tackle the climate impact of datacentres,positive,positive,neutral,neutral,neutral
+4572,guardian,2026-09-02T01:59:06Z,Relief as five Australians missing in Nepal-Tibet flood disaster found alive,positive,positive,neutral,negative,negative
+5187,guardian,2026-09-11T04:24:57Z,‘I’m on the ticket’: Trump implores Republicans to vote in November at unusual midterm convention,positive,positive,neutral,positive,neutral
+5263,guardian,2026-09-12T06:00:26Z,Thousands of ebikes seized by London councils as anger rises over blocked paths,negative,negative,negative,negative,negative
+5487,guardian,2026-09-15T22:10:56Z,Mail-in disaster averted as Trump in angry froth after court defeat,negative,negative,negative,negative,negative
+5590,guardian,2026-09-17T01:51:54Z,‘Pretend I’m on the ticket’: Trump hits campaign trail in bid to boost Republican hopes,negative,positive,neutral,neutral,positive
+5658,guardian,2026-09-18T01:47:56Z,Ukraine war briefing: Poland’s Tusk heads to Kyiv after warning of Russian strikes on Ukrainian allies,negative,positive,neutral,neutral,negative
+5781,guardian,2026-09-20T02:00:02Z,Future of German chancellor hangs in the balance as two states go to polls,negative,positive,neutral,neutral,neutral
+6162,guardian,2026-09-25T15:00:11Z,"‘Robust little’ vessel begins treacherous 22,000km journey around Antarctica in the name of climate science",positive,positive,neutral,negative,neutral
+6192,guardian,2026-09-25T22:21:15Z,Michigan CEO loses job after posting AI-made image of her family in ‘Lake America’ sweaters,negative,negative,negative,negative,negative
+6227,guardian,2026-09-26T16:15:45Z,Ranulph Fiennes’ stepson appeals for funds to ‘locate and safeguard’ the explorer,negative,positive,neutral,neutral,neutral
+6229,guardian,2026-09-26T16:35:27Z,‘I can deliver’: Burnham pledges radical change on eve of Labour conference,positive,positive,positive,neutral,neutral
+6244,guardian,2026-09-27T07:00:59Z,‘Viscerally dedicated to social issues’: behind Lula’s drive to win final term in Brazil’s crunch election,positive,positive,neutral,positive,positive
+6246,guardian,2026-09-27T09:00:01Z,Bill Gates says unchecked AI could ‘cause a billion deaths’ in call for regulation,negative,negative,negative,neutral,neutral
+6385,guardian,2026-09-29T10:00:49Z,"Three deaths, three states, 24 hours: one day in ICE’s quiet but ‘gruesome’ surge",negative,negative,negative,negative,neutral
+6445,guardian,2026-09-30T00:00:04Z,Antarctic winter sea ice falls to third-lowest level on record as scientists warn of ‘now problem’,negative,negative,negative,neutral,negative
+6658,guardian,2026-10-02T15:56:09Z,Polanski says he does not need to win ‘50/50’ byelection to stay Green leader,positive,positive,neutral,positive,negative
+6660,guardian,2026-10-02T16:07:03Z,Andy Burnham’s ultimate test will be whether people’s lives improve,positive,positive,neutral,neutral,positive
