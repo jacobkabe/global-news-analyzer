@@ -28,3 +28,19 @@ only URL, title, summary and date. Full text is downloaded only if the teacher a
 
 The Guardian (Open Platform) and the NYT (Article Search API) are accessed through their official APIs
 with our own API keys, so they do not need scraping. Check their API terms before publishing anything.
+
+### The News API (`thenewsapi.com`)
+
+Checked on 2026-11-07. Collector: `src/collect/thenewsapi.py` (key `THENEWSAPI_API_KEY` in `.env`).
+
+- **What we get:** title, description, a ~60-character snippet, URL, date, categories, and the outlet as a
+  domain (`source`, e.g. `cbsnews.com`). No full text. We save the domain in our `source` column.
+- **Which outlets:** any English-language outlet, not only ours. The API can filter with
+  `domains=` (e.g. `domains=bbc.co.uk,foxnews.com`), but our collector does not use it yet.
+- **Free plan:** 100 requests a day, 3 articles per request. Our collector makes at most 30 requests
+  per run (about 90 articles).
+- **Terms:** the Terms of Service (`thenewsapi.com/tos`, last updated 2021-07-08) are written for the website,
+  not the API: "granted a limited license to access and use the Site ... solely for your personal,
+  non-commercial use". They say nothing about storing API results, research use or attribution.
+  **Unclear**, so ask the teacher. The articles still belong to the original outlets, so their terms
+  in the table above apply too.

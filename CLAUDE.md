@@ -10,7 +10,7 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 ## Environment
 - Windows + PowerShell, VS Code, Python virtual environment in `.venv` (activate with `.venv\Scripts\Activate.ps1`).
 - Dependencies in `requirements.txt`; add new packages there.
-- API keys live in `.env` (`GUARDIAN_API_KEY`, `NYT_API_KEY`), loaded with `python-dotenv`. Never print or commit them.
+- API keys live in `.env` (`GUARDIAN_API_KEY`, `NYT_API_KEY`, `THENEWSAPI_API_KEY`), loaded with `python-dotenv`. Never print or commit them.
 
 ## Data collection (`src/collect/`)
 - `db.py`: SQLite database at `data/raw/news.db`, table `articles`
@@ -24,6 +24,9 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 - `nyt.py`: NYT Article Search (`python src\collect\nyt.py 14` = last 14 days, saved day by day) or Archive
   (`--archive 2026 9` = a whole month). Keeps only type "News" in World, U.S., Politics, Business, Science,
   Climate, Health, Technology. Headline + abstract + lead paragraph only; waits 12 s between requests (rate limit).
+- `thenewsapi.py`: The News API (`python src\collect\thenewsapi.py 1` = last day). Any English outlet; `source` is the
+  outlet's domain (e.g. `cbsnews.com`). Title + description only. Free plan: 100 requests/day, 3 articles each;
+  max 30 requests per run, 1 s apart. Terms unclear (see `docs/data-sources.md`).
 - `collect.py`: runs all sources (`python src\collect\collect.py`, or only some: `... guardian nyt`).
   Guardian and NYT fetch everything since the newest article we already have (at least yesterday + today),
   so a missed day or week is filled in on the next run. Long gaps are filled in steps (NYT 14 days, Guardian 90 days per run).
@@ -32,7 +35,8 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 - `save_articles()` stores dates as UTC (`2026-10-17T14:28:07Z`) and URLs without tracking parameters.
   `python src\collect\db.py` applies this to old rows.
 - Error messages must never contain the API key: raise short messages (see `guardian.py`, `nyt.py`), not `raise_for_status()`.
-- Sources: Guardian (API, full text) is the only source with full text. NYT is headline + abstract only.
+- Sources: Guardian (API, full text) is the only source with full text. NYT is headline + abstract only;
+  The News API is headline + description only.
 - No outlet clearly allows scraping (BBC, Al Jazeera, Fox News: not allowed; NPR: unclear).
   Quotes and RSS URLs for 9 outlets: `docs/data-sources.md`. Check an outlet's terms of use before adding it.
 - Be polite to websites: wait ~1 second between requests, respect robots.txt (full-text downloads only).
