@@ -228,3 +228,7 @@ __marimo__/
 data/raw/
 
 __pycache__/
+
+# Old output folders: full results now go to data/raw/outputs/
+data/outputs/
+outputs/
