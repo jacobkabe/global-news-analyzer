@@ -2,3 +2,13 @@
 feedparser
 trafilatura
 python-dotenv
+pandas
+numpy
+matplotlib
+seaborn
+torch
+transformers
+textblob
+vaderSentiment
+spacy
+tqdm
