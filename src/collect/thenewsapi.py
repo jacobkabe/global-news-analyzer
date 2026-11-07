@@ -56,8 +56,12 @@ def fetch_thenewsapi(from_date, to_date, max_pages=30):
 
             categories = item.get("categories") or []
 
+            # The API gives the outlet as a domain, e.g. "cbsnews.com".
+            # We save it as the source so we can compare outlets.
+            outlet = (item.get("source") or "").removeprefix("www.")
+
             articles.append({
-                "source": "thenewsapi",
+                "source": outlet or "thenewsapi",
                 "url": item["url"],
                 "published_at": item.get("published_at"),
                 "title": item.get("title"),
