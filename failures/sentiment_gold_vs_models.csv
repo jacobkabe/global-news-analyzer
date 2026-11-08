@@ -1,231 +1,231 @@
-id,sample,source,headline,my_label,n_models_wrong,vader_tuned,vader_score,roberta_tuned,roberta_score,bart_mnli_tuned,bart_mnli_score,distilbert_tuned,distilbert_score
-640,random,guardian,'Cockroach' leader among thousands detained in Delhi protest crackdown,neutral,4,negative,-0.572,negative,-0.754,negative,-0.977,negative,-0.955
-1192,positive_candidates,foxnews,'Peace through strength': Trump Gaza plan gains global backing one year on,neutral,4,positive,0.848,positive,0.654,positive,0.844,positive,0.984
-1194,random,foxnews,"NATO warns Russia: 'We will break' forces, destroy 'anything and everything' if you attack",neutral,4,negative,-0.791,negative,-0.851,negative,-0.952,negative,-0.995
-1219,random,aljazeera,St Petersburg under attack from Ukrainian drone swarm,neutral,4,negative,-0.477,negative,-0.683,negative,-0.99,negative,-0.985
-1240,random,npr,Pope Leo XIV leaves hospital days after lung cancer surgery,positive,4,negative,-0.66,neutral,-0.329,neutral,-0.439,negative,-0.969
-1912,positive_candidates,nyt,"The Clancy Children: A 'Girly Girl,' a 'Paw Patrol' Fan and a Happy Baby",neutral,4,positive,0.718,positive,0.93,positive,0.921,positive,0.999
-3683,positive_candidates,nyt,Top Democratic Super PAC Raised Record Amount in Third Quarter,neutral,4,positive,0.691,positive,0.707,positive,0.902,positive,0.982
-4733,random,guardian,Genetically modified pig kidney keeps man alive for record nine months,positive,4,neutral,0.382,neutral,0.133,neutral,0.697,neutral,-0.932
-4839,random,guardian,Rescuers in Nepal find two more people alive after flash flood disaster,positive,4,neutral,-0.301,neutral,-0.128,neutral,-0.287,neutral,-0.896
-5890,positive_candidates,guardian,"Cut NHS red tape and boost productivity to prevent 20,000 early deaths a year in England, report urges",positive,4,neutral,0.178,neutral,-0.151,neutral,0.289,neutral,-0.048
-6012,positive_candidates,guardian,UK to join EU ocean science scheme to better predict extreme weather events,positive,4,neutral,0.625,neutral,0.146,neutral,0.253,neutral,-0.914
-68,random,guardian,Katie Zacharia's five days as press secretary expose flaws in Trump's TV-driven hiring,neutral,3,neutral,-0.153,negative,-0.653,negative,-0.985,negative,-0.993
-152,positive_candidates,guardian,Women given free cycling shorts to prevent upskirting on Oktoberfest amusement ride,positive,3,positive,0.71,neutral,0.356,neutral,-0.366,neutral,-0.93
-308,positive_candidates,guardian,Flávio's surprise first-round election win highlights rapid rise of Brazil's House of Bolsonaro,neutral,3,positive,0.71,positive,0.562,neutral,-0.13,positive,1.0
-470,random,guardian,Bendy elm still standing against all odds crowned UK tree of the year,neutral,3,neutral,0.0,positive,0.719,positive,0.836,positive,0.999
-549,random,guardian,Millions on alert as Hurricane Isaias set to bring dangerous storm surge,negative,3,neutral,-0.226,neutral,-0.465,negative,-0.988,positive,0.961
-720,positive_candidates,guardian,"iPhone 18 Pro Max review: Apple's biggest, heaviest and longest-lasting superphone",neutral,3,neutral,0.0,positive,0.846,positive,0.669,negative,-0.966
-1139,random,bbc,'It's really hard to believe' - How Oregon primary school shooting unfolded,neutral,3,neutral,-0.176,negative,-0.748,negative,-0.989,negative,-0.994
-1155,random,aljazeera,Protests spread across France as 'yellow vests' set to join,negative,3,neutral,0.077,neutral,-0.316,negative,-0.984,neutral,-0.87
-1179,random,foxnews,"Recovering from lung surgery, Pope Leo urges Putin to agree to ceasefire in Russian-held Ukraine city",positive,3,neutral,0.361,neutral,0.274,neutral,-0.167,positive,0.968
-1183,random,foxnews,'Not wanted': Irish hotel reportedly cancels 70 rooms reserved for antisemitism conference attendees,neutral,3,neutral,-0.226,negative,-0.763,negative,-0.993,negative,-0.999
-1184,random,foxnews,UN inquiry member says some genocide claims against Israel unverified as Gaza reports population growth,neutral,3,neutral,0.382,negative,-0.657,negative,-0.956,negative,-0.989
-1186,random,foxnews,"Trump wishes Pope Leo speedy recovery after lung cancer diagnosis, speaks highly of pontiff's brother",neutral,3,negative,-0.586,positive,0.867,neutral,0.453,positive,0.981
-1208,random,bbc,Anti-government protesters battle with police in Albania,neutral,3,negative,-0.542,negative,-0.64,negative,-0.977,neutral,-0.91
-1847,random,nyt,Netanyahu's Israel Is Looking for a Fight in Every Direction,neutral,3,negative,-0.382,negative,-0.768,negative,-0.983,neutral,-0.869
-1859,positive_candidates,nyt,"In a Big Win, Google Avoids a Breakup of Its Ad Tech Business",neutral,3,neutral,0.477,positive,0.721,positive,0.946,positive,0.997
-2073,positive_candidates,nyt,"Getting Benefits of Retirement Home Care, at Your Own Home",neutral,3,positive,0.7,neutral,0.457,positive,0.942,positive,0.995
-3219,random,nyt,"Mississippi Hanging Was Staged After Drug Dispute, Investigators Say",neutral,3,negative,-0.402,neutral,-0.192,negative,-0.951,negative,-0.984
-3220,positive_candidates,nyt,3 Bright Spots for the G.O.P.,neutral,3,neutral,0.44,positive,0.88,positive,0.99,positive,0.997
-3341,positive_candidates,nyt,'A New Kind of Cyber Incident': OpenAI Apologizes for Australia Medicare Hack,neutral,3,neutral,0.361,negative,-0.681,negative,-0.992,negative,-0.996
-4075,positive_candidates,nyt,"China's Exports Soar, Putting Its Trade Surplus on Track for a Record",neutral,3,neutral,0.0,positive,0.66,positive,0.951,positive,0.998
-4111,positive_candidates,nyt,They Created a Cell That's Almost Alive. What to Do With It Now?,positive,3,positive,0.512,negative,-0.8,neutral,0.475,neutral,-0.921
-4167,random,nyt,Inside the Plague Research Labs at the Heart of a Russian Mystery,neutral,3,positive,0.637,neutral,-0.142,negative,-0.959,positive,0.98
-4429,random,guardian,First US military attacks on Iran in a month prompt retaliation,neutral,3,negative,-0.44,negative,-0.779,neutral,-0.947,negative,-0.973
-4976,positive_candidates,guardian,"AI will help find cure for cancer 'within our lifetimes', says Arm Holdings chief",positive,3,neutral,-0.402,neutral,0.582,positive,0.68,neutral,0.948
-5350,random,guardian,"'Tidal wave' of Pfas being launched to satisfy AI industry, campaigners warn",neutral,3,positive,0.477,neutral,-0.209,negative,-0.984,negative,-0.971
-6045,positive_candidates,guardian,Trump greets Xi Jinping on arrival in rare move as US-China trade truce extended,neutral,3,neutral,0.153,positive,0.721,positive,0.624,positive,0.997
-6147,random,guardian,"The comedians turning AI anxiety into punchlines: 'It's so good, it'll completely alter our grasp on reality'",neutral,3,positive,0.642,neutral,0.027,positive,0.912,positive,0.999
-6488,random,guardian,Backpack edges past Dancing Queen to win Alaska's Fat Bear Week title,positive,3,neutral,0.586,neutral,0.202,positive,0.563,neutral,-0.075
-77,random,guardian,Uncovering the secrets of New Zealand's elusive 'jungle penguins',neutral,2,neutral,0.0,neutral,0.12,positive,0.808,positive,0.998
-454,positive_candidates,guardian,The AI industry is booming. Women are getting left behind,neutral,2,neutral,0.0,positive,0.711,neutral,-0.277,negative,-0.974
-804,positive_candidates,guardian,Miriam González Durántez launches new centrist party in Spain,neutral,2,neutral,0.402,neutral,0.127,positive,0.636,positive,0.998
-959,random,guardian,Bring a bottle: Viennese dog owners told to rinse pets' urine from trees,neutral,2,neutral,0.0,neutral,-0.013,negative,-0.972,negative,-0.983
-1124,random,bbc,Rare pink diamond goes on display in France 100 years after amateur heist,neutral,2,neutral,0.34,neutral,0.204,positive,0.7,positive,0.998
-1146,random,aljazeera,Protesters clash with police during nationwide demonstrations in France,neutral,2,neutral,-0.226,neutral,-0.571,negative,-0.98,negative,-0.982
-1149,positive_candidates,aljazeera,Davidovich Fokina stuns top seed Zverev to reach Shanghai Masters final,neutral,2,neutral,0.25,neutral,0.305,positive,0.68,positive,0.997
-1168,random,npr,"Decades after apartheid, South Africans seek justice for crimes of the past",neutral,2,positive,0.527,negative,-0.69,neutral,-0.9,neutral,0.317
-1169,random,npr,Sidewalk sleepers: They have nowhere else to stay while a loved one is in the hospital,neutral,2,positive,0.599,neutral,-0.469,neutral,-0.947,negative,-0.998
-1188,random,foxnews,"Cartels use drones to scout border agents and map smuggling routes, expert warns",negative,2,negative,-0.542,neutral,-0.211,negative,-0.988,neutral,-0.912
-1193,random,foxnews,"Pope Leo diagnosed with lung cancer after surgeons remove part of right lung, Vatican says",negative,2,negative,-0.66,neutral,-0.53,negative,-0.983,neutral,-0.885
-1196,random,foxnews,"Zelenskyy accuses Putin of defying Trump's ceasefire push, sends pointed message to White House",neutral,2,negative,-0.34,neutral,-0.458,neutral,-0.946,negative,-0.956
-1198,random,foxnews,Pope Leo denounces death penalty as 'inadmissible' ahead of Pentagon's planned livestreamed execution,neutral,2,negative,-0.869,negative,-0.83,neutral,-0.822,neutral,-0.946
-1212,positive_candidates,aljazeera,WNBA Finals: Gabby Williams leads Valkyries to nervy Game 1 win over Dream,positive,2,positive,0.7,neutral,0.17,neutral,0.574,positive,0.997
-1237,random,npr,Student protests widen into greater social unrest in France,negative,2,neutral,0.153,negative,-0.761,negative,-0.986,neutral,-0.228
-1238,random,npr,The state of the State Department in the wake of the Kimberly Guilfoyle scandal,negative,2,negative,-0.44,neutral,-0.367,negative,-0.99,neutral,-0.942
-1239,random,npr,"Scuffles and fires break out as protesters rally across France, joining students",negative,2,neutral,-0.226,negative,-0.721,negative,-0.994,neutral,-0.948
-1246,random,foxnews,"'Vast majority' of Iran's attempted attacks on Strait of Hormuz are unsuccessful, CENTCOM spokesman says",neutral,2,negative,-0.66,neutral,-0.581,neutral,-0.451,negative,-0.996
-1363,positive_candidates,nyt,A.I. Is Going Rogue. Who Should Be Held Responsible?,negative,2,neutral,0.318,neutral,-0.593,negative,-0.983,negative,-0.999
-1410,positive_candidates,nyt,Canada's Proposed Oil Pipeline Offers Carney Relief From Domestic and Global Turmoil,neutral,2,neutral,0.153,neutral,0.027,positive,0.698,positive,0.994
-1418,random,nyt,Parents Are Charged After Toddler Pulls Out Loaded Gun at Day Care,negative,2,neutral,0.0,neutral,-0.522,negative,-0.974,negative,-0.972
-1572,random,nyt,"With Christa Pike Unconscious, Another Execution Attempt Is in Doubt",negative,2,neutral,-0.361,negative,-0.671,neutral,-0.94,negative,-0.999
-1734,positive_candidates,nyt,An Outrage in 2019. No Problem in 2026. Trump Has Moved the Ethical Line.,neutral,2,neutral,0.309,neutral,0.104,negative,-0.96,positive,0.992
-1791,random,nyt,"Weeks After Failed Drone Attack, Germany Points Finger at Russia",negative,2,negative,-0.751,negative,-0.737,neutral,-0.948,neutral,-0.92
-2107,positive_candidates,nyt,A Tidier Rivian (in Size and Price) Is Ready for the Suburbs,neutral,2,neutral,0.361,neutral,0.142,positive,0.842,negative,-0.979
-2176,positive_candidates,nyt,Trump Posthumously Awards Top Civilian Honor to 'Man in the Red Bandanna',positive,2,positive,0.791,neutral,0.738,neutral,0.443,positive,0.997
-2238,random,nyt,Here's How the Postal Service Could Refuse to Deliver Your Mail Ballot,neutral,2,neutral,-0.296,neutral,-0.578,negative,-0.968,negative,-0.994
-2576,positive_candidates,nyt,Melania Trump Encourages Children to Build 'the Next Great Robot' With A.I.,positive,2,positive,0.791,neutral,-0.091,neutral,0.763,positive,0.962
-2609,positive_candidates,nyt,Aaron Guckian Wins G.O.P. Nomination for Rhode Island Governor,neutral,2,neutral,0.572,neutral,0.264,positive,0.637,positive,0.999
-2759,positive_candidates,nyt,"Seeking Black Votes in Texas Senate Bid, Talarico Wins Crucial Endorsement",neutral,2,positive,0.718,neutral,0.244,neutral,0.512,positive,0.999
-2886,random,nyt,Are A.I. Models Being Misled to Act Too Human?,neutral,2,neutral,0.0,neutral,-0.467,negative,-0.965,negative,-0.999
-3137,positive_candidates,nyt,'Love Me' Ad Promotes Trump With Public Money Ahead of the Midterms,neutral,2,positive,0.765,neutral,0.526,neutral,-0.694,positive,0.97
-3151,random,nyt,Trump Is Hosting Xi for a State Dinner. It's a Rarity for the U.S. President.,neutral,2,neutral,0.0,neutral,-0.027,positive,0.84,positive,0.999
-3197,random,nyt,A Private Hawaiian Island Rode Out a Storm With Faith and Little Help,neutral,2,positive,0.638,neutral,-0.068,positive,0.661,neutral,0.944
-3333,random,nyt,Senate Resoundingly Approves Sweeping College Sports Measure,neutral,2,neutral,0.402,neutral,0.496,positive,0.762,positive,0.99
-3416,random,nyt,New Cancer Drugs Are Revolutionary. Why Don't More Patients Get Them?,neutral,2,negative,-0.66,neutral,0.279,positive,0.838,neutral,-0.731
-3450,random,nyt,Fraternity Says It Acted Quickly to Expel Cornell Members,neutral,2,negative,-0.44,neutral,-0.006,neutral,-0.71,negative,-0.971
-3634,positive_candidates,nyt,A Bolsonaro Win Would Nearly Complete Trump's Latin America Map,neutral,2,positive,0.586,neutral,0.505,neutral,-0.785,positive,0.997
-3857,random,nyt,The Winning Stock Funds This Time Weren't Tech. They Were Energy.,positive,2,positive,0.67,neutral,0.073,neutral,0.558,positive,0.998
-3881,random,nyt,The Midterm Senate Fight Spreads to a Surprising New Battleground,neutral,2,negative,-0.494,neutral,0.284,neutral,-0.675,positive,0.994
-3996,positive_candidates,nyt,Meta Unveils New Series of Advanced A.I. Models,neutral,2,neutral,0.25,neutral,0.206,positive,0.892,positive,0.992
-4072,random,nyt,Pope Leo's Cancer Surgery Draws Outpouring From World Leaders,neutral,2,negative,-0.66,neutral,0.04,neutral,-0.707,positive,0.998
-4306,positive_candidates,nyt,"'I Am Much Better, Thank You': Pope Leo Leaves Hospital, Days After Lung Surgery",positive,2,positive,0.66,positive,0.914,neutral,0.775,neutral,0.604
-4402,random,aljazeera,Food or medicine? The impossible choices facing Sudan's chronically ill,negative,2,neutral,-0.422,neutral,-0.423,negative,-0.971,negative,-0.995
-4447,random,guardian,BT on track for estimated £2bn windfall from selling old copper amid AI boom,neutral,2,neutral,0.0,neutral,0.397,positive,0.879,negative,-0.971
-4711,positive_candidates,guardian,How 20mph on our roads benefits everyone,neutral,2,neutral,0.382,neutral,0.442,positive,0.97,positive,0.999
-4865,random,guardian,Memory of water: the women reshaping Venice,neutral,2,neutral,0.0,neutral,0.094,positive,0.85,positive,0.999
-4925,positive_candidates,guardian,'Nakedly political': US attempts to link trans support to authoritarianism in new health department report,neutral,2,neutral,0.402,neutral,-0.477,negative,-0.992,negative,-0.995
-5207,positive_candidates,guardian,How Ron DeSantis politicized Florida's higher education by placing his loyalists at the top,neutral,2,neutral,0.44,negative,-0.792,negative,-0.992,neutral,0.12
-5260,positive_candidates,guardian,Artist delights in beautiful 'mess' and dead trees of England's rewilding sites,positive,2,neutral,0.026,neutral,0.745,positive,0.684,positive,0.999
-5717,positive_candidates,guardian,Why Europe has been absent from the great AI safety debate,neutral,2,positive,0.784,neutral,-0.336,neutral,-0.864,negative,-0.989
-5740,positive_candidates,guardian,Spider season! Ten species you'll see scuttling across Britain's carpets and lawns this autumn,neutral,2,neutral,0.0,neutral,0.521,positive,0.77,positive,0.977
-6098,random,guardian,have you recently been assaulted on Great Britain's railways?,neutral,2,neutral,0.178,neutral,-0.532,negative,-0.988,negative,-0.99
-6196,positive_candidates,guardian,Trump cancels nearly $1bn in funding approved by Congress,neutral,2,neutral,0.226,neutral,-0.58,negative,-0.977,negative,-0.999
-6401,random,guardian,"New English homes in flood-risk areas could become uninsurable, says Aviva boss",neutral,2,neutral,0.0,neutral,-0.467,negative,-0.983,negative,-0.997
-6483,positive_candidates,guardian,Wildlife arrives on time at rewilded chalk grasslands built along HS2 route,neutral,2,neutral,0.0,positive,0.61,positive,0.897,neutral,-0.917
-6503,positive_candidates,guardian,'He persuaded us': Labour ministers moved by Andy Burnham's emotional conference speech,neutral,2,neutral,0.153,positive,0.809,positive,0.923,neutral,0.894
-6508,positive_candidates,guardian,"'Strong indications' that Iran played role in RAF Fairford incident, says Burnham",neutral,2,positive,0.691,neutral,-0.212,neutral,-0.868,positive,0.991
-6601,positive_candidates,guardian,'Total class act': Marie-France van Heel is poised to be a very different PM's wife,neutral,2,neutral,0.25,neutral,0.548,positive,0.968,positive,0.998
-6614,random,guardian,Former Dallas police officer convicted of murdering Black neighbor given early parole,negative,2,negative,-0.649,negative,-0.638,neutral,-0.685,neutral,-0.573
-6626,random,guardian,"Increased air pollution linked to more night-time coughing, UK-led study finds",negative,2,neutral,0.273,neutral,-0.534,negative,-0.987,negative,-0.973
-6678,positive_candidates,guardian,Kennedy Center Honors awards moved to new venue amid Trump's onslaught,neutral,2,positive,0.743,neutral,-0.408,neutral,-0.59,positive,0.976
-289,random,guardian,Conservatives propose £10bn 'Britannia Shield' inspired by Israel's Iron Dome,neutral,1,positive,0.494,neutral,0.04,neutral,0.191,neutral,-0.922
-446,positive_candidates,guardian,Reform clears its own officials of breaking party funding laws despite police investigation,neutral,1,positive,0.459,neutral,-0.436,neutral,-0.061,neutral,-0.375
-475,random,guardian,"Margaret Hamilton, trailblazer whose software powered Apollo 11 moon landing, dies aged 90",neutral,1,neutral,0.0,neutral,0.308,neutral,0.451,negative,-0.991
-519,positive_candidates,guardian,Honouring Sylvia and Emmeline Pankhurst on stage and in political action,positive,1,neutral,0.477,positive,0.797,positive,0.762,positive,0.999
-531,positive_candidates,guardian,Top bosses at Goldman Sachs to share bonus pot worth up to $500m,neutral,1,positive,0.813,neutral,0.321,neutral,-0.268,neutral,-0.491
-681,positive_candidates,guardian,US's Reagan-era economic promises return as Trump's AI-fueled growth fantasy,neutral,1,positive,0.637,neutral,-0.164,neutral,0.451,neutral,0.82
-691,random,guardian,Is there a different way to fix the small boats crisis?,negative,1,negative,-0.625,neutral,-0.38,negative,-0.965,negative,-0.998
-826,random,guardian,Saudi Arabia strikes oil depots in Yemen and says missiles launched toward location of Saudi Aramco HQ,neutral,1,neutral,-0.25,neutral,-0.364,neutral,-0.95,negative,-0.964
-983,positive_candidates,guardian,Endless fun with a legendary book of placenames,positive,1,neutral,0.511,positive,0.931,positive,0.905,positive,0.99
-1121,random,bbc,Three men jailed for 158 years each for murdering Australian and US surfers in Mexico,negative,1,negative,-0.818,negative,-0.842,negative,-0.972,neutral,-0.934
-1122,random,bbc,Brazil sees record fall in Amazon deforestation as key election looms,neutral,1,neutral,0.026,neutral,-0.108,neutral,0.333,negative,-0.981
-1126,random,bbc,Katie Zacharia leaving White House role less than five days into job,neutral,1,neutral,0.0,neutral,-0.295,neutral,-0.846,negative,-0.993
-1128,random,bbc,Judge throws out child sex abuse charges against actor Timothy Busfield,neutral,1,negative,-0.743,neutral,-0.548,neutral,-0.176,neutral,-0.922
-1131,random,bbc,The uncertain future of Canada's 30 rescued belugas,neutral,1,neutral,0.153,neutral,-0.328,neutral,-0.838,negative,-0.991
-1136,random,bbc,Inside Ukrainian offensive pushing Russia back - with Starlink playing a key role,neutral,1,neutral,-0.296,neutral,0.015,positive,0.693,neutral,0.428
-1138,random,bbc,Did Tesla really just unveil a flying car?,neutral,1,neutral,0.0,neutral,0.409,neutral,-0.135,negative,-0.997
-1147,random,aljazeera,Why Trump's latest White House press secretary lasted just five days,neutral,1,neutral,0.0,neutral,-0.155,neutral,-0.832,negative,-0.993
-1152,random,aljazeera,US and Iran both claim control of Strait of Hormuz amid attacks on vessels,neutral,1,negative,-0.44,neutral,-0.229,neutral,-0.948,neutral,-0.939
-1157,positive_candidates,aljazeera,Sally Rooney's books pulled from UK over Palestine Action support,neutral,1,neutral,0.402,neutral,-0.5,neutral,-0.923,negative,-0.977
-1159,random,aljazeera,India vs West Indies – fifth T20 International,neutral,1,neutral,0.0,neutral,0.059,neutral,-0.186,positive,0.972
-1161,random,aljazeera,Sudan's army claims dozens of RSF fighters killed in Nyala attack,negative,1,negative,-0.832,negative,-0.791,neutral,-0.935,negative,-0.986
-1165,random,aljazeera,Rubio's Uzbekistan trip underlines Central Asia's hunt for diverse partners,neutral,1,neutral,0.0,neutral,0.054,neutral,0.873,positive,0.991
-1172,random,npr,Sally Rooney's books will no longer be sold in U.K. after support for pro-Palestinian group,neutral,1,neutral,0.128,neutral,-0.599,neutral,-0.941,negative,-0.996
-1175,random,npr,"Three years on, Israel still bars foreign journalists from entering Gaza",neutral,1,neutral,0.0,negative,-0.678,neutral,-0.886,neutral,-0.386
-1176,random,npr,"Social Security benefits to get a boost. And, Hasan Piker defends his rhetoric",positive,1,positive,0.772,neutral,0.017,positive,0.652,positive,0.969
-1182,random,foxnews,Albania rioters clash with police for Socialist government as European unrest spreads,negative,1,neutral,0.0,negative,-0.679,negative,-0.98,negative,-0.981
-1195,random,foxnews,British adventurer returns home after 28-year walk around the world,neutral,1,neutral,0.296,neutral,0.24,neutral,0.446,positive,0.999
-1203,random,bbc,"Violent clashes, looting and buildings ablaze in France as over 1,200 arrested after protests",negative,1,negative,-0.836,negative,-0.819,negative,-0.992,neutral,-0.934
-1204,positive_candidates,bbc,Photos show luxury boat with 50m pool and water slides near Kim Jong Un's summer retreat,neutral,1,neutral,0.202,neutral,0.069,neutral,0.49,positive,0.955
-1205,random,bbc,"A wave of homemade, synthetic drugs sweeps US and deepens crisis",negative,1,negative,-0.625,negative,-0.836,negative,-0.996,positive,0.952
-1206,random,bbc,European diplomats attacked by Israeli settlers in West Bank,negative,1,neutral,-0.459,negative,-0.77,negative,-0.988,negative,-0.984
-1209,random,bbc,Church makes sainthood case for 'WW1 hero' priest,neutral,1,positive,0.557,neutral,-0.18,neutral,0.799,neutral,0.914
-1210,random,bbc,At least 17 dead in crush at Hindu festival event in India,negative,1,neutral,-0.402,negative,-0.797,negative,-0.996,negative,-0.986
-1214,random,aljazeera,Daniel Dubois defeats Fabio Wardley to retain WBO heavyweight boxing title,neutral,1,neutral,-0.318,neutral,0.055,positive,0.618,neutral,0.798
-1215,random,aljazeera,Guatemalan former prosecutor shot dead at sports centre,negative,1,negative,-0.649,negative,-0.687,neutral,-0.95,negative,-0.957
-1218,random,aljazeera,"Deaths, injuries after fire at Alberta military base: Canada minister",negative,1,neutral,-0.34,negative,-0.642,negative,-0.994,negative,-0.988
-1233,random,aljazeera,No Kings rallies in US urge midterm voters to cast ballots early,neutral,1,neutral,-0.296,neutral,-0.004,neutral,-0.411,negative,-0.99
-1235,random,aljazeera,Ten killed in fire at beach resort in Bangladesh,negative,1,negative,-0.784,negative,-0.761,negative,-0.992,neutral,-0.909
-1243,random,foxnews,"Three men get 158 years each for murdering American and Australian surfers, dumping bodies in Mexican well",negative,1,negative,-0.67,negative,-0.879,neutral,-0.93,negative,-0.986
-1244,random,foxnews,Former US ambassador says South Korea prosecuted him over speech made on American soil,neutral,1,negative,-0.382,neutral,-0.483,neutral,-0.943,neutral,-0.919
-1977,positive_candidates,nyt,U.N. Approves African Proposal for a New World Map,neutral,1,neutral,0.402,neutral,0.158,neutral,0.581,positive,0.994
-1983,random,nyt,U.A.E. Pardons Egyptian Dissident Sentenced to 10 Years in Prison,neutral,1,neutral,-0.296,neutral,-0.561,neutral,-0.492,negative,-0.952
-1987,random,nyt,Corporate America Is Getting Hooked on Open-Source A.I.,neutral,1,neutral,0.0,neutral,-0.386,positive,0.732,neutral,0.861
-2105,positive_candidates,nyt,"Bears in Los Angeles Are Getting Their Close-Ups, Ready or Not",neutral,1,neutral,0.361,neutral,0.034,neutral,-0.754,negative,-0.989
-2424,positive_candidates,nyt,Top A.I. Leaders Call for Slowing Down A.I. Development,neutral,1,neutral,0.202,neutral,0.007,negative,-0.957,neutral,-0.918
-2681,random,nyt,"China Stockpiled Oil, and Now It Could Dominate the Energy Landscape",neutral,1,neutral,0.153,neutral,-0.082,neutral,0.136,positive,0.998
-2826,random,nyt,"Troy Jackson, a Progressive Brawler, Tries to Flip a Senate Seat in Maine",neutral,1,neutral,0.0,neutral,-0.013,neutral,-0.601,negative,-0.98
-2939,random,nyt,What's Next for Paramount,neutral,1,neutral,0.0,neutral,0.111,neutral,-0.058,positive,0.952
-3175,positive_candidates,nyt,"This Tiny Village Is Picture Perfect, Apart From All the Tourists",positive,1,neutral,0.572,positive,0.941,positive,0.957,positive,1.0
-3297,positive_candidates,nyt,Who's Winning the Race for Congress?,neutral,1,positive,0.527,neutral,0.046,neutral,-0.082,neutral,-0.694
-3616,positive_candidates,nyt,Former Prince Andrew Files Legal Action Against Police Over Warrants,neutral,1,neutral,0.128,neutral,-0.11,neutral,-0.838,negative,-0.976
-3864,random,nyt,Days of Deadly Houthi Attacks Show Saudi Arabia's Vulnerabilities,negative,1,negative,-0.542,negative,-0.841,negative,-0.988,neutral,-0.939
-3985,positive_candidates,nyt,Who's Winning the Race for Congress?,neutral,1,positive,0.527,neutral,0.046,neutral,-0.082,neutral,-0.694
-4008,positive_candidates,nyt,28 Miles and Counting: NASA's Perseverance Rover Sets a Mars Driving Record,positive,1,neutral,0.0,positive,0.818,positive,0.926,positive,0.995
-4249,random,nyt,Nations Meet in Armenia as Goal to Protect Nature Remains Out of Reach,neutral,1,neutral,0.402,neutral,-0.028,neutral,-0.931,negative,-0.978
-4404,positive_candidates,aljazeera,Leeds United vs Manchester United – Premier League,neutral,1,positive,0.681,neutral,0.068,neutral,-0.237,neutral,0.889
-4405,random,aljazeera,Haaland's record scoring spree helps Man City to seventh Premier League win,positive,1,positive,0.751,neutral,0.726,positive,0.878,positive,0.999
-4406,random,aljazeera,Chelsea's injury-hit Emi Martinez will return to action 'in a few weeks',neutral,1,neutral,0.0,neutral,0.006,neutral,-0.222,positive,0.976
-4408,random,aljazeera,'Young protesters across Europe share grievances and tactics',neutral,1,neutral,-0.296,neutral,-0.558,neutral,-0.853,positive,0.977
-4412,random,npr,Major fire breaks out in Alberta after deadly incident at military base,negative,1,negative,-0.4,negative,-0.739,negative,-0.996,neutral,-0.929
-4501,positive_candidates,guardian,Shaun the Sheep hailed on latest list of storm names,neutral,1,neutral,0.226,neutral,0.05,neutral,-0.137,positive,0.973
-4682,random,guardian,Sadiq Khan cleared of car tax conviction caused by 'scam',neutral,1,negative,-0.511,neutral,-0.599,neutral,-0.707,neutral,-0.791
-4789,positive_candidates,guardian,Russia strikes Ukraine intelligence HQ in 'major escalation',neutral,1,neutral,0.153,neutral,-0.444,negative,-0.988,neutral,-0.937
-4935,positive_candidates,guardian,Why is the far-right AfD's state victory significant and what might happen next in German politics?,neutral,1,neutral,0.202,neutral,-0.059,neutral,-0.89,negative,-0.995
-5024,positive_candidates,guardian,Trump-backed John Sununu wins New Hampshire Republican Senate primary,neutral,1,neutral,0.572,neutral,0.09,neutral,0.392,positive,0.997
-5027,random,guardian,"Kyiv books in 1,000 Patriots as UK and EU open up missile aid",neutral,1,neutral,0.0,neutral,-0.232,positive,0.627,neutral,-0.944
-5212,random,guardian,US consumers faced more high prices in August as Iran war raised energy costs,negative,1,negative,-0.422,neutral,-0.594,negative,-0.979,negative,-0.992
-5296,random,guardian,"Burnham must understand Wales is 'not a region in England', says first minister",neutral,1,neutral,0.0,neutral,-0.049,neutral,-0.684,negative,-0.976
-5297,positive_candidates,guardian,The AfD won a shock election in Germany. Elon Musk was thrilled,positive,1,positive,0.612,positive,0.951,neutral,-0.476,positive,1.0
-5304,random,guardian,Many professionals take continuing education. Let's add etiquette classes,neutral,1,neutral,0.0,neutral,0.072,neutral,0.321,positive,0.976
-5382,positive_candidates,guardian,Sweden's political parties launch coalition talks as both blocs try to secure power,neutral,1,positive,0.625,neutral,0.158,neutral,-0.417,neutral,-0.885
-5504,random,guardian,Plantwatch: The insect-eating alpine plant that proves Darwin was right,neutral,1,neutral,0.0,neutral,0.224,positive,0.894,neutral,0.913
-5617,random,guardian,Burnham's talk of 'breathing space' at odds with reality of future Bank rate rises,neutral,1,neutral,0.0,neutral,-0.236,negative,-0.952,neutral,0.189
-5751,positive_candidates,guardian,Kevin Warsh may be the adult in the room. But can he calm the US economy?,neutral,1,neutral,0.45,neutral,0.039,neutral,0.092,negative,-0.984
-5988,positive_candidates,guardian,"New UK agency to fight 'information warfare' from likes of Russia, Burnham tells UN",neutral,1,neutral,-0.25,neutral,-0.083,neutral,-0.593,positive,0.989
-6151,positive_candidates,guardian,Daniel Thomas pleads not guilty after alleged dinghy slashing in Channel,neutral,1,neutral,0.06,neutral,-0.414,neutral,-0.875,negative,-0.994
-6163,positive_candidates,guardian,'Major milestone': TfL to launch new public bus operator in London,positive,1,neutral,0.0,positive,0.871,positive,0.959,positive,0.999
-6239,positive_candidates,guardian,Poland is racing ahead with military spending – but will it help or damage its economic growth story?,neutral,1,neutral,0.392,neutral,-0.194,neutral,-0.887,negative,-0.989
-6310,random,guardian,"Israel does not have right to close UK consulate in Jerusalem, Foreign Office advised",neutral,1,neutral,0.0,neutral,-0.578,neutral,-0.797,negative,-0.996
-6348,random,guardian,Dengue fever outbreak prompts Florida counties to declare state of emergency,negative,1,negative,-0.382,negative,-0.6,negative,-0.991,neutral,-0.72
-6487,random,guardian,MI5 warns UK universities over 'theft of tech secrets by Chinese front company',negative,1,neutral,-0.103,negative,-0.612,negative,-0.985,negative,-0.954
-6688,random,guardian,Partner of Gypsy Rose Blanchard found dead in Louisiana home,negative,1,negative,-0.649,neutral,-0.388,negative,-0.984,negative,-0.968
-96,random,guardian,Two people killed in light aircraft crash near Loch Lomond,negative,0,negative,-0.802,negative,-0.755,negative,-0.984,negative,-0.976
-204,positive_candidates,guardian,Trump names intelligence chief Jay Clayton as new White House AI czar,neutral,0,neutral,0.477,neutral,0.03,neutral,0.354,neutral,-0.263
-581,positive_candidates,guardian,Targeting Trump: how Democrats plan to investigate the president if they win Congress,neutral,0,neutral,0.586,neutral,-0.139,neutral,-0.788,neutral,-0.947
-667,random,guardian,"Christian nationalism in Britain driven by people who seldom go to church, says report",neutral,0,neutral,0.0,neutral,-0.41,neutral,-0.919,neutral,0.949
-948,random,guardian,Revealed: Serbian ruler's secret role in 'illegal' effort to help Trump business,neutral,0,neutral,-0.226,neutral,-0.265,neutral,-0.934,neutral,0.168
-1119,random,bbc,Trump waives several Russia sanctions as row with Zelensky intensifies,neutral,0,neutral,0.0,neutral,-0.402,neutral,-0.912,neutral,0.906
-1123,random,bbc,Nursery owner in China jailed for life after hundreds of children poisoned,negative,0,negative,-0.751,negative,-0.842,negative,-0.986,negative,-0.992
-1135,random,bbc,What we learned from heated US midterm Senate debates,neutral,0,neutral,0.0,neutral,0.02,neutral,-0.047,neutral,-0.941
-1167,random,npr,Zelenskyy urges support for new US sanctions on Russia after Trump puts them on hold,neutral,0,neutral,0.402,neutral,-0.096,neutral,-0.682,neutral,-0.439
-1170,random,npr,Israeli settlers beat Palestinians and a U.S. photojournalist in West Bank attacks,negative,0,negative,-0.44,negative,-0.836,negative,-0.966,negative,-0.984
-1171,random,npr,Crowds throng New Delhi and wave Indian flags amid escalating protests,neutral,0,neutral,-0.226,neutral,-0.007,neutral,-0.827,neutral,0.8
-1173,random,npr,Russia's view amid Ukraine's strikes and Zelenskyy's growing rift with the U.S.,neutral,0,neutral,-0.202,neutral,-0.222,neutral,-0.871,neutral,-0.143
-1174,random,npr,How Putin may react to the rift between the U.S. and Ukraine,neutral,0,neutral,0.0,neutral,-0.096,neutral,-0.94,neutral,-0.729
-1180,random,foxnews,"Autistic teen lured to fake Snapchat meetup, brutally beaten by group of teens: report",negative,0,negative,-0.872,negative,-0.779,negative,-0.997,negative,-0.999
-1187,random,foxnews,Woman found floating in sea after going overboard from Royal Caribbean ship,neutral,0,neutral,0.0,neutral,-0.449,neutral,-0.872,neutral,-0.794
-1200,random,foxnews,Houthis kill 14 at Saudi airport as expert warns of 'rapid targets' amid Middle East war,negative,0,negative,-0.875,negative,-0.838,negative,-0.993,negative,-0.982
-1207,random,bbc,Several dead or injured in major fire at Canada military base,negative,0,negative,-0.866,negative,-0.71,negative,-0.997,negative,-0.982
-1236,random,aljazeera,Protesters allege police brutality as violent clashes rage on in Albania,negative,0,negative,-0.925,negative,-0.813,negative,-0.988,negative,-0.977
-1241,random,foxnews,"Fatalities, injuries reported at Canadian Forces Base Wainwright in Alberta after 'incident' that sparked fire",negative,0,negative,-0.743,negative,-0.802,negative,-0.989,negative,-0.982
-1242,random,foxnews,Limoges Town Hall 'largely lost' after far-left rioters set historic building on fire amid French unrest,negative,0,negative,-0.572,negative,-0.765,negative,-0.995,negative,-0.999
-1245,random,foxnews,Violence erupts at France protests as Macron warns unrest is being exploited,negative,0,negative,-0.856,negative,-0.806,negative,-0.994,negative,-0.975
-1693,random,nyt,"Trump, Critic of Voting by Mail, Urges Republicans to Do It in Midterms",neutral,0,neutral,-0.273,neutral,-0.203,neutral,-0.777,neutral,-0.933
-1702,random,nyt,Trump Promotes Data Centers at Rally With Republican Facing Heat on Them,neutral,0,neutral,0.34,neutral,-0.079,neutral,0.059,neutral,-0.596
-1867,random,nyt,Justice Dept. Sides With OpenAI in New York Times Copyright Suit,neutral,0,neutral,0.527,neutral,-0.098,neutral,0.375,neutral,-0.908
-1955,random,nyt,Argentina Is Ramping Up Its Claim to the Falklands. Here's What to Know.,neutral,0,neutral,0.0,neutral,0.075,neutral,-0.795,neutral,0.878
-2234,random,nyt,'Ferris Bueller Gone Bad': 22-Year-Old Pleads Guilty in Giant Bitcoin Heist,negative,0,negative,-0.743,negative,-0.64,negative,-0.994,negative,-0.996
-2588,random,nyt,Age Limits for Social Media Outlined by European Union,neutral,0,neutral,0.0,neutral,-0.018,neutral,-0.554,neutral,-0.831
-2601,random,nyt,Saudi Pipeline Attack Risks 'Disastrous' Loss of Oil as Fighting Escalates,negative,0,negative,-0.917,negative,-0.815,negative,-0.995,negative,-0.999
-3055,positive_candidates,nyt,Canada's Capital Bids Good Riddance to Trump Avenue as Tensions With U.S. Rise,neutral,0,neutral,0.052,neutral,-0.151,neutral,-0.364,neutral,0.318
-3111,random,nyt,Abbas Presses Case for Palestinian State in Taped General Assembly Address,neutral,0,neutral,0.0,neutral,0.005,neutral,0.513,neutral,-0.88
-3167,random,nyt,"Leo XIV, Trying to Be Everyone's Pope, Tours Secular France",neutral,0,neutral,0.0,neutral,0.115,neutral,-0.868,neutral,0.938
-3317,random,nyt,Trump Administration Asks Justices to Allow It to Deny Hormones to Trans Inmates,neutral,0,neutral,-0.128,neutral,-0.269,neutral,-0.944,neutral,-0.745
-3613,random,nyt,Separatists Lead as Voters in Quebec Go to the Polls,neutral,0,neutral,0.0,neutral,-0.43,neutral,-0.865,neutral,-0.253
-3725,random,nyt,"Iranian Oil, a Minor Player and the Limits of U.S. Sanctions",neutral,0,neutral,0.0,neutral,-0.256,neutral,-0.695,neutral,-0.788
-3807,random,nyt,Escalating Assaults on Ukrainian Cities Are Taking an Enormous Toll,negative,0,negative,-0.542,negative,-0.798,negative,-0.994,negative,-0.962
-3974,random,nyt,Fugitive in Venezuela Money Laundering Cases to Appear in U.S. Court,neutral,0,neutral,0.0,neutral,-0.366,neutral,-0.865,neutral,-0.909
-3993,positive_candidates,nyt,How American Retirees on Different Incomes Rely on Social Security,neutral,0,neutral,0.34,neutral,0.023,neutral,-0.28,neutral,-0.944
-4401,random,bbc,Burnt out cars and shattered glass on Paris streets after protests turn to riots and looting,negative,0,negative,-0.807,negative,-0.852,negative,-0.997,negative,-0.998
-4407,random,aljazeera,'No Kings' protests spread across the US ahead of midterm elections,neutral,0,neutral,-0.226,neutral,-0.471,neutral,-0.881,neutral,-0.845
-4410,random,aljazeera,There is no split in MAGA,neutral,0,neutral,-0.296,neutral,0.043,neutral,0.071,neutral,0.682
-4474,random,guardian,US health officials exclude measles-related deaths in Pennsylvania from counts,neutral,0,neutral,-0.226,neutral,-0.217,neutral,-0.811,neutral,-0.747
-4631,positive_candidates,guardian,"The $1 Trump coin: legal tender, depending on what you mean by legal",neutral,0,neutral,0.25,neutral,0.068,neutral,0.472,neutral,-0.926
-4741,positive_candidates,guardian,Pedicures and a pair of socks: sailors from USS Abraham Lincoln go wild in party resort of Pattaya,neutral,0,neutral,0.402,neutral,0.08,neutral,0.528,neutral,-0.9
-5830,positive_candidates,guardian,How Saudi oil scientists ended up working on the world's most important climate reports,neutral,0,neutral,0.272,neutral,-0.127,neutral,-0.595,neutral,0.145
-6293,positive_candidates,guardian,'Thrilled': huge swarms of bogong moths surprise NSW residents and may point to species' recovery,positive,0,positive,0.743,positive,0.907,positive,0.976,positive,0.999
-6462,positive_candidates,guardian,World's oceans absorbed record heat equal to 40 times annual global energy use,neutral,0,neutral,0.273,neutral,0.021,neutral,-0.94,neutral,-0.396
-6543,random,guardian,Man arrested over alleged plot to attack Texas state capitol,negative,0,negative,-0.735,negative,-0.641,negative,-0.961,negative,-0.957
+id,sample,source,headline,my_label,n_models_wrong,vader_tuned,vader_score,roberta_tuned,roberta_score,bart_mnli_tuned,bart_mnli_score,distilbert_tuned,distilbert_score,vader_words,roberta_words
+640,random,guardian,'Cockroach' leader among thousands detained in Delhi protest crackdown,neutral,4,negative,-0.572,negative,-0.754,negative,-0.977,negative,-0.955,detained:-0.42; protest:-0.25,Cockroach:-0.10; thousands:-0.07
+1192,positive_candidates,foxnews,'Peace through strength': Trump Gaza plan gains global backing one year on,neutral,4,positive,0.848,positive,0.654,positive,0.844,positive,0.984,Peace:+0.62; strength:+0.55; gains:+0.35,gains:+0.12; year:+0.09; strength:+0.08; global:+0.06
+1194,random,foxnews,"NATO warns Russia: 'We will break' forces, destroy 'anything and everything' if you attack",neutral,4,negative,-0.791,negative,-0.851,negative,-0.952,negative,-0.995,destroy:-0.62; attack:-0.53; warns:-0.10,
+1219,random,aljazeera,St Petersburg under attack from Ukrainian drone swarm,neutral,4,negative,-0.477,negative,-0.683,negative,-0.99,negative,-0.985,attack:-0.53,attack:-0.39; Petersburg:-0.09
+1240,random,npr,Pope Leo XIV leaves hospital days after lung cancer surgery,positive,4,negative,-0.66,neutral,-0.329,neutral,-0.439,negative,-0.969,cancer:-0.85,leaves:-0.22; days:-0.12; Leo:+0.12; lung:-0.10
+1912,positive_candidates,nyt,"The Clancy Children: A 'Girly Girl,' a 'Paw Patrol' Fan and a Happy Baby",neutral,4,positive,0.718,positive,0.93,positive,0.921,positive,0.999,Happy:+0.68; Fan:+0.33,Happy:+0.86; Baby:+0.05
+3683,positive_candidates,nyt,Top Democratic Super PAC Raised Record Amount in Third Quarter,neutral,4,positive,0.691,positive,0.707,positive,0.902,positive,0.982,Super:+0.72,Record:+0.26; Raised:+0.11
+4733,random,guardian,Genetically modified pig kidney keeps man alive for record nine months,positive,4,neutral,0.382,neutral,0.133,neutral,0.697,neutral,-0.932,alive:+0.40,kidney:+0.42; alive:+0.32; record:+0.25; keeps:+0.19
+4839,random,guardian,Rescuers in Nepal find two more people alive after flash flood disaster,positive,4,neutral,-0.301,neutral,-0.128,neutral,-0.287,neutral,-0.896,disaster:-0.78; alive:+0.40,Rescuers:+0.50; people:-0.12; alive:+0.08; flood:+0.06
+5890,positive_candidates,guardian,"Cut NHS red tape and boost productivity to prevent 20,000 early deaths a year in England, report urges",positive,4,neutral,0.178,neutral,-0.151,neutral,0.289,neutral,-0.048,boost:+0.42; Cut:-0.28,boost:+0.36; prevent:+0.35; deaths:-0.17; urges:-0.17
+6012,positive_candidates,guardian,UK to join EU ocean science scheme to better predict extreme weather events,positive,4,neutral,0.625,neutral,0.146,neutral,0.253,neutral,-0.914,better:+0.47; join:+0.30,extreme:-0.17; better:+0.15; predict:-0.07
+68,random,guardian,Katie Zacharia's five days as press secretary expose flaws in Trump's TV-driven hiring,neutral,3,neutral,-0.153,negative,-0.653,negative,-0.985,negative,-0.993,expose:-0.15,flaws:-0.55; expose:-0.34; Zacharia's:-0.12; secretary:-0.07
+152,positive_candidates,guardian,Women given free cycling shorts to prevent upskirting on Oktoberfest amusement ride,positive,3,positive,0.71,neutral,0.356,neutral,-0.366,neutral,-0.93,free:+0.57; amusement:+0.38,free:+0.28; shorts:+0.14; given:+0.14; cycling:+0.08
+308,positive_candidates,guardian,Flávio's surprise first-round election win highlights rapid rise of Brazil's House of Bolsonaro,neutral,3,positive,0.71,positive,0.562,neutral,-0.13,positive,1.0,win:+0.70; surprise:+0.28,win:+0.28; Flávio's:-0.13; House:+0.12; rise:+0.11
+470,random,guardian,Bendy elm still standing against all odds crowned UK tree of the year,neutral,3,neutral,0.0,positive,0.719,positive,0.836,positive,0.999,,odds:+0.55; standing:+0.44; tree:+0.09; elm:-0.08
+549,random,guardian,Millions on alert as Hurricane Isaias set to bring dangerous storm surge,negative,3,neutral,-0.226,neutral,-0.465,negative,-0.988,positive,0.961,dangerous:-0.53; alert:+0.30,dangerous:-0.29; bring:-0.18; alert:+0.14; Millions:-0.11
+720,positive_candidates,guardian,"iPhone 18 Pro Max review: Apple's biggest, heaviest and longest-lasting superphone",neutral,3,neutral,0.0,positive,0.846,positive,0.669,negative,-0.966,,biggest:+0.14; Apple's:+0.12; review:-0.08; heaviest:-0.07
+1139,random,bbc,'It's really hard to believe' - How Oregon primary school shooting unfolded,neutral,3,neutral,-0.176,negative,-0.748,negative,-0.989,negative,-0.994,hard:-0.10,hard:-0.57; shooting:-0.29; It's:-0.09; school:-0.09
+1155,random,aljazeera,Protests spread across France as 'yellow vests' set to join,negative,3,neutral,0.077,neutral,-0.316,negative,-0.984,neutral,-0.87,join:+0.30; Protests:-0.23,Protests:-0.32; France:-0.24; yellow:-0.20; spread:-0.12
+1179,random,foxnews,"Recovering from lung surgery, Pope Leo urges Putin to agree to ceasefire in Russian-held Ukraine city",positive,3,neutral,0.361,neutral,0.274,neutral,-0.167,positive,0.968,agree:+0.38,Recovering:+0.17; surgery:+0.08; Russian-held:-0.06; Pope:+0.05
+1183,random,foxnews,'Not wanted': Irish hotel reportedly cancels 70 rooms reserved for antisemitism conference attendees,neutral,3,neutral,-0.226,negative,-0.763,negative,-0.993,negative,-0.999,cancels:-0.23,antisemitism:-0.09; cancels:-0.05
+1184,random,foxnews,UN inquiry member says some genocide claims against Israel unverified as Gaza reports population growth,neutral,3,neutral,0.382,negative,-0.657,negative,-0.956,negative,-0.989,growth:+0.40,genocide:-0.17; claims:+0.11; Gaza:+0.08; unverified:+0.07
+1186,random,foxnews,"Trump wishes Pope Leo speedy recovery after lung cancer diagnosis, speaks highly of pontiff's brother",neutral,3,negative,-0.586,positive,0.867,neutral,0.453,positive,0.981,cancer:-0.85; wishes:+0.15,highly:+0.13; speedy:+0.10
+1208,random,bbc,Anti-government protesters battle with police in Albania,neutral,3,negative,-0.542,negative,-0.64,negative,-0.977,neutral,-0.91,battle:-0.40; protesters:-0.23,Anti-government:-0.09; battle:+0.09; police:+0.07; protesters:-0.05
+1847,random,nyt,Netanyahu's Israel Is Looking for a Fight in Every Direction,neutral,3,negative,-0.382,negative,-0.768,negative,-0.983,neutral,-0.869,Fight:-0.40,Fight:-0.17; Israel:-0.12; Direction:-0.05
+1859,positive_candidates,nyt,"In a Big Win, Google Avoids a Breakup of Its Ad Tech Business",neutral,3,neutral,0.477,positive,0.721,positive,0.946,positive,0.997,Win:+0.70; Avoids:-0.17,Win:+0.66; Big:+0.23; Avoids:-0.18; Google:+0.17
+2073,positive_candidates,nyt,"Getting Benefits of Retirement Home Care, at Your Own Home",neutral,3,positive,0.7,neutral,0.457,positive,0.942,positive,0.995,Care:+0.55; Benefits:+0.40,Benefits:+0.37; Retirement:-0.12; Home:+0.10; Getting:-0.10
+3219,random,nyt,"Mississippi Hanging Was Staged After Drug Dispute, Investigators Say",neutral,3,negative,-0.402,neutral,-0.192,negative,-0.951,negative,-0.984,Dispute:-0.42,Hanging:+0.10; Staged:-0.09
+3220,positive_candidates,nyt,3 Bright Spots for the G.O.P.,neutral,3,neutral,0.44,positive,0.88,positive,0.99,positive,0.997,Bright:+0.47,Bright:+0.75; G.O.P:+0.29
+3341,positive_candidates,nyt,'A New Kind of Cyber Incident': OpenAI Apologizes for Australia Medicare Hack,neutral,3,neutral,0.361,negative,-0.681,negative,-0.992,negative,-0.996,Kind:+0.60; Apologizes:+0.38,Incident:-0.43; Apologizes:-0.23; Hack:-0.10; Australia:-0.09
+4075,positive_candidates,nyt,"China's Exports Soar, Putting Its Trade Surplus on Track for a Record",neutral,3,neutral,0.0,positive,0.66,positive,0.951,positive,0.998,,Record:+0.32; Surplus:+0.25; Soar:+0.19; Track:+0.12
+4111,positive_candidates,nyt,They Created a Cell That's Almost Alive. What to Do With It Now?,positive,3,positive,0.512,negative,-0.8,neutral,0.475,neutral,-0.921,Alive:+0.40; Created:+0.25,Alive:-0.42; Cell:-0.16; Created:-0.10
+4167,random,nyt,Inside the Plague Research Labs at the Heart of a Russian Mystery,neutral,3,positive,0.637,neutral,-0.142,negative,-0.959,positive,0.98,Heart:+0.80,Mystery:+0.18; Plague:-0.17; Inside:+0.06; Research:+0.05
+4429,random,guardian,First US military attacks on Iran in a month prompt retaliation,neutral,3,negative,-0.44,negative,-0.779,neutral,-0.947,negative,-0.973,attacks:-0.47,month:-0.26; attacks:-0.14; prompt:-0.10; retaliation:-0.10
+4976,positive_candidates,guardian,"AI will help find cure for cancer 'within our lifetimes', says Arm Holdings chief",positive,3,neutral,-0.402,neutral,0.582,positive,0.68,neutral,0.948,cancer:-0.85; help:+0.42,cure:+0.25; AI:+0.23; lifetimes:+0.13; help:+0.08
+5350,random,guardian,"'Tidal wave' of Pfas being launched to satisfy AI industry, campaigners warn",neutral,3,positive,0.477,neutral,-0.209,negative,-0.984,negative,-0.971,satisfy:+0.50; launched:+0.12; warn:-0.10,satisfy:+0.44; AI:+0.24; Tidal:-0.24; wave:-0.22
+6045,positive_candidates,guardian,Trump greets Xi Jinping on arrival in rare move as US-China trade truce extended,neutral,3,neutral,0.153,positive,0.721,positive,0.624,positive,0.997,greets:+0.15,Trump:+0.32; greets:+0.23; arrival:+0.15; extended:+0.06
+6147,random,guardian,"The comedians turning AI anxiety into punchlines: 'It's so good, it'll completely alter our grasp on reality'",neutral,3,positive,0.642,neutral,0.027,positive,0.912,positive,0.999,good:+0.47; comedians:+0.30; anxiety:-0.17,good:+0.75; turning:-0.22; anxiety:-0.20; It's:-0.18
+6488,random,guardian,Backpack edges past Dancing Queen to win Alaska's Fat Bear Week title,positive,3,neutral,0.586,neutral,0.202,positive,0.563,neutral,-0.075,win:+0.70,win:+0.09; title:-0.07; Alaska's:-0.06; Backpack:+0.05
+77,random,guardian,Uncovering the secrets of New Zealand's elusive 'jungle penguins',neutral,2,neutral,0.0,neutral,0.12,positive,0.808,positive,0.998,,penguins:+0.08; Uncovering:+0.06
+454,positive_candidates,guardian,The AI industry is booming. Women are getting left behind,neutral,2,neutral,0.0,positive,0.711,neutral,-0.277,negative,-0.974,,booming:+1.42; industry:+0.26; left:-0.23; getting:-0.12
+804,positive_candidates,guardian,Miriam González Durántez launches new centrist party in Spain,neutral,2,neutral,0.402,neutral,0.127,positive,0.636,positive,0.998,party:+0.42,Durántez:-0.05; Miriam:+0.05
+959,random,guardian,Bring a bottle: Viennese dog owners told to rinse pets' urine from trees,neutral,2,neutral,0.0,neutral,-0.013,negative,-0.972,negative,-0.983,,bottle:+0.09; told:-0.07; owners:-0.05
+1124,random,bbc,Rare pink diamond goes on display in France 100 years after amateur heist,neutral,2,neutral,0.34,neutral,0.204,positive,0.7,positive,0.998,diamond:+0.35,100:+0.08; heist:-0.08; diamond:+0.08; France:-0.05
+1146,random,aljazeera,Protesters clash with police during nationwide demonstrations in France,neutral,2,neutral,-0.226,neutral,-0.571,negative,-0.98,negative,-0.982,Protesters:-0.23,Protesters:-0.13; police:-0.07; France:-0.07
+1149,positive_candidates,aljazeera,Davidovich Fokina stuns top seed Zverev to reach Shanghai Masters final,neutral,2,neutral,0.25,neutral,0.305,positive,0.68,positive,0.997,,stuns:+0.15; Fokina:-0.12
+1168,random,npr,"Decades after apartheid, South Africans seek justice for crimes of the past",neutral,2,positive,0.527,negative,-0.69,neutral,-0.9,neutral,0.317,justice:+0.60,apartheid:-0.16; crimes:-0.08; Decades:-0.08; South:+0.05
+1169,random,npr,Sidewalk sleepers: They have nowhere else to stay while a loved one is in the hospital,neutral,2,positive,0.599,neutral,-0.469,neutral,-0.947,negative,-0.998,loved:+0.72,hospital:-0.14; loved:-0.11; stay:+0.07
+1188,random,foxnews,"Cartels use drones to scout border agents and map smuggling routes, expert warns",negative,2,negative,-0.542,neutral,-0.211,negative,-0.988,neutral,-0.912,smuggling:-0.53; warns:-0.10,scout:+0.11; warns:-0.10; agents:+0.06; smuggling:-0.06
+1193,random,foxnews,"Pope Leo diagnosed with lung cancer after surgeons remove part of right lung, Vatican says",negative,2,negative,-0.66,neutral,-0.53,negative,-0.983,neutral,-0.885,cancer:-0.85,cancer:-0.38; diagnosed:+0.16; Leo:+0.10; remove:-0.08
+1196,random,foxnews,"Zelenskyy accuses Putin of defying Trump's ceasefire push, sends pointed message to White House",neutral,2,negative,-0.34,neutral,-0.458,neutral,-0.946,negative,-0.956,accuses:-0.35,defying:-0.17; ceasefire:-0.11; Trump's:+0.10; accuses:-0.08
+1198,random,foxnews,Pope Leo denounces death penalty as 'inadmissible' ahead of Pentagon's planned livestreamed execution,neutral,2,negative,-0.869,negative,-0.83,neutral,-0.822,neutral,-0.946,death:-0.72; penalty:-0.50; denounces:-0.47,death:-0.12
+1212,positive_candidates,aljazeera,WNBA Finals: Gabby Williams leads Valkyries to nervy Game 1 win over Dream,positive,2,positive,0.7,neutral,0.17,neutral,0.574,positive,0.997,win:+0.70; Dream:+0.25,Valkyries:+0.09; leads:+0.08; 1:-0.08; nervy:-0.07
+1237,random,npr,Student protests widen into greater social unrest in France,negative,2,neutral,0.153,negative,-0.761,negative,-0.986,neutral,-0.228,greater:+0.38; protests:-0.23,unrest:-0.36; widen:-0.09; protests:-0.08; Student:-0.08
+1238,random,npr,The state of the State Department in the wake of the Kimberly Guilfoyle scandal,negative,2,negative,-0.44,neutral,-0.367,negative,-0.99,neutral,-0.942,scandal:-0.47,scandal:-0.23; state:-0.17; State:+0.12; Department:+0.10
+1239,random,npr,"Scuffles and fires break out as protesters rally across France, joining students",negative,2,neutral,-0.226,negative,-0.721,negative,-0.994,neutral,-0.948,protesters:-0.23,fires:-0.30; Scuffles:-0.17; break:-0.16
+1246,random,foxnews,"'Vast majority' of Iran's attempted attacks on Strait of Hormuz are unsuccessful, CENTCOM spokesman says",neutral,2,negative,-0.66,neutral,-0.581,neutral,-0.451,negative,-0.996,attacks:-0.47; unsuccessful:-0.38,majority:+0.06
+1363,positive_candidates,nyt,A.I. Is Going Rogue. Who Should Be Held Responsible?,negative,2,neutral,0.318,neutral,-0.593,negative,-0.983,negative,-0.999,Responsible:+0.33,Rogue:-0.42
+1410,positive_candidates,nyt,Canada's Proposed Oil Pipeline Offers Carney Relief From Domestic and Global Turmoil,neutral,2,neutral,0.153,neutral,0.027,positive,0.698,positive,0.994,Relief:+0.53; Turmoil:-0.38,Relief:+0.24; Offers:+0.10; Domestic:+0.06; Carney:-0.05
+1418,random,nyt,Parents Are Charged After Toddler Pulls Out Loaded Gun at Day Care,negative,2,neutral,0.0,neutral,-0.522,negative,-0.974,negative,-0.972,Care:+0.55; Gun:-0.35; Charged:-0.20,Charged:-0.16; Toddler:-0.11
+1572,random,nyt,"With Christa Pike Unconscious, Another Execution Attempt Is in Doubt",negative,2,neutral,-0.361,negative,-0.671,neutral,-0.94,negative,-0.999,Doubt:-0.38,Execution:-0.17; Unconscious:-0.12; Christa:-0.11
+1734,positive_candidates,nyt,An Outrage in 2019. No Problem in 2026. Trump Has Moved the Ethical Line.,neutral,2,neutral,0.309,neutral,0.104,negative,-0.96,positive,0.992,Outrage:-0.57; Ethical:+0.57; Problem:-0.42,Outrage:-0.53; 2026:+0.29; Problem:+0.19; Moved:+0.19
+1791,random,nyt,"Weeks After Failed Drone Attack, Germany Points Finger at Russia",negative,2,negative,-0.751,negative,-0.737,neutral,-0.948,neutral,-0.92,Failed:-0.57; Attack:-0.53,Failed:-0.23; Attack:-0.12; Russia:+0.08; Germany:+0.06
+2107,positive_candidates,nyt,A Tidier Rivian (in Size and Price) Is Ready for the Suburbs,neutral,2,neutral,0.361,neutral,0.142,positive,0.842,negative,-0.979,Ready:+0.38,Ready:+0.11; Suburbs:-0.07
+2176,positive_candidates,nyt,Trump Posthumously Awards Top Civilian Honor to 'Man in the Red Bandanna',positive,2,positive,0.791,neutral,0.738,neutral,0.443,positive,0.997,Honor:+0.55; Awards:+0.50,Posthumously:+0.25; Honor:+0.21; Man:-0.05; Trump:+0.05
+2238,random,nyt,Here's How the Postal Service Could Refuse to Deliver Your Mail Ballot,neutral,2,neutral,-0.296,neutral,-0.578,negative,-0.968,negative,-0.994,Refuse:-0.30,Refuse:-0.73; Deliver:-0.36; Postal:+0.08
+2576,positive_candidates,nyt,Melania Trump Encourages Children to Build 'the Next Great Robot' With A.I.,positive,2,positive,0.791,neutral,-0.091,neutral,0.763,positive,0.962,Great:+0.78; Encourages:+0.47,Great:+0.26; Trump:-0.24; Children:-0.18; Robot:-0.16
+2609,positive_candidates,nyt,Aaron Guckian Wins G.O.P. Nomination for Rhode Island Governor,neutral,2,neutral,0.572,neutral,0.264,positive,0.637,positive,0.999,Wins:+0.68,Wins:+0.19; Guckian:-0.12; G.O.P:+0.09
+2759,positive_candidates,nyt,"Seeking Black Votes in Texas Senate Bid, Talarico Wins Crucial Endorsement",neutral,2,positive,0.718,neutral,0.244,neutral,0.512,positive,0.999,Wins:+0.68; Endorsement:+0.33,Wins:+0.20; Seeking:-0.11; Endorsement:+0.06; Votes:+0.06
+2886,random,nyt,Are A.I. Models Being Misled to Act Too Human?,neutral,2,neutral,0.0,neutral,-0.467,negative,-0.965,negative,-0.999,,Misled:-0.34; Human:-0.17; Act:-0.09
+3137,positive_candidates,nyt,'Love Me' Ad Promotes Trump With Public Money Ahead of the Midterms,neutral,2,positive,0.765,neutral,0.526,neutral,-0.694,positive,0.97,Love:+0.80; Promotes:+0.35,Love:+0.33; Trump:+0.28; Promotes:+0.15; Ad:-0.11
+3151,random,nyt,Trump Is Hosting Xi for a State Dinner. It's a Rarity for the U.S. President.,neutral,2,neutral,0.0,neutral,-0.027,positive,0.84,positive,0.999,,President:+0.08; Dinner:+0.06; Trump:-0.06
+3197,random,nyt,A Private Hawaiian Island Rode Out a Storm With Faith and Little Help,neutral,2,positive,0.638,neutral,-0.068,positive,0.661,neutral,0.944,Faith:+0.45; Help:+0.42,Little:-0.31; Help:-0.16; Hawaiian:+0.13; Faith:+0.11
+3333,random,nyt,Senate Resoundingly Approves Sweeping College Sports Measure,neutral,2,neutral,0.402,neutral,0.496,positive,0.762,positive,0.99,Approves:+0.42,Resoundingly:+0.32; Senate:-0.15; Sweeping:-0.11; College:-0.08
+3416,random,nyt,New Cancer Drugs Are Revolutionary. Why Don't More Patients Get Them?,neutral,2,negative,-0.66,neutral,0.279,positive,0.838,neutral,-0.731,Cancer:-0.85,Revolutionary:+0.78; New:+0.37; Don't:+0.22; Drugs:-0.08
+3450,random,nyt,Fraternity Says It Acted Quickly to Expel Cornell Members,neutral,2,negative,-0.44,neutral,-0.006,neutral,-0.71,negative,-0.971,Expel:-0.47,Quickly:+0.28; Expel:-0.12; Acted:+0.07; Says:-0.07
+3634,positive_candidates,nyt,A Bolsonaro Win Would Nearly Complete Trump's Latin America Map,neutral,2,positive,0.586,neutral,0.505,neutral,-0.785,positive,0.997,Win:+0.70,Win:+0.34; Trump's:-0.23; Bolsonaro:-0.19; Complete:+0.14
+3857,random,nyt,The Winning Stock Funds This Time Weren't Tech. They Were Energy.,positive,2,positive,0.67,neutral,0.073,neutral,0.558,positive,0.998,Winning:+0.60; Energy:+0.28,Weren't:-0.55; Winning:+0.30; Tech:+0.25; Funds:-0.10
+3881,random,nyt,The Midterm Senate Fight Spreads to a Surprising New Battleground,neutral,2,negative,-0.494,neutral,0.284,neutral,-0.675,positive,0.994,Battleground:-0.42; Fight:-0.40; Surprising:+0.28,Surprising:+0.26; New:+0.13; Senate:-0.12; Midterm:-0.07
+3996,positive_candidates,nyt,Meta Unveils New Series of Advanced A.I. Models,neutral,2,neutral,0.25,neutral,0.206,positive,0.892,positive,0.992,Advanced:+0.25,A.I:-0.18; Unveils:+0.11; Models:-0.10; New:+0.09
+4072,random,nyt,Pope Leo's Cancer Surgery Draws Outpouring From World Leaders,neutral,2,negative,-0.66,neutral,0.04,neutral,-0.707,positive,0.998,Cancer:-0.85,Leo's:+0.30; Outpouring:-0.13; Draws:-0.12; World:+0.08
+4306,positive_candidates,nyt,"'I Am Much Better, Thank You': Pope Leo Leaves Hospital, Days After Lung Surgery",positive,2,positive,0.66,positive,0.914,neutral,0.775,neutral,0.604,Better:+0.47; Thank:+0.38,Thank:+0.21
+4402,random,aljazeera,Food or medicine? The impossible choices facing Sudan's chronically ill,negative,2,neutral,-0.422,neutral,-0.423,negative,-0.971,negative,-0.995,ill:-0.45,impossible:-0.28; facing:+0.15; ill:-0.13; medicine:+0.10
+4447,random,guardian,BT on track for estimated £2bn windfall from selling old copper amid AI boom,neutral,2,neutral,0.0,neutral,0.397,positive,0.879,negative,-0.971,,boom:+0.22; AI:+0.11; windfall:+0.10; copper:-0.10
+4711,positive_candidates,guardian,How 20mph on our roads benefits everyone,neutral,2,neutral,0.382,neutral,0.442,positive,0.97,positive,0.999,benefits:+0.40,benefits:+0.58; 20mph:+0.32; roads:+0.29
+4865,random,guardian,Memory of water: the women reshaping Venice,neutral,2,neutral,0.0,neutral,0.094,positive,0.85,positive,0.999,,water:-0.17; Venice:+0.06
+4925,positive_candidates,guardian,'Nakedly political': US attempts to link trans support to authoritarianism in new health department report,neutral,2,neutral,0.402,neutral,-0.477,negative,-0.992,negative,-0.995,support:+0.42,authoritarianism:-0.29; link:-0.11; political:+0.07; trans:-0.06
+5207,positive_candidates,guardian,How Ron DeSantis politicized Florida's higher education by placing his loyalists at the top,neutral,2,neutral,0.44,negative,-0.792,negative,-0.992,neutral,0.12,loyalists:+0.28,politicized:-0.34; placing:-0.13; loyalists:-0.08; education:-0.08
+5260,positive_candidates,guardian,Artist delights in beautiful 'mess' and dead trees of England's rewilding sites,positive,2,neutral,0.026,neutral,0.745,positive,0.684,positive,0.999,dead:-0.82; beautiful:+0.72; delights:+0.50; mess:-0.38,beautiful:+0.97; Artist:+0.68; delights:+0.64; dead:-0.19
+5717,positive_candidates,guardian,Why Europe has been absent from the great AI safety debate,neutral,2,positive,0.784,neutral,-0.336,neutral,-0.864,negative,-0.989,great:+0.78; safety:+0.45,absent:-0.24; debate:+0.06; Europe:+0.05
+5740,positive_candidates,guardian,Spider season! Ten species you'll see scuttling across Britain's carpets and lawns this autumn,neutral,2,neutral,0.0,neutral,0.521,positive,0.77,positive,0.977,,season:+0.60; Spider:+0.34; scuttling:-0.15; you'll:+0.14
+6098,random,guardian,have you recently been assaulted on Great Britain's railways?,neutral,2,neutral,0.178,neutral,-0.532,negative,-0.988,negative,-0.99,Great:+0.78; assaulted:-0.60,assaulted:-0.61; Britain's:+0.09; recently:+0.05
+6196,positive_candidates,guardian,Trump cancels nearly $1bn in funding approved by Congress,neutral,2,neutral,0.226,neutral,-0.58,negative,-0.977,negative,-0.999,approved:+0.45; cancels:-0.23,cancels:-1.43; Trump:-0.45; funding:-0.21; Congress:+0.05
+6401,random,guardian,"New English homes in flood-risk areas could become uninsurable, says Aviva boss",neutral,2,neutral,0.0,neutral,-0.467,negative,-0.983,negative,-0.997,,uninsurable:-0.42; flood-risk:-0.11; says:-0.06; New:+0.06
+6483,positive_candidates,guardian,Wildlife arrives on time at rewilded chalk grasslands built along HS2 route,neutral,2,neutral,0.0,positive,0.61,positive,0.897,neutral,-0.917,,time:+0.36; Wildlife:+0.27; arrives:+0.13
+6503,positive_candidates,guardian,'He persuaded us': Labour ministers moved by Andy Burnham's emotional conference speech,neutral,2,neutral,0.153,positive,0.809,positive,0.923,neutral,0.894,emotional:+0.15,persuaded:+0.46; moved:+0.17; emotional:+0.13; Burnham's:+0.06
+6508,positive_candidates,guardian,"'Strong indications' that Iran played role in RAF Fairford incident, says Burnham",neutral,2,positive,0.691,neutral,-0.212,neutral,-0.868,positive,0.991,Strong:+0.57; played:+0.35,Iran:-0.16; incident:-0.14; role:-0.13; played:-0.12
+6601,positive_candidates,guardian,'Total class act': Marie-France van Heel is poised to be a very different PM's wife,neutral,2,neutral,0.25,neutral,0.548,positive,0.968,positive,0.998,poised:+0.25,act:+0.60; class:+0.58; different:-0.30; PM's:-0.17
+6614,random,guardian,Former Dallas police officer convicted of murdering Black neighbor given early parole,negative,2,negative,-0.649,negative,-0.638,neutral,-0.685,neutral,-0.573,murdering:-0.82,murdering:-0.43; parole:+0.09; given:+0.08; convicted:-0.07
+6626,random,guardian,"Increased air pollution linked to more night-time coughing, UK-led study finds",negative,2,neutral,0.273,neutral,-0.534,negative,-0.987,negative,-0.973,Increased:+0.28,pollution:-0.16; Increased:-0.11; study:+0.08; coughing:-0.07
+6678,positive_candidates,guardian,Kennedy Center Honors awards moved to new venue amid Trump's onslaught,neutral,2,positive,0.743,neutral,-0.408,neutral,-0.59,positive,0.976,Honors:+0.57; awards:+0.50,Trump's:-0.37; onslaught:-0.32; venue:+0.19; moved:-0.17
+289,random,guardian,Conservatives propose £10bn 'Britannia Shield' inspired by Israel's Iron Dome,neutral,1,positive,0.494,neutral,0.04,neutral,0.191,neutral,-0.922,inspired:+0.55,Israel's:-0.05
+446,positive_candidates,guardian,Reform clears its own officials of breaking party funding laws despite police investigation,neutral,1,positive,0.459,neutral,-0.436,neutral,-0.061,neutral,-0.375,party:+0.42; clears:+0.07,breaking:-0.42; clears:+0.22; Reform:+0.19; laws:-0.09
+475,random,guardian,"Margaret Hamilton, trailblazer whose software powered Apollo 11 moon landing, dies aged 90",neutral,1,neutral,0.0,neutral,0.308,neutral,0.451,negative,-0.991,,dies:-0.30; trailblazer:+0.26; Hamilton:+0.15; moon:+0.09
+519,positive_candidates,guardian,Honouring Sylvia and Emmeline Pankhurst on stage and in political action,positive,1,neutral,0.477,positive,0.797,positive,0.762,positive,0.999,Honouring:+0.53,Honouring:+0.75; Sylvia:+0.20; stage:+0.09; political:-0.09
+531,positive_candidates,guardian,Top bosses at Goldman Sachs to share bonus pot worth up to $500m,neutral,1,positive,0.813,neutral,0.321,neutral,-0.268,neutral,-0.491,bonus:+0.62; share:+0.30; worth:+0.23,bonus:+0.13; $500m:+0.09; pot:-0.09; Goldman:-0.08
+681,positive_candidates,guardian,US's Reagan-era economic promises return as Trump's AI-fueled growth fantasy,neutral,1,positive,0.637,neutral,-0.164,neutral,0.451,neutral,0.82,promises:+0.40; growth:+0.40,fantasy:-0.43; growth:+0.21; Reagan-era:-0.17; economic:-0.16
+691,random,guardian,Is there a different way to fix the small boats crisis?,negative,1,negative,-0.625,neutral,-0.38,negative,-0.965,negative,-0.998,crisis:-0.78,different:+0.25; fix:-0.23; crisis:-0.16; way:-0.06
+826,random,guardian,Saudi Arabia strikes oil depots in Yemen and says missiles launched toward location of Saudi Aramco HQ,neutral,1,neutral,-0.25,neutral,-0.364,neutral,-0.95,negative,-0.964,strikes:-0.38; launched:+0.12,strikes:-0.15; missiles:-0.15; location:+0.11; Aramco:+0.11
+983,positive_candidates,guardian,Endless fun with a legendary book of placenames,positive,1,neutral,0.511,positive,0.931,positive,0.905,positive,0.99,fun:+0.57,fun:+0.38; legendary:+0.22; Endless:+0.18
+1121,random,bbc,Three men jailed for 158 years each for murdering Australian and US surfers in Mexico,negative,1,negative,-0.818,negative,-0.842,negative,-0.972,neutral,-0.934,murdering:-0.82; jailed:-0.55,murdering:-0.18
+1122,random,bbc,Brazil sees record fall in Amazon deforestation as key election looms,neutral,1,neutral,0.026,neutral,-0.108,neutral,0.333,negative,-0.981,Amazon:+0.17; looms:-0.15,election:+0.25; deforestation:+0.18; record:-0.18; looms:-0.11
+1126,random,bbc,Katie Zacharia leaving White House role less than five days into job,neutral,1,neutral,0.0,neutral,-0.295,neutral,-0.846,negative,-0.993,,leaving:-0.27; days:-0.08; job:-0.07; House:-0.07
+1128,random,bbc,Judge throws out child sex abuse charges against actor Timothy Busfield,neutral,1,negative,-0.743,neutral,-0.548,neutral,-0.176,neutral,-0.922,abuse:-0.80; charges:-0.28,Judge:+0.19; abuse:-0.08; actor:-0.06; charges:+0.05
+1131,random,bbc,The uncertain future of Canada's 30 rescued belugas,neutral,1,neutral,0.153,neutral,-0.328,neutral,-0.838,negative,-0.991,rescued:+0.45; uncertain:-0.30,uncertain:-0.57; future:-0.41; Canada's:+0.10; rescued:+0.06
+1136,random,bbc,Inside Ukrainian offensive pushing Russia back - with Starlink playing a key role,neutral,1,neutral,-0.296,neutral,0.015,positive,0.693,neutral,0.428,offensive:-0.50; playing:+0.20,pushing:-0.13; Russia:+0.06; Ukrainian:-0.05
+1138,random,bbc,Did Tesla really just unveil a flying car?,neutral,1,neutral,0.0,neutral,0.409,neutral,-0.135,negative,-0.997,,unveil:+0.28; just:+0.24; Tesla:+0.15; flying:+0.13
+1147,random,aljazeera,Why Trump's latest White House press secretary lasted just five days,neutral,1,neutral,0.0,neutral,-0.155,neutral,-0.832,negative,-0.993,,Trump's:+0.10
+1152,random,aljazeera,US and Iran both claim control of Strait of Hormuz amid attacks on vessels,neutral,1,negative,-0.44,neutral,-0.229,neutral,-0.948,neutral,-0.939,attacks:-0.47,attacks:-0.25; control:+0.21; claim:+0.21; vessels:-0.07
+1157,positive_candidates,aljazeera,Sally Rooney's books pulled from UK over Palestine Action support,neutral,1,neutral,0.402,neutral,-0.5,neutral,-0.923,negative,-0.977,support:+0.42,pulled:-0.61
+1159,random,aljazeera,India vs West Indies – fifth T20 International,neutral,1,neutral,0.0,neutral,0.059,neutral,-0.186,positive,0.972,,
+1161,random,aljazeera,Sudan's army claims dozens of RSF fighters killed in Nyala attack,negative,1,negative,-0.832,negative,-0.791,neutral,-0.935,negative,-0.986,killed:-0.88; attack:-0.53; fighters:-0.05,killed:-0.19; dozens:-0.06
+1165,random,aljazeera,Rubio's Uzbekistan trip underlines Central Asia's hunt for diverse partners,neutral,1,neutral,0.0,neutral,0.054,neutral,0.873,positive,0.991,,hunt:-0.13; diverse:+0.10; Uzbekistan:-0.09; underlines:-0.09
+1172,random,npr,Sally Rooney's books will no longer be sold in U.K. after support for pro-Palestinian group,neutral,1,neutral,0.128,neutral,-0.599,neutral,-0.941,negative,-0.996,support:+0.42,pro-Palestinian:-0.27; books:-0.22; U.K:-0.19; sold:-0.11
+1175,random,npr,"Three years on, Israel still bars foreign journalists from entering Gaza",neutral,1,neutral,0.0,negative,-0.678,neutral,-0.886,neutral,-0.386,,years:-0.16; foreign:+0.08
+1176,random,npr,"Social Security benefits to get a boost. And, Hasan Piker defends his rhetoric",positive,1,positive,0.772,neutral,0.017,positive,0.652,positive,0.969,boost:+0.42; benefits:+0.40; Security:+0.35,boost:+0.28; rhetoric:-0.21; Security:-0.19; Social:-0.13
+1182,random,foxnews,Albania rioters clash with police for Socialist government as European unrest spreads,negative,1,neutral,0.0,negative,-0.679,negative,-0.98,negative,-0.981,,Albania:-0.17; government:-0.13; rioters:-0.12; Socialist:-0.12
+1195,random,foxnews,British adventurer returns home after 28-year walk around the world,neutral,1,neutral,0.296,neutral,0.24,neutral,0.446,positive,0.999,adventurer:+0.30,British:-0.17; returns:+0.11; home:-0.07; 28-year:+0.07
+1203,random,bbc,"Violent clashes, looting and buildings ablaze in France as over 1,200 arrested after protests",negative,1,negative,-0.836,negative,-0.819,negative,-0.992,neutral,-0.934,Violent:-0.72; arrested:-0.53; protests:-0.23,
+1204,positive_candidates,bbc,Photos show luxury boat with 50m pool and water slides near Kim Jong Un's summer retreat,neutral,1,neutral,0.202,neutral,0.069,neutral,0.49,positive,0.955,retreat:+0.20,boat:-0.19; near:-0.08; Jong:-0.07; Un's:-0.07
+1205,random,bbc,"A wave of homemade, synthetic drugs sweeps US and deepens crisis",negative,1,negative,-0.625,negative,-0.836,negative,-0.996,positive,0.952,crisis:-0.78,crisis:-0.11; deepens:-0.05
+1206,random,bbc,European diplomats attacked by Israeli settlers in West Bank,negative,1,neutral,-0.459,negative,-0.77,negative,-0.988,negative,-0.984,attacked:-0.50,attacked:-0.19; Israeli:-0.07
+1209,random,bbc,Church makes sainthood case for 'WW1 hero' priest,neutral,1,positive,0.557,neutral,-0.18,neutral,0.799,neutral,0.914,hero:+0.65,sainthood:-0.22; WW1:-0.17; priest:-0.09; case:+0.09
+1210,random,bbc,At least 17 dead in crush at Hindu festival event in India,negative,1,neutral,-0.402,negative,-0.797,negative,-0.996,negative,-0.986,dead:-0.82; festival:+0.55; crush:-0.15,dead:-0.26
+1214,random,aljazeera,Daniel Dubois defeats Fabio Wardley to retain WBO heavyweight boxing title,neutral,1,neutral,-0.318,neutral,0.055,positive,0.618,neutral,0.798,defeats:-0.33,Dubois:-0.09; defeats:-0.08; Fabio:-0.05
+1215,random,aljazeera,Guatemalan former prosecutor shot dead at sports centre,negative,1,negative,-0.649,negative,-0.687,neutral,-0.95,negative,-0.957,dead:-0.82,dead:-0.20; sports:+0.08
+1218,random,aljazeera,"Deaths, injuries after fire at Alberta military base: Canada minister",negative,1,neutral,-0.34,negative,-0.642,negative,-0.994,negative,-0.988,,Deaths:-0.22; base:+0.12
+1233,random,aljazeera,No Kings rallies in US urge midterm voters to cast ballots early,neutral,1,neutral,-0.296,neutral,-0.004,neutral,-0.411,negative,-0.99,,urge:-0.07
+1235,random,aljazeera,Ten killed in fire at beach resort in Bangladesh,negative,1,negative,-0.784,negative,-0.761,negative,-0.992,neutral,-0.909,killed:-0.88,killed:-0.33
+1243,random,foxnews,"Three men get 158 years each for murdering American and Australian surfers, dumping bodies in Mexican well",negative,1,negative,-0.67,negative,-0.879,neutral,-0.93,negative,-0.986,murdering:-0.82; dumping:-0.33,murdering:-0.10
+1244,random,foxnews,Former US ambassador says South Korea prosecuted him over speech made on American soil,neutral,1,negative,-0.382,neutral,-0.483,neutral,-0.943,neutral,-0.919,prosecuted:-0.40,prosecuted:-0.18; ambassador:-0.12; says:-0.08; South:+0.07
+1977,positive_candidates,nyt,U.N. Approves African Proposal for a New World Map,neutral,1,neutral,0.402,neutral,0.158,neutral,0.581,positive,0.994,Approves:+0.42,Approves:+0.14; U.N:+0.12; Map:-0.10
+1983,random,nyt,U.A.E. Pardons Egyptian Dissident Sentenced to 10 Years in Prison,neutral,1,neutral,-0.296,neutral,-0.561,neutral,-0.492,negative,-0.952,Prison:-0.57; Pardons:+0.30,Years:-0.27; Prison:-0.24; Egyptian:-0.19; Dissident:-0.07
+1987,random,nyt,Corporate America Is Getting Hooked on Open-Source A.I.,neutral,1,neutral,0.0,neutral,-0.386,positive,0.732,neutral,0.861,,America:-0.54; A.I:-0.18; Open-Source:+0.15; Hooked:-0.06
+2105,positive_candidates,nyt,"Bears in Los Angeles Are Getting Their Close-Ups, Ready or Not",neutral,1,neutral,0.361,neutral,0.034,neutral,-0.754,negative,-0.989,Ready:+0.38,
+2424,positive_candidates,nyt,Top A.I. Leaders Call for Slowing Down A.I. Development,neutral,1,neutral,0.202,neutral,0.007,negative,-0.957,neutral,-0.918,,
+2681,random,nyt,"China Stockpiled Oil, and Now It Could Dominate the Energy Landscape",neutral,1,neutral,0.153,neutral,-0.082,neutral,0.136,positive,0.998,Energy:+0.28; Dominate:-0.12,Stockpiled:+0.17; China:-0.16; Energy:+0.12; Landscape:+0.09
+2826,random,nyt,"Troy Jackson, a Progressive Brawler, Tries to Flip a Senate Seat in Maine",neutral,1,neutral,0.0,neutral,-0.013,neutral,-0.601,negative,-0.98,,Progressive:+0.19; Flip:-0.09; Brawler:-0.06; Jackson:+0.06
+2939,random,nyt,What's Next for Paramount,neutral,1,neutral,0.0,neutral,0.111,neutral,-0.058,positive,0.952,,
+3175,positive_candidates,nyt,"This Tiny Village Is Picture Perfect, Apart From All the Tourists",positive,1,neutral,0.572,positive,0.941,positive,0.957,positive,1.0,Perfect:+0.68,Perfect:+1.31
+3297,positive_candidates,nyt,Who's Winning the Race for Congress?,neutral,1,positive,0.527,neutral,0.046,neutral,-0.082,neutral,-0.694,Winning:+0.60,
+3616,positive_candidates,nyt,Former Prince Andrew Files Legal Action Against Police Over Warrants,neutral,1,neutral,0.128,neutral,-0.11,neutral,-0.838,negative,-0.976,Legal:+0.12,Andrew:+0.16; Prince:+0.16; Action:+0.07
+3864,random,nyt,Days of Deadly Houthi Attacks Show Saudi Arabia's Vulnerabilities,negative,1,negative,-0.542,negative,-0.841,negative,-0.988,neutral,-0.939,Attacks:-0.47; Vulnerabilities:-0.15,Days:-0.12; Vulnerabilities:-0.06; Deadly:-0.06
+3985,positive_candidates,nyt,Who's Winning the Race for Congress?,neutral,1,positive,0.527,neutral,0.046,neutral,-0.082,neutral,-0.694,Winning:+0.60,
+4008,positive_candidates,nyt,28 Miles and Counting: NASA's Perseverance Rover Sets a Mars Driving Record,positive,1,neutral,0.0,positive,0.818,positive,0.926,positive,0.995,,Record:+0.27; Perseverance:+0.27; Sets:+0.11; NASA's:+0.10
+4249,random,nyt,Nations Meet in Armenia as Goal to Protect Nature Remains Out of Reach,neutral,1,neutral,0.402,neutral,-0.028,neutral,-0.931,negative,-0.978,Protect:+0.40,Remains:-0.06; Goal:-0.06
+4404,positive_candidates,aljazeera,Leeds United vs Manchester United – Premier League,neutral,1,positive,0.681,neutral,0.068,neutral,-0.237,neutral,0.889,United:+0.45; United:+0.45,vs:-0.06; Leeds:-0.06
+4405,random,aljazeera,Haaland's record scoring spree helps Man City to seventh Premier League win,positive,1,positive,0.751,neutral,0.726,positive,0.878,positive,0.999,win:+0.70; helps:+0.40,win:+0.10; helps:+0.09; Haaland's:-0.07; City:-0.07
+4406,random,aljazeera,Chelsea's injury-hit Emi Martinez will return to action 'in a few weeks',neutral,1,neutral,0.0,neutral,0.006,neutral,-0.222,positive,0.976,,injury-hit:-0.07
+4408,random,aljazeera,'Young protesters across Europe share grievances and tactics',neutral,1,neutral,-0.296,neutral,-0.558,neutral,-0.853,positive,0.977,grievances:-0.38; share:+0.30; protesters:-0.23,grievances:-0.48; Young:-0.22; share:+0.09; Europe:-0.07
+4412,random,npr,Major fire breaks out in Alberta after deadly incident at military base,negative,1,negative,-0.4,negative,-0.739,negative,-0.996,neutral,-0.929,,deadly:-0.07; Major:-0.06
+4501,positive_candidates,guardian,Shaun the Sheep hailed on latest list of storm names,neutral,1,neutral,0.226,neutral,0.05,neutral,-0.137,positive,0.973,hailed:+0.23,hailed:+0.51; list:-0.20; storm:+0.11; names:+0.09
+4682,random,guardian,Sadiq Khan cleared of car tax conviction caused by 'scam',neutral,1,negative,-0.511,neutral,-0.599,neutral,-0.707,neutral,-0.791,scam:-0.68; cleared:+0.10,scam:-0.46; caused:-0.24; Khan:+0.12; conviction:-0.09
+4789,positive_candidates,guardian,Russia strikes Ukraine intelligence HQ in 'major escalation',neutral,1,neutral,0.153,neutral,-0.444,negative,-0.988,neutral,-0.937,intelligence:+0.53; strikes:-0.38,strikes:-0.26; Russia:-0.19; intelligence:+0.11; HQ:-0.08
+4935,positive_candidates,guardian,Why is the far-right AfD's state victory significant and what might happen next in German politics?,neutral,1,neutral,0.202,neutral,-0.059,neutral,-0.89,negative,-0.995,significant:+0.20,far-right:-0.12; victory:+0.10; politics:+0.10; significant:+0.09
+5024,positive_candidates,guardian,Trump-backed John Sununu wins New Hampshire Republican Senate primary,neutral,1,neutral,0.572,neutral,0.09,neutral,0.392,positive,0.997,wins:+0.68,wins:+0.08
+5027,random,guardian,"Kyiv books in 1,000 Patriots as UK and EU open up missile aid",neutral,1,neutral,0.0,neutral,-0.232,positive,0.627,neutral,-0.944,,"missile:-0.26; 1,000:-0.15; Kyiv:-0.12; aid:+0.11"
+5212,random,guardian,US consumers faced more high prices in August as Iran war raised energy costs,negative,1,negative,-0.422,neutral,-0.594,negative,-0.979,negative,-0.992,war:-0.72; energy:+0.28,prices:-0.08; August:-0.08; raised:-0.06; war:-0.06
+5296,random,guardian,"Burnham must understand Wales is 'not a region in England', says first minister",neutral,1,neutral,0.0,neutral,-0.049,neutral,-0.684,negative,-0.976,,England:+0.12; says:+0.09
+5297,positive_candidates,guardian,The AfD won a shock election in Germany. Elon Musk was thrilled,positive,1,positive,0.612,positive,0.951,neutral,-0.476,positive,1.0,won:+0.68; thrilled:+0.47; shock:-0.40,thrilled:+0.53; Germany:+0.06
+5304,random,guardian,Many professionals take continuing education. Let's add etiquette classes,neutral,1,neutral,0.0,neutral,0.072,neutral,0.321,positive,0.976,,etiquette:-0.15; professionals:+0.05
+5382,positive_candidates,guardian,Sweden's political parties launch coalition talks as both blocs try to secure power,neutral,1,positive,0.625,neutral,0.158,neutral,-0.417,neutral,-0.885,parties:+0.42; secure:+0.35,secure:+0.06
+5504,random,guardian,Plantwatch: The insect-eating alpine plant that proves Darwin was right,neutral,1,neutral,0.0,neutral,0.224,positive,0.894,neutral,0.913,,right:+0.32; insect-eating:-0.28; Plantwatch:+0.24; proves:+0.17
+5617,random,guardian,Burnham's talk of 'breathing space' at odds with reality of future Bank rate rises,neutral,1,neutral,0.0,neutral,-0.236,negative,-0.952,neutral,0.189,,odds:-0.23; reality:-0.17; Bank:+0.07; breathing:+0.06
+5751,positive_candidates,guardian,Kevin Warsh may be the adult in the room. But can he calm the US economy?,neutral,1,neutral,0.45,neutral,0.039,neutral,0.092,negative,-0.984,calm:+0.33,economy:-0.05
+5988,positive_candidates,guardian,"New UK agency to fight 'information warfare' from likes of Russia, Burnham tells UN",neutral,1,neutral,-0.25,neutral,-0.083,neutral,-0.593,positive,0.989,likes:+0.45; fight:-0.40; warfare:-0.30,Russia:+0.11; fight:+0.08
+6151,positive_candidates,guardian,Daniel Thomas pleads not guilty after alleged dinghy slashing in Channel,neutral,1,neutral,0.06,neutral,-0.414,neutral,-0.875,negative,-0.994,guilty:-0.45; slashing:-0.28,slashing:-0.12; Daniel:-0.11; pleads:+0.09; guilty:-0.08
+6163,positive_candidates,guardian,'Major milestone': TfL to launch new public bus operator in London,positive,1,neutral,0.0,positive,0.871,positive,0.959,positive,0.999,,milestone:+0.79; Major:+0.28
+6239,positive_candidates,guardian,Poland is racing ahead with military spending – but will it help or damage its economic growth story?,neutral,1,neutral,0.392,neutral,-0.194,neutral,-0.887,negative,-0.989,damage:-0.55; help:+0.42; growth:+0.40,damage:-0.10; military:-0.09; ahead:+0.06; –:+0.05
+6310,random,guardian,"Israel does not have right to close UK consulate in Jerusalem, Foreign Office advised",neutral,1,neutral,0.0,neutral,-0.578,neutral,-0.797,negative,-0.996,,right:-0.51; Jerusalem:+0.10; advised:+0.10; Israel:+0.08
+6348,random,guardian,Dengue fever outbreak prompts Florida counties to declare state of emergency,negative,1,negative,-0.382,negative,-0.6,negative,-0.991,neutral,-0.72,emergency:-0.40,counties:+0.09; prompts:-0.09; emergency:-0.07; outbreak:-0.06
+6487,random,guardian,MI5 warns UK universities over 'theft of tech secrets by Chinese front company',negative,1,neutral,-0.103,negative,-0.612,negative,-0.985,negative,-0.954,warns:-0.10,theft:-0.16; warns:-0.16; company:-0.15
+6688,random,guardian,Partner of Gypsy Rose Blanchard found dead in Louisiana home,negative,1,negative,-0.649,neutral,-0.388,negative,-0.984,negative,-0.968,dead:-0.82,dead:-0.31; Partner:-0.18; Blanchard:+0.09; home:-0.05
+96,random,guardian,Two people killed in light aircraft crash near Loch Lomond,negative,0,negative,-0.802,negative,-0.755,negative,-0.984,negative,-0.976,killed:-0.88; crash:-0.42,killed:-0.14; people:-0.09; crash:+0.06
+204,positive_candidates,guardian,Trump names intelligence chief Jay Clayton as new White House AI czar,neutral,0,neutral,0.477,neutral,0.03,neutral,0.354,neutral,-0.263,intelligence:+0.53,
+581,positive_candidates,guardian,Targeting Trump: how Democrats plan to investigate the president if they win Congress,neutral,0,neutral,0.586,neutral,-0.139,neutral,-0.788,neutral,-0.947,win:+0.70,Targeting:-0.10; president:-0.07; investigate:-0.05
+667,random,guardian,"Christian nationalism in Britain driven by people who seldom go to church, says report",neutral,0,neutral,0.0,neutral,-0.41,neutral,-0.919,neutral,0.949,,seldom:-0.17; nationalism:-0.12; driven:-0.10
+948,random,guardian,Revealed: Serbian ruler's secret role in 'illegal' effort to help Trump business,neutral,0,neutral,-0.226,neutral,-0.265,neutral,-0.934,neutral,0.168,illegal:-0.65; help:+0.42,illegal:-0.19; secret:+0.10; effort:-0.09; Trump:+0.08
+1119,random,bbc,Trump waives several Russia sanctions as row with Zelensky intensifies,neutral,0,neutral,0.0,neutral,-0.402,neutral,-0.912,neutral,0.906,,sanctions:-0.24; row:-0.18; intensifies:-0.17; Zelensky:+0.13
+1123,random,bbc,Nursery owner in China jailed for life after hundreds of children poisoned,negative,0,negative,-0.751,negative,-0.842,negative,-0.986,negative,-0.992,jailed:-0.55; poisoned:-0.55,children:-0.07
+1135,random,bbc,What we learned from heated US midterm Senate debates,neutral,0,neutral,0.0,neutral,0.02,neutral,-0.047,neutral,-0.941,,Senate:+0.05
+1167,random,npr,Zelenskyy urges support for new US sanctions on Russia after Trump puts them on hold,neutral,0,neutral,0.402,neutral,-0.096,neutral,-0.682,neutral,-0.439,support:+0.42,Zelenskyy:+0.13; support:+0.12
+1170,random,npr,Israeli settlers beat Palestinians and a U.S. photojournalist in West Bank attacks,negative,0,negative,-0.44,negative,-0.836,negative,-0.966,negative,-0.984,attacks:-0.47,
+1171,random,npr,Crowds throng New Delhi and wave Indian flags amid escalating protests,neutral,0,neutral,-0.226,neutral,-0.007,neutral,-0.827,neutral,0.8,protests:-0.23,amid:+0.22; protests:-0.12; wave:+0.10; Crowds:+0.10
+1173,random,npr,Russia's view amid Ukraine's strikes and Zelenskyy's growing rift with the U.S.,neutral,0,neutral,-0.202,neutral,-0.222,neutral,-0.871,neutral,-0.143,strikes:-0.38; growing:+0.17,Russia's:+0.13; strikes:-0.12; view:+0.10; Ukraine's:+0.09
+1174,random,npr,How Putin may react to the rift between the U.S. and Ukraine,neutral,0,neutral,0.0,neutral,-0.096,neutral,-0.94,neutral,-0.729,,rift:-0.07
+1180,random,foxnews,"Autistic teen lured to fake Snapchat meetup, brutally beaten by group of teens: report",negative,0,negative,-0.872,negative,-0.779,negative,-0.997,negative,-0.999,brutally:-0.75; fake:-0.53; beaten:-0.45,beaten:-0.09; meetup:-0.09; brutally:-0.08
+1187,random,foxnews,Woman found floating in sea after going overboard from Royal Caribbean ship,neutral,0,neutral,0.0,neutral,-0.449,neutral,-0.872,neutral,-0.794,,overboard:-0.25; Woman:-0.18; going:-0.17; ship:-0.09
+1200,random,foxnews,Houthis kill 14 at Saudi airport as expert warns of 'rapid targets' amid Middle East war,negative,0,negative,-0.875,negative,-0.838,negative,-0.993,negative,-0.982,kill:-0.93; war:-0.72; warns:-0.10,kill:-0.15
+1207,random,bbc,Several dead or injured in major fire at Canada military base,negative,0,negative,-0.866,negative,-0.71,negative,-0.997,negative,-0.982,dead:-0.82; injured:-0.42,injured:+0.07
+1236,random,aljazeera,Protesters allege police brutality as violent clashes rage on in Albania,negative,0,negative,-0.925,negative,-0.813,negative,-0.988,negative,-0.977,brutality:-0.75; violent:-0.72; rage:-0.65; Protesters:-0.23,brutality:-0.08
+1241,random,foxnews,"Fatalities, injuries reported at Canadian Forces Base Wainwright in Alberta after 'incident' that sparked fire",negative,0,negative,-0.743,negative,-0.802,negative,-0.989,negative,-0.982,Fatalities:-0.72,Fatalities:-0.20
+1242,random,foxnews,Limoges Town Hall 'largely lost' after far-left rioters set historic building on fire amid French unrest,negative,0,negative,-0.572,negative,-0.765,negative,-0.995,negative,-0.999,lost:-0.33,lost:-0.20
+1245,random,foxnews,Violence erupts at France protests as Macron warns unrest is being exploited,negative,0,negative,-0.856,negative,-0.806,negative,-0.994,negative,-0.975,Violence:-0.78; exploited:-0.50; protests:-0.23; warns:-0.10,Violence:-0.15
+1693,random,nyt,"Trump, Critic of Voting by Mail, Urges Republicans to Do It in Midterms",neutral,0,neutral,-0.273,neutral,-0.203,neutral,-0.777,neutral,-0.933,Critic:-0.28,Critic:-0.27; Midterms:+0.11
+1702,random,nyt,Trump Promotes Data Centers at Rally With Republican Facing Heat on Them,neutral,0,neutral,0.34,neutral,-0.079,neutral,0.059,neutral,-0.596,Promotes:+0.35,Heat:-0.10; Rally:+0.07; Trump:+0.06; Republican:+0.06
+1867,random,nyt,Justice Dept. Sides With OpenAI in New York Times Copyright Suit,neutral,0,neutral,0.527,neutral,-0.098,neutral,0.375,neutral,-0.908,Justice:+0.60,Suit:-0.09; Dept:-0.09
+1955,random,nyt,Argentina Is Ramping Up Its Claim to the Falklands. Here's What to Know.,neutral,0,neutral,0.0,neutral,0.075,neutral,-0.795,neutral,0.878,,Falklands:-0.06
+2234,random,nyt,'Ferris Bueller Gone Bad': 22-Year-Old Pleads Guilty in Giant Bitcoin Heist,negative,0,negative,-0.743,negative,-0.64,negative,-0.994,negative,-0.996,Bad:-0.62; Guilty:-0.45,Bad:-0.51; Ferris:-0.13; Pleads:+0.12; Gone:+0.08
+2588,random,nyt,Age Limits for Social Media Outlined by European Union,neutral,0,neutral,0.0,neutral,-0.018,neutral,-0.554,neutral,-0.831,,Age:+0.07
+2601,random,nyt,Saudi Pipeline Attack Risks 'Disastrous' Loss of Oil as Fighting Escalates,negative,0,negative,-0.917,negative,-0.815,negative,-0.995,negative,-0.999,Disastrous:-0.72; Attack:-0.53; Fighting:-0.38; Loss:-0.33,Oil:-0.08; Disastrous:-0.07
+3055,positive_candidates,nyt,Canada's Capital Bids Good Riddance to Trump Avenue as Tensions With U.S. Rise,neutral,0,neutral,0.052,neutral,-0.151,neutral,-0.364,neutral,0.318,Good:+0.47; Tensions:-0.42,Riddance:-0.31; U.S:+0.15; Tensions:-0.12; Rise:-0.08
+3111,random,nyt,Abbas Presses Case for Palestinian State in Taped General Assembly Address,neutral,0,neutral,0.0,neutral,0.005,neutral,0.513,neutral,-0.88,,
+3167,random,nyt,"Leo XIV, Trying to Be Everyone's Pope, Tours Secular France",neutral,0,neutral,0.0,neutral,0.115,neutral,-0.868,neutral,0.938,,Trying:-0.15; Everyone's:+0.07; France:+0.05
+3317,random,nyt,Trump Administration Asks Justices to Allow It to Deny Hormones to Trans Inmates,neutral,0,neutral,-0.128,neutral,-0.269,neutral,-0.944,neutral,-0.745,Deny:-0.35; Allow:+0.23,Asks:+0.12; Trump:-0.11; Deny:-0.08; Justices:-0.08
+3613,random,nyt,Separatists Lead as Voters in Quebec Go to the Polls,neutral,0,neutral,0.0,neutral,-0.43,neutral,-0.865,neutral,-0.253,,Separatists:-0.50; Polls:+0.17; Lead:-0.16; Quebec:+0.16
+3725,random,nyt,"Iranian Oil, a Minor Player and the Limits of U.S. Sanctions",neutral,0,neutral,0.0,neutral,-0.256,neutral,-0.695,neutral,-0.788,,Limits:+0.14; Sanctions:-0.14; Iranian:-0.12; Minor:-0.10
+3807,random,nyt,Escalating Assaults on Ukrainian Cities Are Taking an Enormous Toll,negative,0,negative,-0.542,negative,-0.798,negative,-0.994,negative,-0.962,Assaults:-0.62,Enormous:-0.17; Toll:-0.07; Assaults:-0.06; Cities:-0.05
+3974,random,nyt,Fugitive in Venezuela Money Laundering Cases to Appear in U.S. Court,neutral,0,neutral,0.0,neutral,-0.366,neutral,-0.865,neutral,-0.909,,Fugitive:-0.25; U.S:+0.21; Court:+0.07; Laundering:+0.06
+3993,positive_candidates,nyt,How American Retirees on Different Incomes Rely on Social Security,neutral,0,neutral,0.34,neutral,0.023,neutral,-0.28,neutral,-0.944,Security:+0.35,
+4401,random,bbc,Burnt out cars and shattered glass on Paris streets after protests turn to riots and looting,negative,0,negative,-0.807,negative,-0.852,negative,-0.997,negative,-0.998,riots:-0.57; shattered:-0.53; protests:-0.23,Burnt:-0.06
+4407,random,aljazeera,'No Kings' protests spread across the US ahead of midterm elections,neutral,0,neutral,-0.226,neutral,-0.471,neutral,-0.881,neutral,-0.845,protests:-0.23,Kings:-0.48; protests:-0.36; elections:+0.08; midterm:+0.06
+4410,random,aljazeera,There is no split in MAGA,neutral,0,neutral,-0.296,neutral,0.043,neutral,0.071,neutral,0.682,,split:+0.45; MAGA:+0.09
+4474,random,guardian,US health officials exclude measles-related deaths in Pennsylvania from counts,neutral,0,neutral,-0.226,neutral,-0.217,neutral,-0.811,neutral,-0.747,exclude:-0.23,exclude:+0.14; measles-related:+0.08; deaths:-0.07; counts:+0.06
+4631,positive_candidates,guardian,"The $1 Trump coin: legal tender, depending on what you mean by legal",neutral,0,neutral,0.25,neutral,0.068,neutral,0.472,neutral,-0.926,legal:+0.12; legal:+0.12,coin:+0.11; tender:-0.11; $1:+0.07; depending:-0.06
+4741,positive_candidates,guardian,Pedicures and a pair of socks: sailors from USS Abraham Lincoln go wild in party resort of Pattaya,neutral,0,neutral,0.402,neutral,0.08,neutral,0.528,neutral,-0.9,party:+0.42,sailors:-0.08; pair:+0.07; resort:-0.06; USS:-0.06
+5830,positive_candidates,guardian,How Saudi oil scientists ended up working on the world's most important climate reports,neutral,0,neutral,0.272,neutral,-0.127,neutral,-0.595,neutral,0.145,important:+0.20,important:+0.11; ended:-0.10; reports:+0.07
+6293,positive_candidates,guardian,'Thrilled': huge swarms of bogong moths surprise NSW residents and may point to species' recovery,positive,0,positive,0.743,positive,0.907,positive,0.976,positive,0.999,Thrilled:+0.47; huge:+0.33; surprise:+0.28,Thrilled:+0.29; species:+0.09; bogong:+0.06
+6462,positive_candidates,guardian,World's oceans absorbed record heat equal to 40 times annual global energy use,neutral,0,neutral,0.273,neutral,0.021,neutral,-0.94,neutral,-0.396,energy:+0.28,heat:-0.14
+6543,random,guardian,Man arrested over alleged plot to attack Texas state capitol,negative,0,negative,-0.735,negative,-0.641,negative,-0.961,negative,-0.957,arrested:-0.53; attack:-0.53,attack:-0.13; Man:-0.07; arrested:-0.06
