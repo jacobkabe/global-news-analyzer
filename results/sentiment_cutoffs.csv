@@ -1,0 +1,5 @@
+model,negative_if_score_at_most,positive_if_score_at_least
+vader,-0.35,0.5
+roberta,-0.6,0.7
+bart_mnli,-0.95,0.55
+distilbert,-0.95,0.95

@@ -13,3 +13,4 @@ vaderSentiment
 spacy
 tqdm
 openpyxl
+scikit-learn
