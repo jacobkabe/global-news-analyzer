@@ -5,6 +5,9 @@ Small anonymised sample of collected articles and outputs.
 - `sentiment_to_label.csv`: 150 headlines to label by hand (made by `nlp/sentiment/make_label_sheet.py`).
   Spread across outlets: Guardian 38, NYT 37, Al Jazeera 20, BBC 20, Fox News 20, NPR 15.
   The outlet and the model labels are hidden on purpose, so they do not influence the labeller.
+- `sentiment_gold.csv`: the 150 headlines above with our hand labels (`my_label`). Label counts: 95 neutral, 47 negative, 8 positive.
+- `sentiment_to_label_extra.xlsx` (not in Git until labelled): 80 more headlines that a model thinks are positive
+  (made by `nlp/sentiment/make_label_sheet_extra.py`), because 8 positives are too few to evaluate. Not a random sample: say so in the report.
 
 ## How to label `sentiment_to_label.csv`
 Write one of `negative`, `neutral`, `positive` in `my_label`. Use `note` for anything unclear

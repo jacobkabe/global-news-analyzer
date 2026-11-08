@@ -12,3 +12,4 @@ textblob
 vaderSentiment
 spacy
 tqdm
+openpyxl
