@@ -11,6 +11,17 @@ Course: Text Analytics 2, VŠE Prague
 | `results/` | Metrics table comparing approaches, plots |
 | `failures/` | Analysed failure cases |
 | `screenshots/` | Dashboard screenshots or demo link |
+## Setup
+Windows PowerShell, from the project folder:
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+Copy-Item .env.example .env
+```
+Then open `.env` and fill in your API keys (`GUARDIAN_API_KEY`, `NYT_API_KEY`, `THENEWSAPI_API_KEY`).
+Never commit `.env`.
 ## Data
 Raw scraped articles are not published (personal content, terms of service).
 We provide the collection script, the schema and a small anonymised sample instead.
