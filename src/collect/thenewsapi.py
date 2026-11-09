@@ -26,7 +26,7 @@ def fetch_thenewsapi(from_date, to_date, max_pages=30):
         params = {
             "api_token": token,
             "language": "en",
-            "domains": "cnn.com,dw.com,aljazeera.com,cbc.ca",
+            "domains": "cnn.com,dw.com,cbc.ca,time.com",
             "published_after": from_date,
             "published_before": to_date,
             "limit": 3,  # Free plan limit
