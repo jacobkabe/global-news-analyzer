@@ -26,6 +26,7 @@ def fetch_thenewsapi(from_date, to_date, max_pages=30):
         params = {
             "api_token": token,
             "language": "en",
+            "domains": "cnn.com,dw.com,aljazeera.com,cbc.ca",
             "published_after": from_date,
             "published_before": to_date,
             "limit": 3,  # Free plan limit
@@ -57,7 +58,7 @@ def fetch_thenewsapi(from_date, to_date, max_pages=30):
             categories = item.get("categories") or []
 
             articles.append({
-                "source": "thenewsapi",
+                "source": item.get("source") or "thenewsapi",
                 "url": item["url"],
                 "published_at": item.get("published_at"),
                 "title": item.get("title"),
