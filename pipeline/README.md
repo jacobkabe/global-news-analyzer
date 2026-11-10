@@ -10,7 +10,7 @@ Run each step from the project folder, in this order:
 |---|---|---|---|
 | 1. Clean | `python pipeline\clean.py` | `articles_clean.csv` | done |
 | 2. Sentiment | `python pipeline\sentiment.py run` / `evaluate` / `explain` | `sentiment.csv`, `sentiment_explain.csv`, `results/sentiment_*` | done |
-| 3. Entities | `python pipeline\ner.py ...` (with name normalisation: "Trump" = "Donald Trump") | `entities.csv` | planned |
+| 3. Entities | `python pipeline\ner.py run` / `normalise` / `sheets` / `evaluate` | `entities.csv`, `results/ner_*` | built; waiting for labels |
 | 4. Stories | `python pipeline\cluster.py ...` (same event across outlets) | `stories.csv` | later |
 | 5. Dashboard | `streamlit run app\streamlit_app.py` | | planned |
 
@@ -61,3 +61,32 @@ with 5-fold cross-validation):
 - The 80 extra "positive candidate" headlines were picked by the models, not at random (only 17 were positive).
 - One annotator. The Guardian is the hardest outlet for every model (55-68% accuracy).
 - All failures with every model's label and driving words: `failures/sentiment_gold_vs_models.csv`.
+
+## 3. Entities (`ner.py`)
+People, organisations, places, groups ("Republicans", "Russian") and events in the headline + lead.
+Details of the rules and commands: the top of `ner.py`. The transformer model needs a one-time download:
+`python -m spacy download en_core_web_trf` (about 450 MB).
+
+- **Two models compared:** `en_core_web_sm` (small, fast baseline) and `en_core_web_trf` (transformer).
+  The small model relies on capital letters, so NYT Title Case headlines give entities such as "Trump Says" (ORG);
+  the transformer reads the whole sentence. All 6,140 articles: sm under 1 minute, trf about 5 minutes on our laptops.
+- **Name normalisation** (trf output -> `entities.csv`, column `how` says which rule decided):
+  clean ("President Trump's" -> "Trump"), our alias list `pipeline/entity_aliases.csv` ("U.S." -> "United States"),
+  one type per name, short name -> full name in the same article, surname -> the dominant full name in all articles.
+  Result: "Donald Trump" is found in 957 articles; the exact name "Donald Trump" alone appears in only 48.
+  Top 100 entities with their variants: `results/ner_top_entities.csv`.
+- **Evaluation (needs our labels):** `python pipeline\ner.py sheets` makes two sheets in `data/sample/`:
+  - `ner_to_label_types.xlsx`: every name either model found in 100 headlines (from the 150 random sentiment
+    headlines). Choose the right type in `my_type` (`no` = not an entity or a wrong span such as "Trump Says",
+    `other` = a real entity of a type we do not use). Write names both models missed in `missed`:
+    `Keir Starmer (person); Gaza (place)`. Scores precision, recall and F1 for sm and trf.
+  - `ner_to_label_same.xlsx`: 150 random mentions (60 people, 50 places, 40 organisations). `real_entity` is
+    pre-filled with the name as found; change it to the full real-world name when needed ("Trump" -> "Donald Trump",
+    "US" -> "United States"), so that the same thing always has the same text. Scores pairs of mentions
+    (precision: mentions we joined are really the same; recall: same mentions we joined) before and after normalisation.
+  Save each labelled sheet as CSV (`ner_gold_types.csv`, `ner_gold_same.csv`), then run `evaluate`.
+
+**Known limits**
+- "Trump" is always taken to be Donald Trump unless another Trump is named in the same article.
+- Spelling variants that are not in the alias list stay separate (we added "Zelensky" = "Zelenskyy").
+- Adjectives and countries stay separate on purpose: "Russian" (group) is not "Russia" (place).
