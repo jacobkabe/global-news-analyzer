@@ -1,0 +1,17 @@
+model,labels,eval_set,n,accuracy,macro_f1,macro_f1_ci_low,macro_f1_ci_high,f1_negative,f1_neutral,f1_positive,predicted_positive
+vader,default,random150,150,0.567,0.51,0.416,0.597,0.646,0.559,0.324,29
+vader,default,all230,230,0.448,0.452,0.393,0.516,0.631,0.417,0.306,99
+vader,tuned,random150,150,0.7,0.58,0.46,0.699,0.667,0.758,0.316,11
+vader,tuned,all230,230,0.683,0.591,0.512,0.658,0.66,0.758,0.355,37
+roberta,default,random150,150,0.727,0.552,0.461,0.664,0.721,0.768,0.167,4
+roberta,default,all230,230,0.704,0.627,0.546,0.694,0.695,0.765,0.421,32
+roberta,tuned,random150,150,0.773,0.524,0.476,0.566,0.745,0.827,0.0,2
+roberta,tuned,all230,230,0.748,0.625,0.544,0.701,0.714,0.819,0.34,22
+bart_mnli,default,random150,150,0.347,0.278,0.212,0.349,0.564,0.021,0.25,32
+bart_mnli,default,all230,230,0.296,0.293,0.237,0.342,0.47,0.013,0.396,76
+bart_mnli,tuned,random150,150,0.7,0.575,0.486,0.665,0.762,0.734,0.231,18
+bart_mnli,tuned,all230,230,0.648,0.578,0.51,0.647,0.719,0.705,0.31,46
+distilbert,default,random150,150,0.32,0.244,0.186,0.3,0.564,0.0,0.167,40
+distilbert,default,all230,230,0.27,0.259,0.21,0.304,0.474,0.0,0.304,87
+distilbert,tuned,random150,150,0.507,0.44,0.353,0.526,0.536,0.542,0.242,25
+distilbert,tuned,all230,230,0.47,0.444,0.371,0.505,0.484,0.51,0.337,64
