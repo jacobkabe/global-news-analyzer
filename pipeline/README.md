@@ -12,7 +12,7 @@ Run each step from the project folder, in this order:
 | 2. Sentiment | `python pipeline\sentiment.py run` / `evaluate` / `explain` | `sentiment.csv`, `sentiment_explain.csv`, `results/sentiment_*` | done |
 | 3. Entities | `python pipeline\ner.py run` / `normalise` / `sheets` / `evaluate` | `entities.csv`, `results/ner_*` | built; waiting for labels |
 | 4. Stories | `python pipeline\cluster.py ...` (same event across outlets) | `stories.csv` | later |
-| 5. Dashboard | `streamlit run app\streamlit_app.py` | | planned |
+| 5. Dashboard | `streamlit run app\streamlit_app.py` | (reads the files above) | v2 built; stories come with step 4 |
 
 ## 1. Clean (`clean.py`)
 Reads `data/raw/news.db` (or `--input news.csv`) and writes one row per article:
@@ -90,3 +90,12 @@ Details of the rules and commands: the top of `ner.py`. The transformer model ne
 - "Trump" is always taken to be Donald Trump unless another Trump is named in the same article.
 - Spelling variants that are not in the alias list stay separate (we added "Zelensky" = "Zelenskyy").
 - Adjectives and countries stay separate on purpose: "Russian" (group) is not "Russia" (place).
+
+## 5. Dashboard (`app/streamlit_app.py`)
+`streamlit run app\streamlit_app.py` (opens in the browser; only this computer can see it).
+Reads the outputs of steps 1-3; `app/data.py` loads and joins them. Layout from the mockup in our proposal (slide 4):
+filters on the left, article cards in the middle, and on the right "Why these labels?" (the 3 sentiment models,
+RoBERTa's driving words highlighted in the headline, VADER's word values, each entity with the rule that named it),
+sentiment over time and trending entities. A second tab compares the outlets (sentiment mix, gap from the
+average, most mentioned names). Tala's first demo (`app.py` in the project folder) stays as it is.
+Story cards and the per-story comparison come when step 4 exists.

@@ -1,0 +1,14 @@
+# Dark theme with the yellow accent of our project proposal
+[theme]
+base = "dark"
+primaryColor = "#FFDE59"
+backgroundColor = "#0F0C0C"
+secondaryBackgroundColor = "#1C1616"
+textColor = "#EDE6E3"
+
+# Only this computer can open the dashboard (no Windows Firewall question)
+[server]
+address = "localhost"
+
+[browser]
+gatherUsageStats = false
