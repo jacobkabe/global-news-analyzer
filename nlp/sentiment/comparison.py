@@ -8,13 +8,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-from IPython.display import display
+import re
 
 # ============================================================
 # 1. CONFIGURATION
 # ============================================================
 
-output_dir = "data/outputs/"
+# Full per-article results (contain article text) stay in data/raw/ (ignored by Git).
+output_dir = "data/raw/outputs/"
+
+# Small aggregate tables and plots that we commit.
+results_dir = "results/"
+
+# Small anonymised sample that we commit (no summary, text, url or author names).
+sample_path = "data/sample/sentiment_sample.csv"
+sample_size = 50
 
 models = {
     "DistilBERT": "distilbert_results.csv",
@@ -27,6 +35,8 @@ models = {
 sentiments = ["negative", "neutral", "positive"]
 
 os.makedirs(output_dir, exist_ok=True)
+os.makedirs(results_dir, exist_ok=True)
+os.makedirs(os.path.dirname(sample_path), exist_ok=True)
 
 
 # ============================================================
@@ -52,38 +62,41 @@ for model_name, filename in models.items():
 # 3. COMBINE MODEL PREDICTIONS
 # ============================================================
 
-comparison_df = pd.DataFrame()
+# We match the models on the article "id" (unique per article),
+# not on the title: two articles can have the same headline.
 
-comparison_df["title"] = model_results["DistilBERT"]["title"]
+comparison_df = model_results["DistilBERT"][
+    ["id", "source", "published_at", "title"]
+].copy()
 
 for model_name, df in model_results.items():
 
-    if len(df) != len(comparison_df):
-        raise ValueError(
-            f"{model_name} has a different number of headlines."
-        )
+    if df["id"].duplicated().any():
+        raise ValueError(f"{model_name} has duplicate article ids.")
 
-    if not df["title"].fillna("").astype(str).equals(
-        comparison_df["title"].fillna("").astype(str)
-    ):
+    if set(df["id"]) != set(comparison_df["id"]):
         raise ValueError(
-            f"{model_name} contains different headlines or ordering."
+            f"{model_name} contains different articles than DistilBERT."
         )
 
     column = model_name.lower() + "_sentiment"
 
-    comparison_df[column] = (
-        df[column]
+    labels = df[["id", column]].copy()
+
+    labels[column] = (
+        labels[column]
         .fillna("")
         .astype(str)
         .str.lower()
         .str.strip()
     )
 
+    comparison_df = comparison_df.merge(labels, on="id", how="left")
+
 
 print("\nAll model predictions combined successfully!")
 
-display(comparison_df.head(10))
+print(comparison_df.head(10))
 
 
 # ============================================================
@@ -119,10 +132,8 @@ distribution_df = pd.DataFrame(distribution).T
 
 print(distribution_df)
 
-display(distribution_df)
-
 distribution_df.to_csv(
-    output_dir + "sentiment_distribution_comparison.csv"
+    results_dir + "sentiment_distribution_comparison.csv"
 )
 
 
@@ -165,7 +176,7 @@ plt.legend(title="Sentiment")
 plt.tight_layout()
 
 plt.savefig(
-    output_dir + "sentiment_distribution.png",
+    results_dir + "sentiment_distribution.png",
     dpi=300
 )
 
@@ -190,7 +201,7 @@ plt.legend(title="Sentiment", bbox_to_anchor=(1.02, 1))
 plt.tight_layout()
 
 plt.savefig(
-    output_dir + "sentiment_composition.png",
+    results_dir + "sentiment_composition.png",
     dpi=300
 )
 
@@ -228,10 +239,8 @@ agreement = agreement.round(2)
 
 print(agreement)
 
-display(agreement)
-
 agreement.to_csv(
-    output_dir + "model_agreement.csv"
+    results_dir + "model_agreement.csv"
 )
 
 
@@ -255,7 +264,7 @@ plt.title("Agreement Between Sentiment Models (%)", fontsize=15)
 plt.tight_layout()
 
 plt.savefig(
-    output_dir + "model_agreement_heatmap.png",
+    results_dir + "model_agreement_heatmap.png",
     dpi=300
 )
 
@@ -290,14 +299,38 @@ comparison_df.to_csv(
     index=False
 )
 
+# ============================================================
+# 11. SAVE A SMALL SAMPLE THAT WE CAN COMMIT
+# ============================================================
+
+# Guardian headlines end with " | Author Name": remove it (no author names in Git).
+author_suffix = re.compile(r"\s+\|\s+[^|]+$")
+
+sample_df = comparison_df.sample(
+    n=min(sample_size, len(comparison_df)),
+    random_state=42
+).sort_values("id")
+
+sample_df["title"] = (
+    sample_df["title"]
+    .fillna("")
+    .astype(str)
+    .str.replace(author_suffix, "", regex=True)
+)
+
+sample_df.to_csv(sample_path, index=False)
+
 print("\nAll comparison files saved successfully!")
 
 print("\nGenerated files:")
+print("In", results_dir, "(committed):")
 print("1. sentiment_distribution_comparison.csv")
 print("2. model_agreement.csv")
-print("3. all_models_comparison.csv")
-print("4. sentiment_distribution.png")
-print("5. sentiment_composition.png")
-print("6. model_agreement_heatmap.png")
+print("3. sentiment_distribution.png")
+print("4. sentiment_composition.png")
+print("5. model_agreement_heatmap.png")
+print("In", output_dir, "(not committed):")
+print("6. all_models_comparison.csv")
+print("Sample (committed):", sample_path)
 
 print("\nCOMPARISON COMPLETED!")

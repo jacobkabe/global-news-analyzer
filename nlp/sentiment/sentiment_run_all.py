@@ -19,9 +19,11 @@ from nlp.sentiment.vader import run_vader
 # 1. CONFIGURATION
 # ============================================================
 
-input_path = "data/news.csv"
+# Made by src/collect/export_csv.py
+input_path = "data/raw/news.csv"
 
-output_dir = "data/outputs/"
+# Full results contain the article text, so they stay in data/raw/ (ignored by Git).
+output_dir = "data/raw/outputs/"
 
 text_column = "title"
 

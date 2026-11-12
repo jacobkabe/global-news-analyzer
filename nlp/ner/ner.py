@@ -22,7 +22,7 @@ Input types (entity offsets refer to the string build_input() returns for that t
   headline_lead_sentcase   same, Title Case headlines converted to sentence case (casing experiment)
   fulltext                 "<title>. <text>"         only rows with text (Guardian today)
 
-Outputs (in --output-dir, default data/outputs)
+Outputs (in --output-dir, default data/raw/outputs)
   ner.csv       article_id, source, model, input_type, start_char, end_char, text, label
                 label is spaCy's own label (PERSON, ORG, GPE, NORP, LOC, FAC, DATE, ...)
   ner_runs.csv  article_id, source, model, input_type, n_chars, n_entities, seconds
@@ -40,8 +40,8 @@ from pathlib import Path
 
 import pandas as pd
 
-DEFAULT_INPUT = "/home/klaudi/Desktop/global-news-analyzer/data/news.csv"
-DEFAULT_OUTPUT_DIR = "data/outputs"
+DEFAULT_INPUT = "data/raw/news.csv"   # made by src/collect/export_csv.py
+DEFAULT_OUTPUT_DIR = "data/raw/outputs"
 DEFAULT_MODEL = "en_core_web_sm"
 INPUT_TYPES = ("headline_lead", "headline_lead_sentcase", "fulltext")
 CHUNK_CHARS = 1500           # long articles are split at sentence boundaries into chunks of this size
