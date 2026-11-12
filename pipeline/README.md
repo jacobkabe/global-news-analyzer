@@ -33,20 +33,22 @@ Headline only (full text is for the story summary). Gold labels: `data/sample/se
 (codebook in `data/sample/README.md`). Details of the models and commands: the top of `sentiment.py`.
 
 **Results on the 150 random headlines** (`results/sentiment_metrics.csv`; "tuned" = neutral cut-offs tuned
-with 5-fold cross-validation):
+with 5-fold cross-validation). The 150 are random within each outlet (20 each for the small RSS outlets),
+while most of our data is Guardian + NYT. Labels after the codebook review of 12 Nov 2026 (see below).
 
 | Model | Labels | Accuracy | Macro-F1 (95% interval) |
 |---|---|---|---|
-| VADER (baseline, word list) | own / tuned | 57% / 70% | 0.51 / 0.58 (0.46-0.70) |
-| Twitter RoBERTa | own / tuned | 73% / 77% | 0.55 (0.46-0.66) / 0.52 |
-| BART-MNLI zero-shot | own / tuned | 35% / 70% | 0.28 / 0.58 (0.49-0.67) |
-| DistilBERT SST-2 (failure example) | own / tuned | 32% / 51% | 0.24 / 0.44 |
+| Always "neutral" (no model) | – | 53% | 0.23 |
+| VADER (baseline, word list) | own / tuned | 61% / 71% | 0.54 / 0.57 (0.47-0.68) |
+| Twitter RoBERTa | own / tuned | 71% / 73% | 0.58 (0.46-0.68) / 0.60 (0.48-0.71) |
+| BART-MNLI zero-shot | own / tuned | 45% / 70% | 0.36 / 0.59 (0.50-0.67) |
+| DistilBERT SST-2 (failure example) | own / tuned | 42% / 54% | 0.30 / 0.47 |
 
 **Which model does what, and why**
-- **RoBERTa gives the label and score.** Highest accuracy, best macro-F1 on all 230 gold headlines (0.63),
-  a real neutral class (63% of our headlines are neutral), and about 20x faster than BART-MNLI.
-  VADER-tuned and BART-tuned have a similar macro-F1; the intervals overlap, so 150 headlines cannot
-  separate them and the practical reasons decide.
+- **No model is significantly better than the others** (the intervals overlap; a paired bootstrap of RoBERTa
+  against VADER-tuned gives a difference that can be zero). All three are well above "always neutral".
+- **RoBERTa gives the label and score** for practical reasons: a real neutral class (53% of our headlines are
+  neutral), about 20x faster than BART-MNLI, and it explains its own decisions (occlusion).
 - **Each label is explained by the model that gave it** (`sentiment.py explain`). RoBERTa: occlusion
   (remove one word, see how much RoBERTa's own score changes). VADER: its word list values.
   Showing VADER's words next to RoBERTa's label would mix two models and could contradict the label.
@@ -55,11 +57,23 @@ with 5-fold cross-validation):
   Its own labels almost never say "neutral" (1 of 230), so only its tuned score is useful.
 - **DistilBERT** is kept as a documented failure: trained on movie reviews, it has no neutral class.
 
+**Our labels: codebook review (12 Nov 2026).** A second pass labelled all 230 headlines against the codebook
+without looking at the first labels (agreement 75%, Cohen's kappa 0.52). 30 clear cases were corrected, mostly
+war, violence and threats that had been labelled neutral; the first label is kept in `label_before_review` and the
+reason in `note`. Borderline cases kept the first label. RoBERTa's accuracy went down (73% -> 71%), so the
+corrections did not simply favour the models.
+
 **Known limits**
-- Positive news is rare (8 of 150 random headlines) and under-detected by every model. Typical failure:
-  good news told with bad words ("Rescuers find two more people alive after flash flood disaster").
-- The 80 extra "positive candidate" headlines were picked by the models, not at random (only 17 were positive).
-- One annotator. The Guardian is the hardest outlet for every model (55-68% accuracy).
+- Positive news is rare (11 of 150 random headlines) and under-detected by every model; a "positive" label is
+  wrong more often than right. Typical failure: good news told with bad words
+  ("Rescuers find two more people alive after flash flood disaster"), and positive words in neutral news
+  ("Who's Winning the Race for Congress?").
+- The 80 extra "positive candidate" headlines were picked by the models, not at random (16 were positive).
+- RoBERTa calls many neutral headlines negative, and its accuracy differs by outlet (Fox News 55%, NYT 84%,
+  20-38 headlines each), so part of an outlet's "more negative" gap can be model error.
+- Driving words: deleting a word can break the sentence ("facing deadly borrow from..."), and the filler-word
+  list also hides "not", "no", "never", "without". To improve: mask the word instead of deleting it.
+- One annotator plus one codebook review; a second team member should label a sample blind.
 - All failures with every model's label and driving words: `failures/sentiment_gold_vs_models.csv`.
 
 ## 3. Entities (`ner.py`)

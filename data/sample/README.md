@@ -3,12 +3,14 @@ Small anonymised sample of collected articles and outputs.
 ## Files
 - `sentiment_sample.csv`: 50 random headlines with the labels of the 5 sentiment models (made by `nlp/sentiment/comparison.py`).
 - `sentiment_gold.csv`: 230 headlines labelled by hand (`my_label`). Column `sample` says how they were picked:
-  - `random` (150): 96 neutral, 46 negative, 8 positive. Use these for the main metrics (they look like our real data).
-  - `positive_candidates` (80): headlines a model called positive; we agreed on only 17 (62 neutral, 1 negative).
+  - `random` (150): 79 neutral, 60 negative, 11 positive. Use these for the main metrics.
+  - `positive_candidates` (80): headlines a model called positive; we agreed on only 16 (59 neutral, 5 negative).
     Use them to check the positive class and to show that models over-detect "positive" in neutral news.
   The random 150 were picked by `nlp/sentiment/make_label_sheet.py`, spread across outlets: Guardian 38, NYT 37, Al Jazeera 20, BBC 20,
   Fox News 20, NPR 15. The outlet and the model labels were hidden while labelling.
   The 80 positive candidates were picked by `nlp/sentiment/make_label_sheet_extra.py` (not a random sample: say so in the report).
+  Codebook review (12 Nov 2026): all 230 were labelled again against the codebook without seeing the first labels;
+  30 clear mistakes were corrected (first label in `label_before_review`, reason in `note`).
 
 ## How to label (our codebook)
 Ask one question: "Reading only this headline, is it reporting something bad, something good, or neither?"
