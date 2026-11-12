@@ -8,7 +8,7 @@ Layout follows the mockup in our project proposal (slide 4):
   left    filters (topic, sentiment, outlets, people/places, dates)
   middle  article cards (stories come later, when pipeline step 4 groups articles into stories)
   right   "Why these labels?" for the selected article, sentiment over time, trending entities
-A second tab compares the outlets.
+A second tab compares the outlets; a third explains every rule behind the labels (methods.py).
 
 The first version (app.py in the project folder, by Tala) stays as it is; ideas taken from it:
 the outlet filter, the keyword search and the charts of sentiment and articles over time.
@@ -21,6 +21,7 @@ import pandas as pd
 import streamlit as st
 
 import data
+import methods
 
 st.set_page_config(page_title="Global News Analyzer", page_icon="🌍", layout="wide")
 
@@ -45,8 +46,15 @@ st.markdown(f"""
 .tag-negative {{ background:#4A2A1A; color:#FF9A57; }}
 .tag-positive {{ background:#1C2E52; color:#8FB3FF; }}
 .tag-neutral, .tag-not {{ background:#2E2A2A; color:#C8BFBF; }}
-.headline a {{ color:#F3ECE8; text-decoration:none; font-weight:700; font-size:1.12rem; }}
-.headline a:hover {{ text-decoration:underline; }}
+.headline {{ color:#F3ECE8; font-weight:700; font-size:1.12rem; }}
+.open-link {{ float:right; font-size:.8rem; color:{YELLOW} !important; text-decoration:none;
+              position:relative; z-index:2; }}
+/* click anywhere on a card: the card's button is stretched invisibly over the whole card */
+[class*="st-key-card_"] {{ position:relative; cursor:pointer; }}
+[class*="st-key-card_"]:hover {{ border-color:#7A6A3A !important; }}
+[class*="st-key-pick_"] {{ position:absolute !important; inset:0; width:auto !important; z-index:1; margin:0 !important; }}
+[class*="st-key-pick_"] div, [class*="st-key-pick_"] button {{ width:100% !important; height:100% !important; }}
+[class*="st-key-pick_"] button {{ opacity:0; cursor:pointer; }}
 .lead {{ color:#BDB3AF; font-size:.9rem; margin:.25rem 0 .4rem 0; }}
 .chip {{ background:#2A2323; border-radius:999px; padding:2px 10px; font-size:.8rem;
          margin:0 6px 6px 0; display:inline-block; }}
@@ -182,7 +190,7 @@ info.markdown(f'<span class="muted">{len(shown):,} articles · {shown["outlet"].
 
 
 # ---- tab 1: articles ---------------------------------------------------------------------------------
-tab_articles, tab_outlets = st.tabs(["Articles", "Outlets compared"])
+tab_articles, tab_outlets, tab_methods = st.tabs(["Articles", "Outlets compared", "How the labels work"])
 
 with tab_articles:
     middle, right = st.columns([2, 1.15], gap="large")
@@ -204,32 +212,39 @@ with tab_articles:
         if st.session_state.get("selected") not in set(ordered["article_id"]):
             st.session_state["selected"] = ordered["article_id"].iloc[0] if len(ordered) else None
         selected = st.session_state["selected"]
-        st.markdown(f"<style>.st-key-card_{selected} {{ border:1px solid {YELLOW} !important; }}</style>",
+        st.markdown(f"<style>.st-key-card_{selected}.st-key-card_{selected} {{ border:1px solid {YELLOW} !important; }}</style>",
                     unsafe_allow_html=True)
 
         if ordered.empty:
             st.info("No articles match the filters.")
 
-        how_many = st.session_state.get("how_many", CARDS_PER_STEP)
-        for a in ordered.head(how_many).itertuples():
-            with st.container(border=True, key=f"card_{a.article_id}"):
-                st.markdown(
-                    f'<span class="tag tag-topic">{esc(str(a.topic))}</span>'
-                    f'{sentiment_tag(a.roberta_label, a.roberta_score)}'
-                    f'<span class="muted">{esc(a.outlet)} · {a.date:%d %b %Y}</span>'
-                    f'<div class="headline"><a href="{esc(a.url)}" target="_blank">{esc(a.headline)}</a></div>'
-                    + (f'<div class="lead">{esc(a.lead)}</div>' if isinstance(a.lead, str) else "")
-                    + entity_chips(entities[entities["article_id"] == a.article_id]),
-                    unsafe_allow_html=True)
-                if st.button("Why this label?", key=f"why_{a.article_id}", type="tertiary"):
-                    st.session_state["selected"] = a.article_id
-                    st.rerun()
+        def select(article_id):
+            st.session_state["selected"] = article_id
 
-        if len(ordered) > how_many:
-            st.caption(f"Showing {how_many} of {len(ordered):,}")
-            if st.button("Show more"):
-                st.session_state["how_many"] = how_many + CARDS_PER_STEP
-                st.rerun()
+        def show_more():
+            st.session_state["how_many"] = st.session_state.get("how_many", CARDS_PER_STEP) + CARDS_PER_STEP
+
+        # The cards scroll inside this box, so "Why these labels?" on the right stays in view.
+        # Each card has an invisible button over the whole card (see the CSS "click anywhere on a card"):
+        # a click anywhere selects the article. Only the "Open article" link sits above the button.
+        how_many = st.session_state.get("how_many", CARDS_PER_STEP)
+        with st.container(height=820, border=False):
+            for a in ordered.head(how_many).itertuples():
+                with st.container(border=True, key=f"card_{a.article_id}"):
+                    st.markdown(
+                        f'<span class="tag tag-topic">{esc(str(a.topic))}</span>'
+                        f'{sentiment_tag(a.roberta_label, a.roberta_score)}'
+                        f'<span class="muted">{esc(a.outlet)} · {a.date:%d %b %Y}</span>'
+                        f'<a class="open-link" href="{esc(a.url)}" target="_blank">Open article ↗</a>'
+                        f'<div class="headline">{esc(a.headline)}</div>'
+                        + (f'<div class="lead">{esc(a.lead)}</div>' if isinstance(a.lead, str) else "")
+                        + entity_chips(entities[entities["article_id"] == a.article_id]),
+                        unsafe_allow_html=True)
+                    st.button("Show why", key=f"pick_{a.article_id}", on_click=select, args=(a.article_id,))
+
+            if len(ordered) > how_many:
+                st.caption(f"Showing {how_many} of {len(ordered):,}")
+                st.button("Show more", on_click=show_more)
 
     with right:
         # -- why these labels? --
@@ -272,6 +287,7 @@ with tab_articles:
                 st.markdown(f'<p class="muted" style="margin-top:.6rem">TOPIC · from the outlet\'s section: '
                             f'<b>{esc(str(a.topic))}</b> (topic model: later)<br>'
                             f'STORY CLUSTER · not grouped yet (pipeline step 4)</p>', unsafe_allow_html=True)
+                st.caption("All rules and why we chose them: the tab \"How the labels work\".")
 
         # -- sentiment over time --
         with st.container(border=True):
@@ -316,6 +332,11 @@ with tab_articles:
 
 
 # ---- tab 2: outlets compared -------------------------------------------------------------------------
+# ---- tab 3: how the labels work (written before tab 2, because tab 2 can stop the script) ---------------
+with tab_methods:
+    methods.show(articles, entities, SENTIMENT_COLOURS)
+
+
 with tab_outlets:
     analysed = shown[shown["roberta_label"] != "not analysed"]
     if analysed.empty:

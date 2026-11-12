@@ -94,8 +94,9 @@ Details of the rules and commands: the top of `ner.py`. The transformer model ne
 ## 5. Dashboard (`app/streamlit_app.py`)
 `streamlit run app\streamlit_app.py` (opens in the browser; only this computer can see it).
 Reads the outputs of steps 1-3; `app/data.py` loads and joins them. Layout from the mockup in our proposal (slide 4):
-filters on the left, article cards in the middle, and on the right "Why these labels?" (the 3 sentiment models,
+filters on the left, article cards in the middle (they scroll; click a card to explain it), and on the right "Why these labels?" (the 3 sentiment models,
 RoBERTa's driving words highlighted in the headline, VADER's word values, each entity with the rule that named it),
 sentiment over time and trending entities. A second tab compares the outlets (sentiment mix, gap from the
-average, most mentioned names). Tala's first demo (`app.py` in the project folder) stays as it is.
+average, most mentioned names). A third tab, "How the labels work" (`app/methods.py`), explains every rule
+behind the labels and why we chose it, with the numbers read from `results/`. Tala's first demo (`app.py` in the project folder) stays as it is.
 Story cards and the per-story comparison come when step 4 exists.
