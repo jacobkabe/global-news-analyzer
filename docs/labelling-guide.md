@@ -1,6 +1,7 @@
 # Labelling guide
 
-For the team, November 2026. Every person gets one Excel file, `labelling_<Name>.xlsx`.
+For the team, November 2026. Every person has one Excel file, `labelling_<Name>.xlsx`, in the shared OneDrive
+folder **TA2 / Semestral project - TA / Labelling**.
 It has a short version of this guide on the first sheet (**READ ME**) and three sheets to fill.
 In total about 60-90 minutes.
 
@@ -10,7 +11,8 @@ In total about 60-90 minutes.
 - **Fill only the yellow columns.** Don't sort, delete or add rows, and don't change the other columns.
 - Use the drop-down lists where there is one.
 - When you are not sure, choose the best answer anyway and write `x` in **unsure** (sheet 1) or a short note.
-- Save the file with the same name and send it back to Jakub.
+- Open **your own** file in the OneDrive folder (Excel or Excel online), fill it, save it there with the same name,
+  and tell Jakub when you are done. Don't open the other people's files before you have finished yours.
 
 Why we do this: the course asks us to compare our models with hand labels. With your labels we can
 (1) show how much people agree (if we don't agree, a model can't be "right" either), (2) get more examples of
@@ -44,6 +46,7 @@ For example, an election win ("Trump-backed John Sununu wins New Hampshire Repub
 decision that helps one side, or a party's plan.
 
 **Tricky cases. Decide like this:**
+
 - **War news is negative, even if one side is winning** ("St Petersburg under attack from Ukrainian drone swarm").
 - **A death is negative, also in an obituary** ("Margaret Hamilton … dies aged 90").
 - **Crime and court news is negative** when the headline is about the crime ("Three men jailed for murdering
@@ -108,6 +111,6 @@ Column **real_entity** is already filled with the name as found.
 ---
 
 ## What happens next
-Jakub saves the returned files in `data/raw/labelling/returned/` and runs `python pipeline\labels.py collect`.
+Jakub runs `python pipeline\labels.py collect --folder <the OneDrive Labelling folder>`.
 This checks every file, computes how much we agree (Cohen's kappa), and writes the labels that `sentiment.py` and
 `ner.py` use for their evaluation.

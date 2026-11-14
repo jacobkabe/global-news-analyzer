@@ -58,9 +58,13 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
   words of each method and measure how much the score moves): masking 0.316 vs deleting 0.299; masking finds the
   more important words in 45% of headlines, deleting in 25% (tie 30%); the top word is a "nonsense" word
   (effect < 0.05) in 3.5% vs 11% of headlines. Caveat: the test hides words with a mask, which favours masking a little.
-  *(sentiment.py, "How explain works")*
+  *(results/sentiment_explain_comparison.csv: `python pipeline\sentiment.py compare-explain`)*
 - **scikit-learn's stop-word list hid important words** ("not", "no", "never", "without", "against", "fire"), which
   appear in 7% of our headlines; we now use our own short filler list. *(sentiment.py FILLER)*
+- **The new filler list shows the words that decide the meaning:** about 5% of headlines now show "not", "no",
+  "never", "without" etc. among their driving words ("Starlink access still not fully restored…" → *not* −0.28),
+  none did before. Side effect: "No" in a name ("No Kings", "No 10") is also shown, as a weak negative word.
+  *(data/raw/outputs/sentiment_explain.csv)*
 - **The driving words explain the score, not the label:** the label is the most likely of three probabilities, so the
   dashboard now shows these probabilities above the words. *(app/streamlit_app.py)*
 

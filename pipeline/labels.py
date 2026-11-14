@@ -2,8 +2,12 @@
 labels.py - hand labelling by the team: make one Excel file per person, then collect the labels.
 
 Commands (from the project folder)
-  python pipeline\\labels.py make       -> data/raw/labelling/labelling_<Name>.xlsx (send these to the team)
-  python pipeline\\labels.py collect    reads the filled files from data/raw/labelling/returned/
+  python pipeline\\labels.py make                         -> data/raw/labelling/labelling_<Name>.xlsx
+  python pipeline\\labels.py make --out "<folder>"        the Excel files go to another folder (shared OneDrive)
+  python pipeline\\labels.py collect                      reads the filled files from data/raw/labelling/returned/
+  python pipeline\\labels.py collect --folder "<folder>"  ... or from another folder (shared OneDrive)
+The key (which headline is shared, random or a positive candidate) always stays in data/raw/labelling/key.csv,
+so the team cannot see it.
 
 Each file has a "READ ME" sheet (short guide; full guide: docs/labelling-guide.md) and three tasks:
   1 Sentiment     70 headlines: 30 that EVERYONE labels (to measure how much we agree)
@@ -82,16 +86,18 @@ READ_ME = [
     "  you may search the web for this sheet.",
     "If it is not a real name at all, write: no",
     "",
-    "When done: save the file (same name) and send it back to Jakub.",
+    "When done: save the file in the OneDrive folder (same name) and tell Jakub.",
 ]
 
 
 # ---- make ---------------------------------------------------------------------------------------------
 def cmd_make(a):
     FOLDER.mkdir(parents=True, exist_ok=True)
-    out = [FOLDER / f"labelling_{name}.xlsx" for name in TEAM]
+    target = Path(a.out) if a.out else FOLDER
+    target.mkdir(parents=True, exist_ok=True)
+    out = [target / f"labelling_{name}.xlsx" for name in TEAM]
     if any(p.exists() for p in out):
-        sys.exit(f"{FOLDER} already has labelling files; delete or rename them first (they may contain labels)")
+        sys.exit(f"{target} already has labelling files; delete or rename them first (they may contain labels)")
 
     articles = pd.read_csv(OUTPUTS / "articles_clean.csv", keep_default_na=False)
     gold = pd.read_csv(GOLD, keep_default_na=False)
@@ -127,8 +133,8 @@ def cmd_make(a):
         print(f"{path.name}: {len(sentiment)} headlines, {type_groups[i]['article_id'].nunique()} entity-type "
               f"headlines, {len(same_groups[i])} same-entity mentions")
     pd.DataFrame(key).to_csv(FOLDER / "key.csv", index=False)
-    print(f"\nsaved to {FOLDER}; send each person their file together with docs/labelling-guide.md")
-    print(f"when they come back: save them in {RETURNED} and run: python pipeline\\labels.py collect")
+    print(f"\nsaved to {target} (key: {FOLDER / 'key.csv'}); give each person their file and docs/labelling-guide.md")
+    print(f'when they are done: python pipeline\\labels.py collect --folder "{target}"')
 
 
 def positive_candidates(news):
@@ -187,9 +193,10 @@ def write_file(path, sentiment, types, same):
 # ---- collect ------------------------------------------------------------------------------------------
 def cmd_collect(a):
     from sklearn.metrics import cohen_kappa_score
-    files = sorted(RETURNED.glob("labelling_*.xlsx"))
+    folder = Path(a.folder) if a.folder else RETURNED
+    files = sorted(folder.glob("labelling_*.xlsx"))
     if not files:
-        sys.exit(f"no files in {RETURNED}; save the filled labelling_<Name>.xlsx files there")
+        sys.exit(f"no labelling_<Name>.xlsx files in {folder}")
     key = pd.read_csv(FOLDER / "key.csv")
     sentiment, types, same, problems = [], [], [], []
     for f in files:
@@ -248,7 +255,11 @@ def cmd_collect(a):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("make", help="make one labelling file per team member").set_defaults(fn=cmd_make)
-    sub.add_parser("collect", help="collect the filled files").set_defaults(fn=cmd_collect)
+    p_make = sub.add_parser("make", help="make one labelling file per team member")
+    p_make.add_argument("--out", help="folder for the Excel files (default: data/raw/labelling)")
+    p_make.set_defaults(fn=cmd_make)
+    p_collect = sub.add_parser("collect", help="collect the filled files")
+    p_collect.add_argument("--folder", help="folder with the filled files (default: data/raw/labelling/returned)")
+    p_collect.set_defaults(fn=cmd_collect)
     args = parser.parse_args()
     args.fn(args)

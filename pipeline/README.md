@@ -72,7 +72,10 @@ corrections did not simply favour the models.
 - RoBERTa's accuracy differs by outlet (Fox News 55%, NYT 84%, BBC 90%, Guardian 58%; 15-38 headlines each),
   so part of an outlet's "more negative" gap can be model error. Before the label review it seemed to call many
   neutral headlines negative; with the corrected labels its errors go both ways (19 vs 14 of 150).
-- Driving words are found by masking one word at a time (deleting it broke sentences; see docs/findings.md).
+- Driving words are found by masking one word at a time. Two approaches compared on the 230 labelled headlines
+  (`python pipeline\sentiment.py compare-explain` -> `results/sentiment_explain_comparison.csv`): masking finds the
+  more important words in 45% of headlines, deleting in 25% (tie 30%); its top word is "nonsense" in 3.5% vs 11%.
+  Our own filler list now shows "not", "no", "never", "without" (about 5% of headlines show one of them).
 - One annotator plus one codebook review; a second team member should label a sample blind.
 - All failures with every model's label and driving words: `failures/sentiment_gold_vs_models.csv`.
 
