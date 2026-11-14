@@ -304,16 +304,16 @@ with tab_articles:
                     st.markdown('<p class="muted" style="margin-top:.6rem">ENTITIES · spaCy transformer</p>'
                                 + "".join(lines), unsafe_allow_html=True)
 
-                st.markdown(f'<p class="muted" style="margin-top:.6rem">TOPIC · from the outlet\'s section: '
-                            f'<b>{esc(str(a.topic))}</b> · STORY · not grouped yet</p>', unsafe_allow_html=True)
-
-                notes = ["RoBERTa uses its own label; VADER and BART use cut-offs tuned on our hand labels.",
-                         "Names are merged by our rules (“Trump” → Donald Trump); rules and limits: "
-                         "tab “How the labels work”."]
+                limits = ["The models read only the headline, not the article.",
+                          "Positive labels are often wrong: about 4 in 10 are really good news "
+                          "(positive words ≠ good news).",
+                          "Driving words show what moved the score; two words that say the same thing both look weak.",
+                          "“Trump” is always Donald Trump, unless the article names another Trump."]
                 if a.roberta_label == "positive":
-                    notes.append("⚠ Positive labels are often wrong: on our hand labels only about 4 in 10 are "
-                                 "really good news (positive words ≠ good news).")
-                st.caption("  \n".join(notes))
+                    limits[1] = "⚠ " + limits[1]
+                st.markdown('<p class="muted" style="margin-top:.8rem">LIMITS</p><ul class="muted" style="margin:0;'
+                            'padding-left:1.1rem">' + "".join(f"<li>{x}</li>" for x in limits) + "</ul>"
+                            '<p class="muted">More: tab “How the labels work”.</p>', unsafe_allow_html=True)
 
         # -- trending entities: the last 7 days of the range vs the 7 days before --
         with st.container(border=True):
