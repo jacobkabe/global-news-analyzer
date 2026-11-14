@@ -74,7 +74,7 @@ corrections did not simply favour the models.
   neutral headlines negative; with the corrected labels its errors go both ways (19 vs 14 of 150).
 - Driving words are found by masking one word at a time. Two approaches compared on the 230 labelled headlines
   (`python pipeline\sentiment.py compare-explain` -> `results/sentiment_explain_comparison.csv`): masking finds the
-  more important words in 45% of headlines, deleting in 25% (tie 30%); its top word is "nonsense" in 3.5% vs 11%.
+  more important words in 44% of headlines, deleting in 25% (tie 31%); its top word is "nonsense" in 3.5% vs 11%.
   Our own filler list now shows "not", "no", "never", "without" (about 5% of headlines show one of them).
 - One annotator plus one codebook review; a second team member should label a sample blind.
 - All failures with every model's label and driving words: `failures/sentiment_gold_vs_models.csv`.

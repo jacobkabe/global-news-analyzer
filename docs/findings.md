@@ -55,8 +55,8 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
 - **Deleting a word to measure its effect can break the sentence:** "US workers facing deadly heat borrow…" without
   "heat" reads "facing deadly borrow…", so "heat" looked positive (+0.33). *(failure example, 12 Nov 2026)*
 - **Masking the word instead works better** (two approaches compared on the 230 labelled headlines: hide the top-2
-  words of each method and measure how much the score moves): masking 0.316 vs deleting 0.299; masking finds the
-  more important words in 45% of headlines, deleting in 25% (tie 30%); the top word is a "nonsense" word
+  words of each method and measure how much the score moves): masking 0.315 vs deleting 0.299; masking finds the
+  more important words in 44% of headlines, deleting in 25% (tie 31%); the top word is a "nonsense" word
   (effect < 0.05) in 3.5% vs 11% of headlines. Caveat: the test hides words with a mask, which favours masking a little.
   *(results/sentiment_explain_comparison.csv: `python pipeline\sentiment.py compare-explain`)*
 - **scikit-learn's stop-word list hid important words** ("not", "no", "never", "without", "against", "fire"), which

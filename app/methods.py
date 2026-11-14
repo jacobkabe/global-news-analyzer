@@ -267,7 +267,7 @@ def show(articles, entities, colours):
 - **Why a mask and not deleting the word:** deleting can break the sentence. "US workers facing deadly heat borrow
   from…" without "heat" reads "facing deadly borrow from…", and "heat" looked positive (+0.33) although it is not.
   With a mask the sentence keeps its shape: *win* +0.36 and *deadly* −0.20 are the words that matter.
-  On our 230 hand-labelled headlines the masked words matter more in 45% of headlines, the deleted words in 25%
+  On our 230 hand-labelled headlines the masked words matter more in 44% of headlines, the deleted words in 25%
   (`docs/findings.md`).
 - If two words say the same thing ("killed in crash"), hiding one changes little, so both look weak.
 - The words explain the **score**, not the label: the label is the most likely of the three probabilities, which
