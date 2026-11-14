@@ -62,6 +62,8 @@ st.markdown(f"""
 [class*="st-key-open_"] {{ position:absolute !important; inset:0; width:auto !important; z-index:1; margin:0 !important; }}
 [class*="st-key-open_"] div, [class*="st-key-open_"] button {{ width:100% !important; height:100% !important; }}
 [class*="st-key-open_"] button {{ opacity:0; cursor:pointer; }}
+/* the "mentioned together with" names wrap onto more lines instead of being cut off */
+.st-key-together_pick div {{ flex-wrap:wrap !important; height:auto !important; overflow:visible !important; }}
 .lead {{ color:#BDB3AF; font-size:.9rem; margin:.25rem 0 .4rem 0; }}
 .chip {{ background:#2A2323; border-radius:999px; padding:2px 10px; font-size:.8rem;
          margin:0 6px 6px 0; display:inline-block; }}
