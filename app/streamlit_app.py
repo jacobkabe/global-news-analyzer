@@ -124,13 +124,13 @@ def probability_bar(probs, label):
     """One bar split into negative / neutral / positive, as wide as RoBERTa's probability for each."""
     parts = []
     for name, p in probs.items():
-        text = f"{p:.0%} {name}" if p >= 0.25 else ""   # too narrow for text: the line below has it
-        border = "outline:2px solid #FFDE59;outline-offset:-2px;" if name == label else ""
-        parts.append(f'<div title="{name} {p:.0%}" style="width:{p * 100:.1f}%;background:{SENTIMENT_COLOURS[name]};'
-                     f'{border}color:#140F0F;font-size:.75rem;font-weight:700;display:flex;align-items:center;'
+        text = f"{p:.0%}" if p >= 0.10 else ""          # only the number; too narrow parts stay empty
+        weight = "700" if name == label else "400"      # the label's part in bold, nothing else stands out
+        parts.append(f'<div title="{name} {p:.0%}" style="width:{p * 100:.1f}%;background:{SENTIMENT_COLOURS[name]}40;'
+                     f'color:#EDE6E3;font-size:.7rem;font-weight:{weight};display:flex;align-items:center;'
                      f'justify-content:center;white-space:nowrap;overflow:hidden">{text}</div>')
-    legend = " · ".join(f"<b>{p:.0%} {n}</b>" if n == label else f"{p:.0%} {n}" for n, p in probs.items())
-    return (f'<div style="display:flex;height:24px;border-radius:6px;overflow:hidden;margin:.2rem 0">'
+    legend = " · ".join(f"<b>{n} {p:.0%}</b>" if n == label else f"{n} {p:.0%}" for n, p in probs.items())
+    return (f'<div style="display:flex;height:16px;border-radius:4px;overflow:hidden;margin:.2rem 0">'
             f'{"".join(parts)}</div><p class="muted">{legend}</p>')
 
 
@@ -276,9 +276,8 @@ with tab_articles:
                 # RoBERTa's three probabilities as one bar: the label is the biggest part
                 if pd.notna(a.roberta_p_neu):
                     probs = {"negative": a.roberta_p_neg, "neutral": a.roberta_p_neu, "positive": a.roberta_p_pos}
-                    st.markdown('<p class="muted">ROBERTA · HOW SURE IS IT?</p>' + probability_bar(probs, a.roberta_label)
-                                + f'<p class="muted">Label = the biggest part · score = positive − negative = '
-                                  f'{a.roberta_score:+.2f}</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="muted">ROBERTA · HOW SURE IS IT?</p>' + probability_bar(probs, a.roberta_label),
+                                unsafe_allow_html=True)
 
                 st.markdown('<p class="muted" style="margin-top:.6rem">3 MODELS COMPARED</p>', unsafe_allow_html=True)
                 rows = ""
