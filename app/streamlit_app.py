@@ -292,8 +292,7 @@ if view == "Articles":
                 limits = ["The models read only the headline, not the article.",
                           "Positive labels are often wrong: about 4 in 10 are really good news "
                           "(positive words ≠ good news).",
-                          "Driving words show what moved the score; two words that say the same thing both look weak.",
-                          "“Trump” is always Donald Trump, unless the article names another Trump."]
+                          "Driving words show what moved the score; two words that say the same thing both look weak."]
                 if a.roberta_label == "positive":
                     limits[1] = "⚠ " + limits[1]
                 st.markdown('<p class="muted" style="margin-top:.8rem">LIMITS</p><ul class="muted" style="margin:0;'
