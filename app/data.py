@@ -34,9 +34,9 @@ ENTITY_TAGS = {"person": "PER", "place": "LOC", "organisation": "ORG", "group": 
 # entities.csv column "how" -> which rule of ner.py gave the final name, in plain words
 HOW_TEXT = {
     "same": "name as found in the text",
-    "alias": "our alias list (pipeline/entity_aliases.csv)",
-    "article": "short name -> full name used in the same article",
-    "corpus": "surname -> the most common full name in all articles",
+    "alias": "our list of name variants",
+    "article": "full name used in the same article",
+    "corpus": "the most common full name in all articles",
 }
 
 
