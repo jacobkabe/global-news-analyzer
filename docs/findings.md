@@ -65,6 +65,8 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
   "never", "without" etc. among their driving words ("Starlink access still not fully restored…" → *not* −0.28),
   none did before. Side effect: "No" in a name ("No Kings", "No 10") is also shown, as a weak negative word.
   *(data/raw/outputs/sentiment_explain.csv)*
+- **Punctuation was shown as a driving word:** in 67 headlines a dash ("–") was among the top words, because hiding
+  it changes RoBERTa's score a little; punctuation is now never shown. *(sentiment.py as_text, app/data.py)*
 - **The driving words explain the score, not the label:** the label is the most likely of three probabilities, so the
   dashboard now shows these probabilities above the words. *(app/streamlit_app.py)*
 
