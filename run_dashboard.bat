@@ -30,6 +30,15 @@ if not exist ".venv-dashboard\Scripts\python.exe" (
         exit /b 1
     )
     ".venv-dashboard\Scripts\python.exe" -m pip install --quiet --disable-pip-version-check -r requirements-dashboard.txt
+    if errorlevel 1 (
+        rmdir /s /q .venv-dashboard
+        echo.
+        echo  The installation failed. If the message above says the file name is too long,
+        echo  move the project to a folder with a shorter path, e.g.  C:\Users\%USERNAME%\gna
+        echo  and double-click run_dashboard.bat again.
+        pause
+        exit /b 1
+    )
 )
 
 echo Starting the dashboard... it opens in your browser. Close this window to stop it.
