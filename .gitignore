@@ -236,3 +236,6 @@ outputs/
 # Excel working files (labels are committed as CSV)
 data/sample/*.xlsx
 ~$*
+
+# small environment made by run_dashboard.bat
+.venv-dashboard/

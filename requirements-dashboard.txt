@@ -1,0 +1,4 @@
+# Only what the dashboard needs (app/). The full pipeline needs requirements.txt (torch, transformers, spaCy...).
+# run_dashboard.bat installs these into .venv-dashboard the first time.
+streamlit==1.67.0
+pandas>=2.2
