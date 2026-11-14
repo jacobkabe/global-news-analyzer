@@ -69,6 +69,8 @@ st.markdown(f"""
          margin:0 6px 6px 0; display:inline-block; }}
 .chip b {{ font-size:.66rem; color:#9AD3C8; margin-right:4px; }}
 .word {{ border-radius:4px; padding:0 3px; }}
+.sec {{ color:#9A8F8B; font-size:.75rem !important; letter-spacing:.4px; border-top:1px solid #2E2727;
+        padding-top:.55rem; margin:.8rem 0 .35rem 0 !important; }}
 .row {{ display:flex; justify-content:space-between; align-items:center; margin:.2rem 0; font-size:.9rem; }}
 .bar {{ background:#2A2323; border-radius:4px; height:8px; width:90px; display:inline-block; margin:0 10px; }}
 .bar span {{ background:{YELLOW}; border-radius:4px; height:8px; display:block; }}
@@ -261,10 +263,10 @@ if view == "Articles":
                 # RoBERTa's three probabilities as one bar: the label is the biggest part
                 if pd.notna(a.roberta_p_neu):
                     probs = {"negative": a.roberta_p_neg, "neutral": a.roberta_p_neu, "positive": a.roberta_p_pos}
-                    st.markdown('<p class="muted">ROBERTA · HOW SURE IS IT?</p>' + probability_bar(probs, a.roberta_label),
+                    st.markdown('<p class="sec">ROBERTA · HOW SURE IS IT?</p>' + probability_bar(probs, a.roberta_label),
                                 unsafe_allow_html=True)
 
-                st.markdown('<p class="muted" style="margin-top:.6rem">3 MODELS COMPARED</p>', unsafe_allow_html=True)
+                st.markdown('<p class="sec">3 MODELS COMPARED</p>', unsafe_allow_html=True)
                 rows = ""
                 for model, (name, kind, _) in data.MODELS.items():
                     label, score = a[f"{model}_label"], a[f"{model}_score"]
@@ -272,21 +274,17 @@ if view == "Articles":
                     rows += f'<div class="row"><span>{name} <span class="muted">· {kind}</span></span>{tag}</div>'
                 st.markdown(rows, unsafe_allow_html=True)
 
-                st.markdown('<p class="muted" style="margin-top:.6rem">DRIVING WORDS · RoBERTa</p>'
+                st.markdown('<p class="sec">DRIVING WORDS · RoBERTa</p>'
                             + word_chips(a.roberta_words), unsafe_allow_html=True)
-                st.markdown('<p class="muted">VADER WORD LIST</p>' + word_chips(a.vader_words), unsafe_allow_html=True)
+                st.markdown('<p class="muted" style="margin-top:.5rem !important">VADER WORD LIST</p>' + word_chips(a.vader_words), unsafe_allow_html=True)
 
                 found = entities[entities["article_id"] == selected]
                 if not found.empty:
                     lines = []
                     for e in found.itertuples():
-                        if e.text != e.entity:      # only a renamed name needs an explanation
-                            lines.append(f'<div class="row"><span class="chip"><b>{e.tag}</b>“{esc(e.text)}” → '
-                                         f'{esc(e.entity)}</span><span class="muted">{data.HOW_TEXT.get(e.how, e.how)}'
-                                         f'</span></div>')
-                        else:
-                            lines.append(f'<span class="chip"><b>{e.tag}</b>{esc(e.entity)}</span>')
-                    st.markdown('<p class="muted" style="margin-top:.6rem">ENTITIES · spaCy transformer</p>'
+                        renamed = f"“{esc(e.text)}” → " if e.text != e.entity else ""   # e.g. "US" → United States
+                        lines.append(f'<span class="chip"><b>{e.tag}</b>{renamed}{esc(e.entity)}</span>')
+                    st.markdown('<p class="sec">ENTITIES · spaCy transformer</p>'
                                 + "".join(lines), unsafe_allow_html=True)
 
                 limits = ["The models read only the headline, not the article.",
@@ -295,7 +293,7 @@ if view == "Articles":
                           "Driving words show what moved the score; two words that say the same thing both look weak."]
                 if a.roberta_label == "positive":
                     limits[1] = "⚠ " + limits[1]
-                st.markdown('<p class="muted" style="margin-top:.8rem">LIMITS</p><ul class="muted" style="margin:0;'
+                st.markdown('<p class="sec">LIMITS</p><ul class="muted" style="margin:0;'
                             'padding-left:1.1rem">' + "".join(f"<li>{x}</li>" for x in limits) + "</ul>"
                             '<p class="muted">More: tab “How the labels work”.</p>', unsafe_allow_html=True)
 

@@ -2,6 +2,7 @@
 entity_view.py - the "People & places" view: how one person, place or organisation is covered.
 
 For the chosen name it shows
+  - one plain sentence that sums up the numbers below it
   - how many articles mention it, and whether their tone is more negative than the average article
   - coverage over time (articles per week, coloured by RoBERTa's label)
   - each outlet: how often it mentions the name (share of its articles) and in which tone
@@ -45,6 +46,45 @@ def open_article(article_id, name):
     st.session_state["focus_from"] = name
 
 
+def articles_text(n):
+    return f"{n:,} article" if n == 1 else f"{n:,} articles"
+
+
+def summary(name, mine, neg, neg_all, now, before, earlier, together):
+    """One plain sentence that says what the numbers below show (built from the numbers, no AI text)."""
+    n = len(mine)
+    outlets = mine["outlet"].value_counts()
+    text = f"<b>{esc(name)}</b> appeared in <b>{articles_text(n)}</b>"
+    if outlets.iloc[0] / n >= 0.6:
+        text += f", mostly in {esc(outlets.index[0])} ({outlets.iloc[0]} of {n})"
+    elif len(outlets) > 1:
+        text += f", spread over {len(outlets)} outlets"
+    text += ". "
+
+    difference = (neg - neg_all) * 100        # percentage points
+    if difference >= 5:
+        text += f"The headlines are <b>more often negative</b> than average ({neg:.0%} vs {neg_all:.0%}). "
+    elif difference <= -5:
+        text += f"The headlines are <b>less often negative</b> than average ({neg:.0%} vs {neg_all:.0%}). "
+    else:
+        text += f"The headlines are about as often negative as the average headline ({neg:.0%}). "
+
+    if now and not earlier:
+        text += f"It is <b>new</b>: first mentioned in the last 7 days ({articles_text(now)}). "
+    elif not now:
+        text += "No articles in the last 7 days. "
+    elif now >= 1.5 * max(before, 1):
+        text += f"Coverage is <b>rising</b>: {articles_text(now)} in the last 7 days, {before} the week before. "
+    elif now <= before / 1.5:
+        text += f"Coverage is <b>falling</b>: {articles_text(now)} in the last 7 days, {before} the week before. "
+    else:
+        text += f"Coverage is steady ({articles_text(now)} in the last 7 days). "
+
+    if len(together):
+        text += f"Most often mentioned together with {esc(together.index[0])}."
+    return text
+
+
 def show(scope, scope_all_dates, entities, entity_types, end):
     """scope: articles after the sidebar filters; scope_all_dates: the same without the date range."""
     in_scope = entities[entities["article_id"].isin(scope["article_id"])]
@@ -70,20 +110,29 @@ def show(scope, scope_all_dates, entities, entity_types, end):
                       f'{len(mine)} articles in {mine["outlet"].nunique()} outlets · '
                       f'{mine["date"].min():%d %b} – {mine["date"].max():%d %b %Y}</p>', unsafe_allow_html=True)
 
-    # ---- key numbers ----
-    k1, k2, k3, k4 = st.columns(4)
-    k1.metric("Articles", f"{len(mine):,}", help="Articles whose headline or summary mentions the name.")
+    # ---- the numbers ----
     neg, neg_all = (analysed["roberta_label"] == "negative").mean(), (everyone["roberta_label"] == "negative").mean()
-    k2.metric("Negative headlines", f"{neg:.0%}", f"{(neg - neg_all) * 100:+.0f} pts vs all articles",
-              delta_color="inverse", help=f"All articles with the same filters: {neg_all:.0%} negative.")
     score, score_all = analysed["roberta_score"].mean(), everyone["roberta_score"].mean()
-    k3.metric("Average tone", f"{score:+.2f}", f"{score - score_all:+.2f} vs all articles",
-              help="RoBERTa's score (positive − negative), from −1 to +1, averaged over the headlines.")
     all_ids = entities.loc[entities["entity"] == name, "article_id"]    # also outside the date range
     dated = scope_all_dates[scope_all_dates["article_id"].isin(all_ids)]
     now = ((dated["date"] > end - timedelta(days=7)) & (dated["date"] <= end)).sum()
     before = ((dated["date"] > end - timedelta(days=14)) & (dated["date"] <= end - timedelta(days=7))).sum()
-    k4.metric("Last 7 days", f"{now}", "new" if before == 0 and now else f"{now - before:+d} vs the 7 days before",
+    earlier = (dated["date"] <= end - timedelta(days=7)).sum()          # anything before the last 7 days
+    together = in_scope[in_scope["article_id"].isin(ids) & (in_scope["entity"] != name)]["entity"].value_counts()
+    together = together[together.index.isin(options)].head(12)
+
+    # ---- in one sentence ----
+    st.markdown(f'<p style="font-size:1.05rem;color:#E6DEDA;margin:.4rem 0 .8rem 0;max-width:62rem">'
+                f'{summary(name, mine, neg, neg_all, now, before, earlier, together)}</p>', unsafe_allow_html=True)
+
+    # ---- key numbers ----
+    k1, k2, k3, k4 = st.columns(4)
+    k1.metric("Articles", f"{len(mine):,}", help="Articles whose headline or summary mentions the name.")
+    k2.metric("Negative headlines", f"{neg:.0%}", f"{(neg - neg_all) * 100:+.0f} pts vs all articles",
+              delta_color="inverse", help=f"All articles with the same filters: {neg_all:.0%} negative.")
+    k3.metric("Average tone", f"{score:+.2f}", f"{score - score_all:+.2f} vs all articles",
+              help="RoBERTa's score (positive − negative), from −1 to +1, averaged over the headlines.")
+    k4.metric("Last 7 days", f"{now}", "new" if now and not earlier else f"{now - before:+d} vs the 7 days before",
               help=f"Articles in the 7 days to {end:%d %b}.")
 
     # ---- coverage over time | outlets ----
@@ -128,8 +177,6 @@ def show(scope, scope_all_dates, entities, entity_types, end):
     left, right = st.columns([1, 1.3], gap="large")
     with left:
         heading("Mentioned together with", "In the same articles · click a name to open its profile")
-        together = in_scope[in_scope["article_id"].isin(ids) & (in_scope["entity"] != name)]["entity"].value_counts()
-        together = together[together.index.isin(options)].head(12)
         if together.empty:
             st.caption("No other name appears often enough.")
         else:
