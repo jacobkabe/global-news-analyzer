@@ -211,7 +211,9 @@ def as_text(effects):
     """[('disaster', -0.42), ...] -> 'disaster:-0.42; ...', strongest first.
     Small effects and filler words ('to', 'is', 'and') are left out: hiding them changes the
     score a little, but they are not a reason a person would accept."""
-    effects = [(w, e) for w, e in effects if w and w.lower() not in FILLER and abs(e) >= MIN_EFFECT]
+    effects = [(w, e) for w, e in effects
+               if any(c.isalnum() for c in w)          # a dash or other punctuation is never a reason
+               and w.lower() not in FILLER and abs(e) >= MIN_EFFECT]
     effects.sort(key=lambda we: -abs(we[1]))
     return "; ".join(f"{w}:{e:+.2f}" for w, e in effects[:TOP_WORDS])
 

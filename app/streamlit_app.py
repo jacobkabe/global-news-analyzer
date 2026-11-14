@@ -97,8 +97,8 @@ with st.sidebar:
                       help="Nothing selected = all topics. The topic comes from the outlet's section.")
     sentiments = st.pills("Sentiment (RoBERTa)", ["positive", "neutral", "negative"], selection_mode="multi",
                           format_func=str.capitalize,
-                          help="Nothing selected = all. Careful with Positive: on our hand labels only about "
-                               "4 in 10 headlines RoBERTa calls positive are really good news.")
+                          help="Nothing selected = all. Used in Articles and Outlets compared. Careful with "
+                               "Positive: on our hand labels only about 4 in 10 are really good news.")
 
     st.markdown("**Sources**")
     outlet_counts = articles["outlet"].value_counts()
@@ -112,7 +112,9 @@ with st.sidebar:
     chosen_entities = st.multiselect(
         "Country, person or org", entity_counts[entity_counts >= 2].index,
         format_func=lambda e: f"{e} ({entity_types[e]}, {entity_counts[e]})",
-        placeholder="e.g. Donald Trump", help="Articles that mention all chosen names.")
+        placeholder="e.g. Donald Trump",
+        help="Articles that mention all chosen names (Articles and Outlets compared). "
+             "For the whole coverage of one name, open People & places.")
 
     first_day, last_day = articles["date"].min(), articles["date"].max()
     dates = st.date_input("Date range", value=(first_day, last_day), min_value=first_day, max_value=last_day)
@@ -121,8 +123,10 @@ with st.sidebar:
 # ---- header ------------------------------------------------------------------------------------------
 title_col, search_col, info_col = st.columns([1.5, 1.6, 1.4], vertical_alignment="center")
 title_col.markdown('<span class="gna-title">GLOBAL NEWS ANALYZER</span>', unsafe_allow_html=True)
-query = search_col.text_input("Search", placeholder="🔍  Search headlines, people, places...",
-                              label_visibility="collapsed", key="query")
+in_articles = st.session_state.get("view", "Articles") == "Articles"
+query = search_col.text_input(
+    "Search", label_visibility="collapsed", key="query", disabled=not in_articles,
+    placeholder="🔍  Search headlines, people, places..." if in_articles else "Search works in the Articles view")
 info = info_col.empty()   # filled in below, when we know how many articles are left
 
 
@@ -158,14 +162,24 @@ if topics:
     scope_all_dates = scope_all_dates[scope_all_dates["topic"].isin(topics)]
 scope = scope_all_dates[(scope_all_dates["date"] >= start) & (scope_all_dates["date"] <= end)]
 
+newest = " · ".join(f"{o}: {d:%d %b}" for o, d in articles.groupby("outlet")["date"].max().items())
 info.markdown(f'<span class="muted">{len(shown):,} articles · {shown["outlet"].nunique()} sources · '
-              f'{start:%d %b} – {end:%d %b %Y}</span> &nbsp; <span class="badge">PIPELINE DATA</span>',
+              f'{start:%d %b} – {end:%d %b %Y}</span> &nbsp; '
+              f'<span class="badge" title="Newest article per outlet: {newest}">DATA TO {last_day:%d %b}</span>',
               unsafe_allow_html=True)
 
 
 # ---- navigation: buttons instead of tabs, so a click elsewhere (a trending name) can switch the view ----
+def keep_view():
+    """A click on the active button would unselect it: keep the last view. Switching views unpins an article."""
+    if st.session_state.get("view") is None:
+        st.session_state["view"] = st.session_state.get("last_view", "Articles")
+    st.session_state["last_view"] = st.session_state["view"]
+    st.session_state.pop("focus", None)
+
+
 st.session_state.setdefault("view", "Articles")
-view = st.segmented_control("View", VIEWS, key="view", label_visibility="collapsed") or "Articles"
+view = st.segmented_control("View", VIEWS, key="view", label_visibility="collapsed", on_change=keep_view) or "Articles"
 
 
 # ---- view 1: articles --------------------------------------------------------------------------------
@@ -184,6 +198,16 @@ if view == "Articles":
             ordered = shown.sort_values("roberta_score", ascending=False)
         else:
             ordered = shown.sort_values("published_at", ascending=False)
+
+        # an article opened with "Why?" in a profile: show only it, with a way back (the side panels stay as they are)
+        focus = st.session_state.get("focus")
+        if focus is not None:
+            ordered = articles[articles["article_id"] == focus]
+            from_name = st.session_state.get("focus_from", "")
+            back_col, all_col = st.columns([1, 1])
+            back_col.button(f"← Back to {from_name}", on_click=entity_view.open_entity, args=(from_name,),
+                            width="stretch")
+            all_col.button("Show all articles", on_click=lambda: st.session_state.pop("focus", None), width="stretch")
 
         # which article is explained on the right: the one clicked, otherwise the first card
         if st.session_state.get("selected") not in set(ordered["article_id"]):

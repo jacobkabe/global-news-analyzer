@@ -19,13 +19,15 @@ import streamlit as st
 from ui import SENTIMENT_COLOURS, YELLOW, esc, heading, highlight, sentiment_tag, word_chips
 
 MIN_ARTICLES = 3        # names with fewer articles in the current filters are not offered
+MIN_OUTLET_ARTICLES = 100   # the "share of the outlet" needs enough articles of that outlet
 TOP_HEADLINES = 3
 
 
 def open_entity(name):
-    """Callback: show the profile of another name (used by the trending list and the 'together with' pills)."""
-    st.session_state["view"] = "People & places"
+    """Callback: show the profile of a name (trending list, 'together with' pills, 'back' from an article)."""
+    st.session_state["view"] = st.session_state["last_view"] = "People & places"
     st.session_state["entity"] = name
+    st.session_state.pop("focus", None)
 
 
 def open_together():
@@ -36,11 +38,11 @@ def open_together():
         open_entity(picked)
 
 
-def open_article(article_id, headline):
-    """Callback: jump to the Articles view with this headline selected, where its 'why' is shown."""
-    st.session_state["view"] = "Articles"
-    st.session_state["selected"] = article_id
-    st.session_state["query"] = headline
+def open_article(article_id, name):
+    """Callback: jump to the Articles view with this article pinned and selected, where its 'why' is shown."""
+    st.session_state["view"] = st.session_state["last_view"] = "Articles"
+    st.session_state["selected"] = st.session_state["focus"] = article_id
+    st.session_state["focus_from"] = name
 
 
 def show(scope, scope_all_dates, entities, entity_types, end):
@@ -56,7 +58,8 @@ def show(scope, scope_all_dates, entities, entity_types, end):
 
     pick_col, info_col = st.columns([1.2, 2], vertical_alignment="bottom")
     pick_col.selectbox("Person, place or organisation", options, key="entity",
-                       format_func=lambda e: f"{e} ({entity_types[e]}, {counts[e]} articles)")
+                       format_func=lambda e: f"{e} ({entity_types[e]}, {counts[e]} articles)",
+                       help="Type to search. Uses the sidebar filters for outlets, topic, 'only news' and dates.")
     name = st.session_state["entity"]
 
     ids = in_scope.loc[in_scope["entity"] == name, "article_id"]
@@ -107,15 +110,19 @@ def show(scope, scope_all_dates, entities, entity_types, end):
                                                negative=("roberta_label", lambda s: (s == "negative").mean()),
                                                tone=("roberta_score", "mean"))
         table["share"] = table["articles"] / per_outlet.reindex(table.index)
+        # with few articles one mention looks like a big share (1 of 31 = 3%): leave it empty
+        table.loc[per_outlet.reindex(table.index) < MIN_OUTLET_ARTICLES, "share"] = None
+        table["negative"] = table["negative"] * 100
         table = table.sort_values("articles", ascending=False)[["articles", "share", "negative", "tone"]]
         st.dataframe(table, column_config={
             "articles": "Articles",
             "share": st.column_config.ProgressColumn("Share of outlet", format="percent", min_value=0,
-                                                     max_value=float(max(table["share"].max(), 0.01))),
-            "negative": st.column_config.NumberColumn("Negative", format="percent"),
+                                                     max_value=float(max(table["share"].max(skipna=True) or 0, 0.01))),
+            "negative": st.column_config.NumberColumn("Negative", format="%.0f%%"),
             "tone": st.column_config.NumberColumn("Tone", format="%+.2f"),
         }, width="stretch")
-        st.caption("Outlets with only a few articles give unreliable numbers; outlets also cover different topics.")
+        st.caption(f"Share is left empty for outlets with fewer than {MIN_OUTLET_ARTICLES} articles in the filters "
+                   "(one mention would look big). Outlets also cover different topics.")
 
     # ---- together with | headlines ----
     left, right = st.columns([1, 1.3], gap="large")
@@ -141,5 +148,5 @@ def show(scope, scope_all_dates, entities, entity_types, end):
                                   f'<span class="muted">{esc(a.outlet)} · {a.date:%d %b}</span><br>'
                                   f'{highlight(a.headline, a.roberta_words)}', unsafe_allow_html=True)
                 button_col.button("Why?", key=f"why_{title}_{a.article_id}", type="tertiary",
-                                  on_click=open_article, args=(a.article_id, a.headline))
+                                  on_click=open_article, args=(a.article_id, name))
         st.caption("⚠ Positive labels are often wrong: about 4 in 10 are really good news.")

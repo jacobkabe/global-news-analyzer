@@ -62,7 +62,8 @@ def parse_words(text):
     words = []
     for part in text.split("; "):
         word, _, effect = part.rpartition(":")
-        words.append((word, float(effect)))
+        if any(c.isalnum() for c in word):        # skip punctuation such as "–" (older explain files have it)
+            words.append((word, float(effect)))
     return words
 
 
