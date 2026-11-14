@@ -9,6 +9,15 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
   rest on very few articles. *(dashboard, "How the labels work")*
 - **Only the Guardian gives full text**, so every model reads the headline (sentiment) or headline + summary
   (entities), which keeps the outlets comparable. *(docs/data-sources.md)*
+- **A CSV opened and saved in Excel is damaged** (Czech settings): Tala's export of The News API (14 Nov) had ';;;'
+  added to each line, 444 of 517 lines packed into one quoted field, and 3 lines split where a summary had a line
+  break. merge_db.py now repairs such files; all 517 articles were recovered. Rule: never open our CSV exports
+  in Excel; share news.db or use merge_db.py. *(src/collect/merge_db.py)*
+- **The News API returns many video pages:** 119 of 172 CBS News and 37 of 54 NBC News articles (10-14 Nov) are
+  videos (NBC's 'Nightly News' covers many events at once). URLs with '/video' now count as media, so 'Only news'
+  hides them; this also moved 25 older RSS/NYT/Guardian video pages from news to media. *(pipeline/clean.py)*
+- **The News API's categories are vague:** 175 of 517 articles are only 'general'; we take the first specific
+  category ('general, politics' -> Politics). *(pipeline/clean.py topic)*
 - **No outlet clearly allows scraping**, so we use APIs and RSS only (headline and summary). *(docs/data-sources.md)*
 
 ## Hand labels

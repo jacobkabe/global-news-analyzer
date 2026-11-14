@@ -19,6 +19,8 @@ After merging, run the pipeline again; every step only does the new articles:
     python pipeline\\ner.py run
     python pipeline\\ner.py normalise
 """
+import csv
+import re
 import shutil
 import sqlite3
 import sys
@@ -32,11 +34,42 @@ from db import DB_PATH, clean_url, get_connection, normalise_date
 COLUMNS = ["source", "url", "published_at", "title", "summary", "text", "section", "collected_at"]
 
 
+def read_excel_damaged_csv(path):
+    """Read a CSV that was opened and saved in Excel with Czech settings. Excel then adds ';;;' to the lines,
+    puts most lines into ONE quoted field, and splits a line where a summary contains a line break.
+    Here every line is unpacked again, the ';' are removed and split lines are joined back together."""
+    rows = list(csv.reader(open(path, encoding="utf-8-sig", newline="")))
+    header = [h.rstrip(";") for h in rows[0]]
+    n = len(header)
+    out, waiting = [], None
+    for r in rows[1:]:
+        if not any(x.strip(" ;") for x in r):
+            continue                                      # an empty line
+        if len(r) == 1 or re.match(r"\d+,[^,]*,https?://", r[0]):
+            # the line (or its start) was put into quotes as one field: read the text once more
+            r = next(csv.reader([",".join(r)]))
+        r = [x.rstrip(";") for x in r]
+        if waiting is not None:                           # second half of a line split by a line break
+            joined = (waiting[-1] + " " + r[0]).replace('""', '"')
+            if joined.count('"') % 2:                     # a quote left over from Excel's quoting
+                joined = joined.rstrip('"')
+            r = waiting[:-1] + [joined] + r[1:]
+            waiting = None
+        if len(r) < n:
+            waiting = r                                   # first half: wait for the rest on the next line
+            continue
+        out.append(r[:n])
+    print(f"repaired an Excel-damaged CSV: {len(out)} articles read")
+    return pd.DataFrame(out, columns=header)
+
+
 def read_other(path):
     if path.suffix == ".db":
         conn = sqlite3.connect(path)
         df = pd.read_sql("SELECT * FROM articles", conn)
         conn.close()
+    elif open(path, encoding="utf-8-sig").readline().rstrip().endswith(";"):
+        df = read_excel_damaged_csv(path)
     else:
         df = pd.read_csv(path, keep_default_na=False, encoding="utf-8-sig")
     for col in COLUMNS:          # an export without the full text has no "text" column

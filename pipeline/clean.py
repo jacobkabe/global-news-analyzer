@@ -40,6 +40,15 @@ OUTLETS = {
     "aljazeera": "Al Jazeera",
     "npr": "NPR",
     "foxnews": "Fox News",
+    # The News API (src/collect/thenewsapi.py): the source is the outlet's domain
+    "abcnews.go.com": "ABC News",
+    "cbsnews.com": "CBS News",
+    "nbcnews.com": "NBC News",
+    "cnbc.com": "CNBC",
+    "time.com": "TIME",
+    "dw.com": "Deutsche Welle",
+    "washingtontimes.com": "The Washington Times",
+    "theconversation.com": "The Conversation",
 }
 
 TOPICS = {
@@ -52,6 +61,8 @@ TOPICS = {
     "science": "Science",
     "health": "Health",
     "environment": "Environment & climate", "climate": "Environment & climate",
+    # The News API's categories
+    "tech": "Technology", "sports": "Sport", "entertainment": "Culture",
 }
 
 # Series labels at the start of a headline -> content type. The label is removed from "headline".
@@ -124,7 +135,7 @@ def content_type_and_headline(title, url):
             kind = label
             headline = headline[match.end():]
             break
-    if MEDIA_SUFFIX.search(headline):
+    if MEDIA_SUFFIX.search(headline) or "/video" in (url or ""):    # NBC, CBS: video pages
         kind = "media"
         headline = MEDIA_SUFFIX.sub("", headline)
     headline = straight_quotes(headline.strip())
@@ -134,10 +145,13 @@ def content_type_and_headline(title, url):
 
 
 def topic(section):
-    """Map an outlet's section to our topic list. The News API gives 'general, politics': use the first."""
+    """Map an outlet's section to our topic list. The News API gives a list such as 'general, politics':
+    use the first category that says something ('general' only if there is nothing else)."""
     if not section:
         return "Other"
-    first = section.split(",")[0].strip()
+    parts = [x.strip() for x in section.split(",") if x.strip()]
+    specific = [x for x in parts if x.lower() != "general"]
+    first = (specific or parts)[0]
     return TOPICS.get(first.lower(), first.capitalize())
 
 

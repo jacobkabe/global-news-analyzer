@@ -58,3 +58,5 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 - Articles collected on another computer: `python src\collect\merge_db.py their_news.db` (or their `news.csv`).
   Always merge INTO the main `data/raw/news.db` (hand labels refer to its article ids); it makes a backup first.
   Then re-run the pipeline steps; each one only does the new articles.
+- Never open or save our CSV exports in Excel (it adds ';;;' and breaks lines). If it happened anyway,
+  `merge_db.py` repairs such a file. New outlets need a readable name in `OUTLETS` in `pipeline/clean.py`.
