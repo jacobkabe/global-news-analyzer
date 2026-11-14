@@ -29,6 +29,7 @@ from ui import (SENTIMENT_COLOURS, YELLOW, entity_chips, esc, heading, highlight
 st.set_page_config(page_title="Global News Analyzer", page_icon="🌍", layout="wide")
 
 CARDS_PER_STEP = 20
+LIST_HEIGHT = 1310   # px: the article list ends about where the right column ("Sentiment over time") ends
 VIEWS = ["Articles", "People & places", "Outlets compared", "How the labels work"]
 
 st.markdown(f"""
@@ -189,11 +190,12 @@ if view == "Articles":
     middle, right = st.columns([2, 1.15], gap="large")
 
     with middle:
-        head_col, sort_col = st.columns([1.1, 1], vertical_alignment="bottom")
+        # the sort order is a small drop-down on the right: an option of the list, not another page switch
+        head_col, sort_col = st.columns([2.2, 1], vertical_alignment="center")
         with head_col:
-            heading("Latest articles", "Stories (articles about the same event grouped) come with pipeline step 4.")
-        sort = sort_col.segmented_control("Sort", ["Newest", "Most negative", "Most positive"],
-                                          default="Newest", label_visibility="collapsed")
+            heading("Latest articles")
+        sort = sort_col.selectbox("Sort", ["Newest", "Most negative", "Most positive"], key="sort",
+                                  format_func=lambda o: f"Sort: {o}", label_visibility="collapsed")
         if sort == "Most negative":
             ordered = shown.sort_values("roberta_score")
         elif sort == "Most positive":
@@ -231,7 +233,7 @@ if view == "Articles":
         # Each card has an invisible button over the whole card (see the CSS "click anywhere on a card"):
         # a click anywhere selects the article. Only the "Open article" link sits above the button.
         how_many = st.session_state.get("how_many", CARDS_PER_STEP)
-        with st.container(height=820, border=False):
+        with st.container(height=LIST_HEIGHT, border=False):
             for a in ordered.head(how_many).itertuples():
                 with st.container(border=True, key=f"card_{a.article_id}"):
                     st.markdown(
