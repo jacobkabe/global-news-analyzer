@@ -120,6 +120,20 @@ def word_chips(words):
     return " ".join(chips) or '<span class="muted">no word changes the score much</span>'
 
 
+def probability_bar(probs, label):
+    """One bar split into negative / neutral / positive, as wide as RoBERTa's probability for each."""
+    parts = []
+    for name, p in probs.items():
+        text = f"{p:.0%} {name}" if p >= 0.25 else ""   # too narrow for text: the line below has it
+        border = "outline:2px solid #FFDE59;outline-offset:-2px;" if name == label else ""
+        parts.append(f'<div title="{name} {p:.0%}" style="width:{p * 100:.1f}%;background:{SENTIMENT_COLOURS[name]};'
+                     f'{border}color:#140F0F;font-size:.75rem;font-weight:700;display:flex;align-items:center;'
+                     f'justify-content:center;white-space:nowrap;overflow:hidden">{text}</div>')
+    legend = " · ".join(f"<b>{p:.0%} {n}</b>" if n == label else f"{p:.0%} {n}" for n, p in probs.items())
+    return (f'<div style="display:flex;height:24px;border-radius:6px;overflow:hidden;margin:.2rem 0">'
+            f'{"".join(parts)}</div><p class="muted">{legend}</p>')
+
+
 def heading(text, note=""):
     st.markdown(f'<p class="gna-h">{text}</p>' + (f'<p class="muted">{note}</p>' if note else ""),
                 unsafe_allow_html=True)
@@ -259,48 +273,68 @@ with tab_articles:
                 st.markdown(f'<p style="font-weight:700">{highlight(a.headline, a.roberta_words)}</p>',
                             unsafe_allow_html=True)
 
-                st.markdown('<p class="muted">SENTIMENT · 3 MODELS COMPARED (HEADLINE ONLY)</p>',
-                            unsafe_allow_html=True)
-                rows = ""
-                for model, (name, kind, rule) in data.MODELS.items():
-                    label, score = a[f"{model}_label"], a[f"{model}_score"]
-                    tag = sentiment_tag(label, score) if pd.notna(score) else '<span class="muted">–</span>'
-                    rows += f'<div class="row"><span>{name} <span class="muted">· {kind}, {rule}</span></span>{tag}</div>'
-                st.markdown(rows, unsafe_allow_html=True)
-
+                # RoBERTa's three probabilities as one bar: the label is the biggest part
                 if pd.notna(a.roberta_p_neu):
                     probs = {"negative": a.roberta_p_neg, "neutral": a.roberta_p_neu, "positive": a.roberta_p_pos}
-                    st.markdown(f'<p class="muted" style="margin-top:.6rem">WHY {a.roberta_label.upper()}? '
-                                "RoBERTa's probabilities: " + " · ".join(
-                                    f'<b>{k} {v:.0%}</b>' if k == a.roberta_label else f'{k} {v:.0%}'
-                                    for k, v in probs.items())
-                                + ". The label is the most likely one.</p>", unsafe_allow_html=True)
-                    if a.roberta_label == "positive":
-                        st.caption("⚠ Positive labels are often wrong: on our hand labels only about 4 in 10 are "
-                                   "really good news (positive words ≠ good news).")
-                st.markdown('<p class="muted">DRIVING WORDS · RoBERTa</p>' + word_chips(a.roberta_words),
-                            unsafe_allow_html=True)
-                st.caption("Each number: how much RoBERTa's score (positive − negative) changes when the word is "
-                           "hidden (replaced by a mask). Words can push a little to both sides and still leave "
-                           "the label neutral.")
-                st.markdown('<p class="muted">VADER word list values</p>' + word_chips(a.vader_words),
-                            unsafe_allow_html=True)
+                    st.markdown('<p class="muted">ROBERTA · HOW SURE IS IT?</p>' + probability_bar(probs, a.roberta_label)
+                                + f'<p class="muted">Label = the biggest part · score = positive − negative = '
+                                  f'{a.roberta_score:+.2f}</p>', unsafe_allow_html=True)
+
+                st.markdown('<p class="muted" style="margin-top:.6rem">3 MODELS COMPARED</p>', unsafe_allow_html=True)
+                rows = ""
+                for model, (name, kind, _) in data.MODELS.items():
+                    label, score = a[f"{model}_label"], a[f"{model}_score"]
+                    tag = sentiment_tag(label, score) if pd.notna(score) else '<span class="muted">–</span>'
+                    rows += f'<div class="row"><span>{name} <span class="muted">· {kind}</span></span>{tag}</div>'
+                st.markdown(rows, unsafe_allow_html=True)
+
+                st.markdown('<p class="muted" style="margin-top:.6rem">DRIVING WORDS · RoBERTa</p>'
+                            + word_chips(a.roberta_words), unsafe_allow_html=True)
+                st.markdown('<p class="muted">VADER WORD LIST</p>' + word_chips(a.vader_words), unsafe_allow_html=True)
 
                 found = entities[entities["article_id"] == selected]
                 if not found.empty:
-                    st.markdown('<p class="muted" style="margin-top:.6rem">ENTITIES · spaCy transformer + our name rules</p>',
-                                unsafe_allow_html=True)
                     lines = []
                     for e in found.itertuples():
-                        renamed = f"“{esc(e.text)}” → " if e.text != e.entity else ""
-                        lines.append(f'<div class="row"><span><span class="chip"><b>{e.tag}</b>{renamed}{esc(e.entity)}</span></span>'
-                                     f'<span class="muted">{data.HOW_TEXT.get(e.how, e.how)}</span></div>')
-                    st.markdown("".join(lines), unsafe_allow_html=True)
+                        if e.text != e.entity:      # only a renamed name needs an explanation
+                            lines.append(f'<div class="row"><span class="chip"><b>{e.tag}</b>“{esc(e.text)}” → '
+                                         f'{esc(e.entity)}</span><span class="muted">{data.HOW_TEXT.get(e.how, e.how)}'
+                                         f'</span></div>')
+                        else:
+                            lines.append(f'<span class="chip"><b>{e.tag}</b>{esc(e.entity)}</span>')
+                    st.markdown('<p class="muted" style="margin-top:.6rem">ENTITIES · spaCy transformer</p>'
+                                + "".join(lines), unsafe_allow_html=True)
 
                 st.markdown(f'<p class="muted" style="margin-top:.6rem">TOPIC · from the outlet\'s section: '
-                            f'<b>{esc(str(a.topic))}</b> (topic model: later)<br>'
-                            f'STORY CLUSTER · not grouped yet (pipeline step 4)</p>', unsafe_allow_html=True)
-                st.caption("All rules and why we chose them: the tab \"How the labels work\".")
+                            f'<b>{esc(str(a.topic))}</b> · STORY · not grouped yet</p>', unsafe_allow_html=True)
+
+                notes = ["RoBERTa uses its own label; VADER and BART use cut-offs tuned on our hand labels.",
+                         "Names are merged by our rules (“Trump” → Donald Trump); rules and limits: "
+                         "tab “How the labels work”."]
+                if a.roberta_label == "positive":
+                    notes.append("⚠ Positive labels are often wrong: on our hand labels only about 4 in 10 are "
+                                 "really good news (positive words ≠ good news).")
+                st.caption("  \n".join(notes))
+
+        # -- trending entities: the last 7 days of the range vs the 7 days before --
+        with st.container(border=True):
+            heading("Trending entities", f"Articles in the 7 days to {end:%d %b} vs the 7 days before")
+            week = base[(base["date"] > end - timedelta(days=7)) & (base["date"] <= end)]
+            before = base[(base["date"] > end - timedelta(days=14)) & (base["date"] <= end - timedelta(days=7))]
+            now_counts = entities[entities["article_id"].isin(week["article_id"])]["entity"].value_counts()
+            old_counts = entities[entities["article_id"].isin(before["article_id"])]["entity"].value_counts()
+            trend = pd.DataFrame({"now": now_counts, "before": old_counts}).fillna(0)
+            trend = trend[trend["now"] >= 3]   # fewer than 3 articles is too little to call a trend
+            trend["growth"] = trend["now"] - trend["before"]
+            trend = trend.sort_values(["growth", "now"], ascending=False).head(6)
+            if trend.empty:
+                st.caption("Not enough articles in this week.")
+            for name, row in trend.iterrows():
+                change = "new" if row.before == 0 else f"{(row.now / row.before - 1) * 100:+.0f}%"
+                width = int(100 * row.now / trend["now"].max())
+                st.markdown(f'<div class="row"><span><span class="chip"><b>{entity_types[name]}</b>{esc(name)}</span></span>'
+                            f'<span><span class="muted">{int(row.now)} art.</span><span class="bar"><span style="width:{width}%"></span></span>'
+                            f'<b style="color:{YELLOW}">{change}</b></span></div>', unsafe_allow_html=True)
 
         # -- sentiment over time --
         with st.container(border=True):
@@ -322,26 +356,6 @@ with tab_articles:
                     tooltip=["date:T", "roberta_label:N", "articles:Q"],
                 ).transform_calculate(order=f"indexof({order}, datum.roberta_label)").properties(height=200)
                 st.altair_chart(chart, width="stretch")
-
-        # -- trending entities: the last 7 days of the range vs the 7 days before --
-        with st.container(border=True):
-            heading("Trending entities", f"Articles in the 7 days to {end:%d %b} vs the 7 days before")
-            week = base[(base["date"] > end - timedelta(days=7)) & (base["date"] <= end)]
-            before = base[(base["date"] > end - timedelta(days=14)) & (base["date"] <= end - timedelta(days=7))]
-            now_counts = entities[entities["article_id"].isin(week["article_id"])]["entity"].value_counts()
-            old_counts = entities[entities["article_id"].isin(before["article_id"])]["entity"].value_counts()
-            trend = pd.DataFrame({"now": now_counts, "before": old_counts}).fillna(0)
-            trend = trend[trend["now"] >= 3]   # fewer than 3 articles is too little to call a trend
-            trend["growth"] = trend["now"] - trend["before"]
-            trend = trend.sort_values(["growth", "now"], ascending=False).head(6)
-            if trend.empty:
-                st.caption("Not enough articles in this week.")
-            for name, row in trend.iterrows():
-                change = "new" if row.before == 0 else f"{(row.now / row.before - 1) * 100:+.0f}%"
-                width = int(100 * row.now / trend["now"].max())
-                st.markdown(f'<div class="row"><span><span class="chip"><b>{entity_types[name]}</b>{esc(name)}</span></span>'
-                            f'<span><span class="muted">{int(row.now)} art.</span><span class="bar"><span style="width:{width}%"></span></span>'
-                            f'<b style="color:{YELLOW}">{change}</b></span></div>', unsafe_allow_html=True)
 
 
 # ---- tab 2: outlets compared -------------------------------------------------------------------------

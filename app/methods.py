@@ -262,6 +262,8 @@ def show(articles, entities, colours):
             "a word that is not in the list counts 0 (e.g. “deadly”)"])
     with st.expander("Details: limits of the driving words"):
         st.markdown("""
+- Each number: how much RoBERTa's score (positive − negative) changes when the word is hidden (replaced by a mask).
+  Words can push a little to both sides and still leave the label neutral.
 - At most 4 words are shown, only words that change the score by at least 0.05, and no filler words
   (*the, of, to…*; "not", "no", "never", "without" are always shown, they often decide the meaning).
 - **Why a mask and not deleting the word:** deleting can break the sentence. "US workers facing deadly heat borrow
