@@ -69,10 +69,10 @@ corrections did not simply favour the models.
   ("Rescuers find two more people alive after flash flood disaster"), and positive words in neutral news
   ("Who's Winning the Race for Congress?").
 - The 80 extra "positive candidate" headlines were picked by the models, not at random (16 were positive).
-- RoBERTa calls many neutral headlines negative, and its accuracy differs by outlet (Fox News 55%, NYT 84%,
-  20-38 headlines each), so part of an outlet's "more negative" gap can be model error.
-- Driving words: deleting a word can break the sentence ("facing deadly borrow from..."), and the filler-word
-  list also hides "not", "no", "never", "without". To improve: mask the word instead of deleting it.
+- RoBERTa's accuracy differs by outlet (Fox News 55%, NYT 84%, BBC 90%, Guardian 58%; 15-38 headlines each),
+  so part of an outlet's "more negative" gap can be model error. Before the label review it seemed to call many
+  neutral headlines negative; with the corrected labels its errors go both ways (19 vs 14 of 150).
+- Driving words are found by masking one word at a time (deleting it broke sentences; see docs/findings.md).
 - One annotator plus one codebook review; a second team member should label a sample blind.
 - All failures with every model's label and driving words: `failures/sentiment_gold_vs_models.csv`.
 

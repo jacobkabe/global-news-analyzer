@@ -5,25 +5,35 @@ Commands
   run        score headlines with the models -> data/raw/outputs/sentiment.csv
   evaluate   compare the models with data/sample/sentiment_gold.csv -> results/, failures/
   explain    "driving words" for each headline -> data/raw/outputs/sentiment_explain.csv
+  compare-explain   two ways to find driving words (delete vs mask a word) -> results/sentiment_explain_comparison.csv
 
 Examples (from the project folder)
   python pipeline\sentiment.py run --gold-only          only the 230 hand-labelled headlines (a few minutes)
   python pipeline\sentiment.py run                      all headlines (BART-MNLI takes the longest)
   python pipeline\sentiment.py run --models vader roberta
   python pipeline\sentiment.py evaluate
-  python pipeline\sentiment.py explain --gold-only      (about 10 minutes for all headlines)
+  python pipeline\sentiment.py explain --gold-only      only the hand-labelled headlines (a few minutes)
+  python pipeline\sentiment.py explain                  all headlines (about 1.5 hours; can be stopped and continued)
 
 How "explain" works (each label is explained by the model that gave it)
-  roberta     occlusion: remove one word, score the headline again; the change is that word's effect.
-              "flood disaster" -> removing "disaster" moves the score from -0.62 to -0.20: disaster -0.42
+  roberta     occlusion with a mask: replace one word with RoBERTa's <mask> token, score the headline again;
+              the change in the score is that word's effect.
+              "flood disaster" -> "flood <mask>" moves the score from -0.62 to -0.20: disaster -0.42
+              We mask instead of deleting the word: deleting can break the sentence ("facing deadly heat borrow"
+              -> "facing deadly borrow"), and then the effect measures the broken sentence, not the word.
+              Compared on our 230 hand-labelled headlines: compare-explain, docs/findings.md.
   vader       the word's value in VADER's word list (VADER also applies rules for "not", "but", CAPS, "!",
               so the words explain most, but not all, of its score)
-  Saved as text, strongest first, e.g.  "disaster:-0.42; rescuers:+0.15". Filler words are not shown.
-  A RoBERTa effect can be above 1: removing one word can flip the score from +0.7 to -0.7 (a change of 1.4).
-  Limit: if two words say the same ("killed in crash"), removing one changes little, so both look weak.
+  Saved as text, strongest first, e.g.  "disaster:-0.42; rescuers:+0.15". Filler words (FILLER) are not shown;
+  "not", "no", "never", "without" are NOT filler: they often decide the meaning.
+  An effect can be above 1: hiding one word can flip the score from +0.7 to -0.7 (a change of 1.4).
+  Limit: if two words say the same ("killed in crash"), hiding one changes little, so both look weak.
+  The words explain the SCORE (positive - negative). The LABEL is the most likely class, so a headline can be
+  "neutral" with a score of -0.10 and words that push a little to either side.
 
-Models (every model gives p_neg, p_neu, p_pos and score = p_pos - p_neg, from -1 to +1)
-  vader       baseline: word list with scores; p_* are VADER's word shares, score is its "compound"
+Models (score = p_pos - p_neg, from -1 to +1, for every model except VADER)
+  vader       baseline: word list with scores; p_* are the shares of negative/neutral/positive words (not
+              probabilities) and the score is VADER's "compound" value
   roberta     cardiffnlp/twitter-roberta-base-sentiment-latest: trained on tweets, has neutral
   bart_mnli   facebook/bart-large-mnli zero-shot: asked our codebook question, "this headline reports
               something bad / something good / neither good nor bad", with no sentiment training
@@ -36,7 +46,9 @@ Two ways to turn a score into a label (both are evaluated)
               The reported "tuned" numbers use 5-fold cross-validation: the cut-offs are always tuned on
               other headlines than the ones they are tested on.
 
-Resumable: run skips (article, model) pairs that are already in sentiment.csv.
+Resumable: run and explain skip articles that are already done, unless the headline has changed
+(clean.py can change a headline when its rules change; the headline is saved next to each result).
+The transformer models are pinned to a fixed version (REVISIONS), so a model update cannot change our results.
 """
 import argparse
 import sys
@@ -56,11 +68,24 @@ FAILURES = ROOT / "failures"
 
 MODELS = ["vader", "roberta", "bart_mnli", "distilbert"]
 LABELS = ["negative", "neutral", "positive"]
-COLS = ["article_id", "model", "p_neg", "p_neu", "p_pos", "score", "label"]
+COLS = ["article_id", "model", "p_neg", "p_neu", "p_pos", "score", "label", "headline"]
+EXPLAIN_COLS = ["article_id", "model", "top_words", "headline"]
 SAVE_EVERY = 256   # rows; the file is saved this often, so a stopped run loses little
 EXPLAIN_MODELS = ["vader", "roberta"]
 MIN_EFFECT = 0.05  # words that change the score by less than this are not shown
 TOP_WORDS = 4
+# Words never shown as driving words: they carry no meaning on their own. Our own short list on purpose:
+# scikit-learn's stop-word list also contains "not", "no", "never", "without", "against", "fire", "serious".
+FILLER = {"a", "an", "the", "of", "to", "in", "on", "at", "for", "with", "by", "from", "as", "into", "about",
+          "is", "are", "was", "were", "be", "been", "has", "have", "had", "and", "or", "it", "its", "this",
+          "that", "these", "those", "his", "her", "their", "our", "s"}
+
+# The exact model versions we used (Hugging Face commit ids), so the results can be reproduced
+REVISIONS = {
+    "cardiffnlp/twitter-roberta-base-sentiment-latest": "3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7",
+    "facebook/bart-large-mnli": "d7645e127eaf1aefc7862fd59a17a5aa8558b8ce",
+    "distilbert/distilbert-base-uncased-finetuned-sst-2-english": "714eb0fa89d2f80546fda750413ed43d93601a13",
+}
 
 ZERO_SHOT_LABELS = {   # our codebook question, as the zero-shot model's choices
     "something bad": "negative",
@@ -89,7 +114,8 @@ def load_model(name):
     from transformers import pipeline
 
     if name == "bart_mnli":
-        clf = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=-1)
+        clf = pipeline("zero-shot-classification", model="facebook/bart-large-mnli",
+                       revision=REVISIONS["facebook/bart-large-mnli"], device=-1)
 
         def bart(texts):
             out = []
@@ -104,7 +130,7 @@ def load_model(name):
         "roberta": "cardiffnlp/twitter-roberta-base-sentiment-latest",
         "distilbert": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
     }[name]
-    clf = pipeline("text-classification", model=model_id, top_k=None, device=-1)
+    clf = pipeline("text-classification", model=model_id, revision=REVISIONS[model_id], top_k=None, device=-1)
 
     def transformer(texts):
         with torch.no_grad():
@@ -123,8 +149,22 @@ def _from_probs(p):
 # ---- run --------------------------------------------------------------------------------------------
 def read_existing():
     if OUTPUT.exists():
-        return pd.read_csv(OUTPUT)
+        return pd.read_csv(OUTPUT, keep_default_na=False)
     return pd.DataFrame(columns=COLS)
+
+
+def still_valid(done, articles):
+    """Keep only results whose headline is still the same as in articles_clean.csv.
+    Results saved before we kept the headline (empty headline) are taken as still valid."""
+    current = articles.set_index("article_id")["headline"]
+    if "headline" not in done.columns:
+        done["headline"] = ""
+    missing = done["headline"] == ""
+    done.loc[missing, "headline"] = done.loc[missing, "article_id"].map(current)
+    same = done["headline"] == done["article_id"].map(current)
+    if (~same).sum():
+        print(f"{(~same).sum()} results are for an old version of the headline: they will be done again")
+    return done[same].reset_index(drop=True)
 
 
 def run(models, gold_only):
@@ -135,7 +175,7 @@ def run(models, gold_only):
         gold_ids = set(pd.read_csv(GOLD)["id"])
         articles = articles[articles["article_id"].isin(gold_ids)]
 
-    done = read_existing()
+    done = still_valid(read_existing(), pd.read_csv(ARTICLES, keep_default_na=False))
     rows = done.to_dict("records")
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 
@@ -149,10 +189,11 @@ def run(models, gold_only):
         start = time.time()
         for i in range(0, len(todo), SAVE_EVERY):
             part = todo.iloc[i:i + SAVE_EVERY]
-            for article_id, (p_neg, p_neu, p_pos, label, score) in zip(part["article_id"], predict(part["headline"])):
+            for article_id, headline, (p_neg, p_neu, p_pos, label, score) in zip(
+                    part["article_id"], part["headline"], predict(part["headline"])):
                 rows.append({"article_id": article_id, "model": name, "p_neg": round(p_neg, 4),
                              "p_neu": round(p_neu, 4), "p_pos": round(p_pos, 4),
-                             "score": round(score, 4), "label": label})
+                             "score": round(score, 4), "label": label, "headline": headline})
             pd.DataFrame(rows, columns=COLS).to_csv(OUTPUT, index=False)
             n = min(i + SAVE_EVERY, len(todo))
             print(f"  {n}/{len(todo)}  ({time.time() - start:.0f} s)")
@@ -168,11 +209,9 @@ def words_of(headline):
 
 def as_text(effects):
     """[('disaster', -0.42), ...] -> 'disaster:-0.42; ...', strongest first.
-    Small effects and filler words ('to', 'is', 'and') are left out: removing them changes the
+    Small effects and filler words ('to', 'is', 'and') are left out: hiding them changes the
     score a little, but they are not a reason a person would accept."""
-    from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-    effects = [(w, e) for w, e in effects
-               if w and w.lower() not in ENGLISH_STOP_WORDS and abs(e) >= MIN_EFFECT]
+    effects = [(w, e) for w, e in effects if w and w.lower() not in FILLER and abs(e) >= MIN_EFFECT]
     effects.sort(key=lambda we: -abs(we[1]))
     return "; ".join(f"{w}:{e:+.2f}" for w, e in effects[:TOP_WORDS])
 
@@ -185,12 +224,12 @@ def explain_vader(headlines):
 
 
 def explain_roberta(headlines):
-    """Occlusion: score the headline once, then once without each word."""
+    """Occlusion with a mask: score the headline once, then once with each word replaced by <mask>."""
     predict = load_model("roberta")
     out = []
     for h in headlines:
         tokens = h.split()
-        variants = [h] + [" ".join(tokens[:i] + tokens[i + 1:]) for i in range(len(tokens))]
+        variants = [h] + [" ".join(tokens[:i] + ["<mask>"] + tokens[i + 1:]) for i in range(len(tokens))]
         scores = [r[4] for r in predict(variants)]
         full = scores[0]
         out.append(as_text([(w, full - s) for w, s in zip(words_of(h), scores[1:])]))
@@ -204,8 +243,13 @@ def explain(gold_only, limit):
     if limit:
         articles = articles.head(limit)
 
-    cols = ["article_id", "model", "top_words"]
-    done = pd.read_csv(EXPLAIN, keep_default_na=False) if EXPLAIN.exists() else pd.DataFrame(columns=cols)
+    done = pd.read_csv(EXPLAIN, keep_default_na=False) if EXPLAIN.exists() else pd.DataFrame(columns=EXPLAIN_COLS)
+    if "headline" not in done.columns:
+        # an explain file from before 14 Nov 2026: RoBERTa words came from deleting words (now: masking)
+        # and the filler list hid "not", "no", "never"; so everything is explained again
+        print("old explain file (deleted words, old filler list): all headlines are explained again")
+        done = pd.DataFrame(columns=EXPLAIN_COLS)
+    done = still_valid(done, pd.read_csv(ARTICLES, keep_default_na=False))
     rows = done.to_dict("records")
 
     for name, explain_fn in [("vader", explain_vader), ("roberta", explain_roberta)]:
@@ -215,12 +259,52 @@ def explain(gold_only, limit):
         start = time.time()
         for i in range(0, len(todo), SAVE_EVERY):
             part = todo.iloc[i:i + SAVE_EVERY]
-            for article_id, words in zip(part["article_id"], explain_fn(part["headline"])):
-                rows.append({"article_id": article_id, "model": name, "top_words": words})
-            pd.DataFrame(rows, columns=cols).to_csv(EXPLAIN, index=False)
+            for article_id, headline, words in zip(part["article_id"], part["headline"], explain_fn(part["headline"])):
+                rows.append({"article_id": article_id, "model": name, "top_words": words, "headline": headline})
+            pd.DataFrame(rows, columns=EXPLAIN_COLS).to_csv(EXPLAIN, index=False)
             print(f"  {min(i + SAVE_EVERY, len(todo))}/{len(todo)}  ({time.time() - start:.0f} s)")
 
     print(f"\nsaved to {EXPLAIN}")
+
+
+def compare_explain():
+    """Two ways to find RoBERTa's driving words, compared on the hand-labelled headlines:
+    'delete' removes one word, 'mask' replaces it with <mask>. For each method take its top-2 words and hide
+    both at once (with <mask>, the same test for both methods); the bigger the change in the score, the more
+    the words really mattered ("comprehensiveness"). Writes results/sentiment_explain_comparison.csv."""
+    gold = pd.read_csv(GOLD, keep_default_na=False)
+    articles = pd.read_csv(ARTICLES, keep_default_na=False).set_index("article_id")
+    predict = load_model("roberta")
+
+    def score(texts):
+        return np.array([r[4] for r in predict(texts)])
+
+    rows = []
+    for article_id in gold["id"]:
+        h = articles.at[article_id, "headline"]
+        tokens, words, full = h.split(), words_of(h), score([h])[0]
+        hide = lambda i, filler: tokens[:i] + filler + tokens[i + 1:]
+        effects = {"delete": full - score([" ".join(hide(i, [])) for i in range(len(tokens))]),
+                   "mask": full - score([" ".join(hide(i, ["<mask>"])) for i in range(len(tokens))])}
+        row = {"article_id": article_id}
+        for method, effect in effects.items():
+            candidates = [i for i in range(len(tokens)) if words[i] and words[i].lower() not in FILLER]
+            top = sorted(candidates, key=lambda i: -abs(effect[i]))[:2]
+            hidden = " ".join("<mask>" if i in top else t for i, t in enumerate(tokens))
+            row[f"{method}_comprehensiveness"] = abs(full - score([hidden])[0])
+            # a "nonsense" top word: hiding it with a mask changes (almost) nothing
+            row[f"{method}_top_word_nonsense"] = bool(top) and abs(effects["mask"][top[0]]) < MIN_EFFECT
+        rows.append(row)
+    r = pd.DataFrame(rows)
+    summary = pd.DataFrame([{
+        "method": m, "n": len(r),
+        "mean_comprehensiveness": round(r[f"{m}_comprehensiveness"].mean(), 3),
+        "share_better_than_other": round((r[f"{m}_comprehensiveness"] >
+                                          r[f"{'mask' if m == 'delete' else 'delete'}_comprehensiveness"] + 1e-9).mean(), 3),
+        "share_top_word_nonsense": round(r[f"{m}_top_word_nonsense"].mean(), 3)} for m in ["delete", "mask"]])
+    RESULTS.mkdir(exist_ok=True)
+    summary.to_csv(RESULTS / "sentiment_explain_comparison.csv", index=False)
+    print(summary.to_string(index=False))
 
 
 # ---- evaluate ---------------------------------------------------------------------------------------
@@ -365,11 +449,14 @@ if __name__ == "__main__":
     p_explain = sub.add_parser("explain", help="driving words for VADER and RoBERTa")
     p_explain.add_argument("--gold-only", action="store_true", help="only the hand-labelled headlines")
     p_explain.add_argument("--limit", type=int, help="only the first N headlines (quick test)")
+    sub.add_parser("compare-explain", help="compare deleting vs masking words (driving words)")
     args = parser.parse_args()
 
     if args.command == "run":
         run(args.models, args.gold_only)
     elif args.command == "explain":
         explain(args.gold_only, args.limit)
+    elif args.command == "compare-explain":
+        compare_explain()
     else:
         evaluate()

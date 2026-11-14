@@ -251,8 +251,8 @@ def show(articles, entities, colours):
     section("Why this label? Driving words")
     w1, w2 = st.columns(2)
     with w1:
-        card("RoBERTa: remove one word, score again", [
-            "“flood disaster” scores −0.62; “flood” alone scores −0.20",
+        card("RoBERTa: hide one word, score again", [
+            "“flood disaster” scores −0.62; “flood &lt;mask&gt;” scores −0.20",
             "so “disaster” = −0.62 − (−0.20) = <b>−0.42</b>: it pushed the headline towards negative",
             "orange = towards negative, blue = towards positive"])
     with w2:
@@ -262,12 +262,16 @@ def show(articles, entities, colours):
             "a word that is not in the list counts 0 (e.g. “deadly”)"])
     with st.expander("Details: limits of the driving words"):
         st.markdown("""
-- At most 4 words are shown, only words that change the score by at least 0.05, and no filler words.
-- **Removing a word can break the sentence.** "US workers facing deadly heat borrow from…" without "heat" reads
-  "facing deadly borrow from…", which RoBERTa finds more negative, so "heat" looks positive (+0.33) although it is not.
-- If two words say the same thing ("killed in crash"), removing one changes little, so both look weak.
-- The words explain the **score**, not the label: a headline can be "Neutral · −0.10" with words that push towards
-  positive, because its neutral probability is still the highest.
+- At most 4 words are shown, only words that change the score by at least 0.05, and no filler words
+  (*the, of, to…*; "not", "no", "never", "without" are always shown, they often decide the meaning).
+- **Why a mask and not deleting the word:** deleting can break the sentence. "US workers facing deadly heat borrow
+  from…" without "heat" reads "facing deadly borrow from…", and "heat" looked positive (+0.33) although it is not.
+  With a mask the sentence keeps its shape: *win* +0.36 and *deadly* −0.20 are the words that matter.
+  On our 230 hand-labelled headlines the masked words matter more in 45% of headlines, the deleted words in 25%
+  (`docs/findings.md`).
+- If two words say the same thing ("killed in crash"), hiding one changes little, so both look weak.
+- The words explain the **score**, not the label: the label is the most likely of the three probabilities, which
+  the "Why these labels?" box shows above the words.
 """)
 
     # ---- entities ----

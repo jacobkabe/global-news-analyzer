@@ -79,6 +79,8 @@ def load_articles():
         articles[f"{model}_score"] = articles["article_id"].map(rows["score"])
         if model == "roberta":
             articles[f"{model}_label"] = articles["article_id"].map(rows["label"])
+            for p in ["p_neg", "p_neu", "p_pos"]:          # its three probabilities, to explain the label
+                articles[f"roberta_{p}"] = articles["article_id"].map(rows[p])
         else:
             low = cutoffs.loc[model, "negative_if_score_at_most"]
             high = cutoffs.loc[model, "positive_if_score_at_least"]
@@ -86,7 +88,7 @@ def load_articles():
                 lambda s: label_from_score(s, low, high) if pd.notna(s) else None)
 
     # driving words: only RoBERTa and VADER have them (see "explain" in sentiment.py)
-    explain = pd.read_csv(OUTPUTS / "sentiment_explain.csv")
+    explain = pd.read_csv(OUTPUTS / "sentiment_explain.csv", keep_default_na=False)
     for model in ["roberta", "vader"]:
         rows = explain[explain["model"] == model].set_index("article_id")
         articles[f"{model}_words"] = articles["article_id"].map(rows["top_words"]).apply(parse_words)

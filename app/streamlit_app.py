@@ -132,7 +132,9 @@ with st.sidebar:
     topics = st.pills("Topic", sorted(articles["topic"].dropna().unique()), selection_mode="multi",
                       help="Nothing selected = all topics. The topic comes from the outlet's section.")
     sentiments = st.pills("Sentiment (RoBERTa)", ["positive", "neutral", "negative"], selection_mode="multi",
-                          format_func=str.capitalize, help="Nothing selected = all.")
+                          format_func=str.capitalize,
+                          help="Nothing selected = all. Careful with Positive: on our hand labels only about "
+                               "4 in 10 headlines RoBERTa calls positive are really good news.")
 
     st.markdown("**Sources**")
     outlet_counts = articles["outlet"].value_counts()
@@ -266,10 +268,21 @@ with tab_articles:
                     rows += f'<div class="row"><span>{name} <span class="muted">· {kind}, {rule}</span></span>{tag}</div>'
                 st.markdown(rows, unsafe_allow_html=True)
 
-                st.markdown('<p class="muted" style="margin-top:.6rem">DRIVING WORDS · RoBERTa (gives the label)</p>'
-                            + word_chips(a.roberta_words), unsafe_allow_html=True)
-                st.caption("Each number: how much RoBERTa's score changes when the word is removed "
-                           "(score = positive − negative, from −1 to +1).")
+                if pd.notna(a.roberta_p_neu):
+                    probs = {"negative": a.roberta_p_neg, "neutral": a.roberta_p_neu, "positive": a.roberta_p_pos}
+                    st.markdown(f'<p class="muted" style="margin-top:.6rem">WHY {a.roberta_label.upper()}? '
+                                "RoBERTa's probabilities: " + " · ".join(
+                                    f'<b>{k} {v:.0%}</b>' if k == a.roberta_label else f'{k} {v:.0%}'
+                                    for k, v in probs.items())
+                                + ". The label is the most likely one.</p>", unsafe_allow_html=True)
+                    if a.roberta_label == "positive":
+                        st.caption("⚠ Positive labels are often wrong: on our hand labels only about 4 in 10 are "
+                                   "really good news (positive words ≠ good news).")
+                st.markdown('<p class="muted">DRIVING WORDS · RoBERTa</p>' + word_chips(a.roberta_words),
+                            unsafe_allow_html=True)
+                st.caption("Each number: how much RoBERTa's score (positive − negative) changes when the word is "
+                           "hidden (replaced by a mask). Words can push a little to both sides and still leave "
+                           "the label neutral.")
                 st.markdown('<p class="muted">VADER word list values</p>' + word_chips(a.vader_words),
                             unsafe_allow_html=True)
 
@@ -368,7 +381,9 @@ with tab_outlets:
     })
     st.caption("Careful: outlets cover different topics, so a gap here can come from the topic mix, not the tone. "
                "The fair comparison (the same story in every outlet) comes with pipeline step 4. "
-               "Outlets with few articles (RSS only started in October) give unreliable numbers.")
+               "Outlets with few articles (RSS only started in October) give unreliable numbers. "
+               "RoBERTa is also more accurate on some outlets than others (on our hand labels: NYT 84%, "
+               "Fox News 55%), so part of a gap can be model error.")
 
     heading("Most mentioned per outlet", "Share of the outlet's articles that mention the name")
     columns = {}
