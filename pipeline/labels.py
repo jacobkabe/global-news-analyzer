@@ -9,7 +9,7 @@ Commands (from the project folder)
 The key (which headline is shared, random or a positive candidate) always stays in data/raw/labelling/key.csv,
 so the team cannot see it.
 
-Each file has a "READ ME" sheet (short guide; full guide: docs/labelling-guide.md) and three tasks:
+Each file has three sheets (the one-page guide for the team: docs/labelling-guide.md):
   1 Sentiment     70 headlines: 30 that EVERYONE labels (to measure how much we agree)
                   + 25 new random headlines + 15 headlines a model called positive (more positive examples).
                   The three kinds are mixed and not marked, so nobody is influenced by where a headline comes from.
@@ -47,47 +47,6 @@ N_RANDOM = 25          # new random headlines per person
 N_CANDIDATES = 15      # new "a model says positive" headlines per person
 SENTIMENT_CHOICES = ["negative", "neutral", "positive"]
 TYPE_CHOICES = ["person", "organisation", "place", "group", "event", "other", "no"]
-
-READ_ME = [
-    "LABELLING GUIDE (short version; the full guide with examples: docs/labelling-guide.md)",
-    "",
-    "Work alone and do not discuss headlines with the others before everyone is done:",
-    "we measure how much we agree, so we need independent answers. About 60-90 minutes in total.",
-    "Fill only the yellow columns. Do not change other columns, do not sort or delete rows.",
-    "",
-    "SHEET 1 - SENTIMENT (column my_label: negative / neutral / positive)",
-    "Ask one question: reading ONLY this headline, does it report something bad, something good, or neither?",
-    "Judge the event, not the style. Do not open the article, do not think about which outlet wrote it.",
-    "NEGATIVE: death, injury, illness, crime, violence, war, attacks, disaster, scandal, crisis, failure, loss;",
-    "  also threats and warnings ('warns', 'risks', 'on alert'), and protests WITH violence (clashes, riots, looting).",
-    "POSITIVE: a win, breakthrough, recovery, rescue, improvement, record achievement, or a light feel-good story.",
-    "NEUTRAL: process news without clear harm or benefit: elections, debates, policy, reports, explainers,",
-    "  announcements, business news; protests WITHOUT violence.",
-    "STANCE TEST: if supporters and opponents of a side would label it differently, it is neutral",
-    "  (an election win, a court decision for one side, a party's plan).",
-    "Tricky cases: war news is negative even if one side is winning; a death is negative, also in an obituary;",
-    "  sports wins are positive; positive WORDS do not make good news ('Who's Winning the Race for Congress?' = neutral).",
-    "Mixed headline? Choose what the headline is mainly about, and write 'x' in 'unsure'.",
-    "",
-    "SHEET 2 - ENTITY TYPES (column my_type, one row per name a model found in the headline)",
-    "person / organisation / place / group / event: the right type of this name (titles and 's are fine:",
-    "  'Pope Leo's' = person). The rows under a headline (headline cell empty) belong to that headline.",
-    "  place = country, city, region, building; group = nationality, religion or political group used as a",
-    "  word ('Russian', 'Republicans', 'Muslim'); organisation = company, agency, party, team, newspaper.",
-    "other = a real name of a type we do not use (a law, a product, a book, a ship...).",
-    "no = not a name, or the wrong piece of text ('Trump Says', 'Saudi Aramco HQ' instead of 'Saudi Aramco').",
-    "missed (first row of each headline): names in the headline that NO row lists, written like",
-    "  Keir Starmer (person); Gaza (place)    - also the correct version of a 'no' row.",
-    "",
-    "SHEET 3 - SAME ENTITY (column real_entity, already filled with the name as found)",
-    "Change it to the full real-world name when needed, so the same thing always has the same text:",
-    "  'Trump' -> Donald Trump, 'US' -> United States, 'the EU' -> European Union, 'Starmer' -> Keir Starmer.",
-    "Use the English Wikipedia name ('Labour Party (UK)'). Use the summary (lead) to see who is meant;",
-    "  you may search the web for this sheet.",
-    "If it is not a real name at all, write: no",
-    "",
-    "When done: save the file in the OneDrive folder (same name) and tell Jakub.",
-]
 
 
 # ---- make ---------------------------------------------------------------------------------------------
@@ -167,8 +126,6 @@ def write_file(path, sentiment, types, same):
               "3 Same entity": (same, {"article_id": 10, "headline": 60, "lead": 70, "start": 6, "mention": 24,
                                        "real_entity": 30}, {}, ["real_entity"])}
     with pd.ExcelWriter(path, engine="openpyxl") as xw:
-        pd.DataFrame({"READ ME": READ_ME}).to_excel(xw, sheet_name="READ ME", index=False)
-        xw.sheets["READ ME"].column_dimensions["A"].width = 120
         for name, (df, widths, dropdowns, to_fill) in sheets.items():
             df.to_excel(xw, sheet_name=name, index=False)
             ws = xw.sheets[name]
