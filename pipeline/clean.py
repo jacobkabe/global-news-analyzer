@@ -135,7 +135,9 @@ def content_type_and_headline(title, url):
             kind = label
             headline = headline[match.end():]
             break
-    if MEDIA_SUFFIX.search(headline) or "/video" in (url or ""):    # NBC, CBS: video pages
+    # video pages are media, except CBS News: its video clips each report one news event (team decision, 14 Nov)
+    is_video = "/video" in (url or "") and "cbsnews.com" not in (url or "")
+    if MEDIA_SUFFIX.search(headline) or is_video:
         kind = "media"
         headline = MEDIA_SUFFIX.sub("", headline)
     headline = straight_quotes(headline.strip())

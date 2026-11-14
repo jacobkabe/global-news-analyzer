@@ -15,7 +15,8 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
   in Excel; share news.db or use merge_db.py. *(src/collect/merge_db.py)*
 - **The News API returns many video pages:** 119 of 172 CBS News and 37 of 54 NBC News articles (10-14 Nov) are
   videos (NBC's 'Nightly News' covers many events at once). URLs with '/video' now count as media, so 'Only news'
-  hides them; this also moved 25 older RSS/NYT/Guardian video pages from news to media. *(pipeline/clean.py)*
+  hides them; this also moved 25 older RSS/NYT/Guardian video pages from news to media. Exception, decided by the
+  team: CBS News videos stay news, because each clip reports one news event. *(pipeline/clean.py)*
 - **The News API's categories are vague:** 175 of 517 articles are only 'general'; we take the first specific
   category ('general, politics' -> Politics). *(pipeline/clean.py topic)*
 - **No outlet clearly allows scraping**, so we use APIs and RSS only (headline and summary). *(docs/data-sources.md)*
