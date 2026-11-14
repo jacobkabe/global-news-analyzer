@@ -1,101 +1,101 @@
 entity,type,articles,articles_exact_name,variants
-Donald Trump,person,1369,67,Trump; Donald Trump
-United States,place,1185,84,US; U.S.; United States; America; U.S.A.
-United Kingdom,place,698,0,UK; Britain; U.K.; Great Britain
-Democrats,group,505,263,Democrats; Democratic; Democrat; democratic
-Republicans,group,495,219,Republican; Republicans; G.O.P.; GOP
-Iran,place,330,330,Iran
-Senate,organisation,250,250,Senate; senate
-Russia,place,241,241,Russia
-Ukraine,place,226,226,Ukraine
+Donald Trump,person,1406,74,Trump; Donald Trump
+United States,place,1234,87,US; U.S.; United States; America; U.S.A.
+United Kingdom,place,709,3,UK; Britain; U.K.; Great Britain; United Kingdom
+Democrats,group,538,280,Democrats; Democratic; Democrat; democratic
+Republicans,group,508,225,Republican; Republicans; G.O.P.; GOP
+Iran,place,337,337,Iran
+Senate,organisation,266,266,Senate; senate
+Russia,place,253,253,Russia
+Ukraine,place,235,235,Ukraine
 Andy Burnham,person,203,94,Burnham; Andy Burnham
-Russian,group,188,188,Russian
+Russian,group,194,194,Russian
+China,place,192,192,China
 Israel,place,184,184,Israel
-California,place,181,181,California
-China,place,173,173,China
-Texas,place,161,161,Texas
+California,place,182,182,California
+Texas,place,166,166,Texas
+White House,organisation,148,148,White House
+Europe,place,145,145,Europe
 France,place,144,144,France
-White House,organisation,141,141,White House
-Europe,place,139,139,Europe
-British,group,139,139,British
-United Nations,organisation,137,20,UN; U.N.; United Nations
-European Union,organisation,135,16,EU; European Union; E.U.
-Israeli,group,134,134,Israeli
-Congress,organisation,111,111,Congress
+British,group,141,141,British
+United Nations,organisation,139,20,UN; U.N.; United Nations
+European Union,organisation,137,17,EU; European Union; E.U.
+Israeli,group,136,136,Israeli
+Congress,organisation,123,123,Congress
+ICE,organisation,111,111,ICE
+Chinese,group,110,110,Chinese
 Labour,organisation,110,108,Labour; Labour party
-ICE,organisation,109,109,ICE
-American,group,103,103,American
+American,group,106,106,American
+London,place,102,102,London
 Houthis,group,101,52,Houthi; Houthis
-London,place,100,100,London
-Canada,place,97,97,Canada
-Volodymyr Zelenskyy,person,97,9,Zelenskyy; Volodymyr Zelensky; Zelensky; Volodymyr Zelenskyy
-Florida,place,92,92,Florida
+Volodymyr Zelenskyy,person,101,13,Zelenskyy; Volodymyr Zelensky; Volodymyr Zelenskyy; Zelensky
+Florida,place,100,100,Florida
+Canada,place,98,98,Canada
+Washington,place,97,97,Washington
+Ukrainian,group,94,94,Ukrainian
+Nvidia,organisation,92,92,Nvidia; NVIDIA
 Reform UK,organisation,92,26,Reform; Reform UK; Reform U.K.
-Chinese,group,91,91,Chinese
-Ukrainian,group,89,89,Ukrainian
+House,organisation,91,91,House
+England,place,88,88,England
 Kyiv,place,88,88,Kyiv
-House,organisation,87,87,House
-Washington,place,87,87,Washington
+New York,place,87,87,New York
 Benjamin Netanyahu,person,87,47,Netanyahu; Benjamin Netanyahu
-England,place,87,87,England
+Americans,group,86,86,Americans
 Michigan,place,85,85,Michigan
+Vladimir Putin,person,83,24,Putin; Vladimir Putin
 French,group,82,82,French
-Americans,group,81,81,Americans
-New York,place,79,79,New York
-Moscow,place,78,78,Moscow
-Vladimir Putin,person,76,21,Putin; Vladimir Putin
+Moscow,place,79,79,Moscow
+Australia,place,76,76,Australia
 OpenAI,organisation,75,75,OpenAI
+Elon Musk,person,74,59,Elon Musk; Musk
+Trump administration,organisation,73,73,Trump administration; Trump Administration
 Supreme Court,organisation,73,73,Supreme Court; supreme court; Supreme court
-Elon Musk,person,72,58,Elon Musk; Musk
-Australia,place,72,72,Australia
-Trump administration,organisation,71,71,Trump administration; Trump Administration
+Jensen Huang,person,72,68,Jensen Huang; Huang
 Yemen,place,71,71,Yemen
-Brazil,place,68,68,Brazil
+European,group,69,69,European
 Guardian,organisation,68,68,Guardian
+Brazil,place,68,68,Brazil
 Saudi Arabia,place,68,68,Saudi Arabia
-European,group,67,67,European
 Saudi,group,67,67,Saudi
-Department of Justice,organisation,65,0,Justice Department; DoJ; Justice department; D.O.J.; justice department
+Department of Justice,organisation,67,1,Justice Department; DoJ; Justice department; D.O.J.; justice department; Department of Justice
+Alaska,place,66,66,Alaska
+Spain,place,64,64,Spain
+India,place,64,64,India
 John Healey,person,63,36,John Healey; Healey
-India,place,63,63,India
-Alaska,place,63,63,Alaska
+Ohio,place,63,63,Ohio
+Pete Hegseth,person,62,35,Hegseth; Pete Hegseth
 Conservatives,group,62,7,Tory; Tories; Conservative; Conservatives
-Ohio,place,62,62,Ohio
-Spain,place,60,60,Spain
-Abdul El-Sayed,person,59,48,Abdul El-Sayed; El-Sayed; Abdul
-Germany,place,58,58,Germany
+Abdul El-Sayed,person,60,49,Abdul El-Sayed; El-Sayed; Abdul
+Germany,place,59,59,Germany
+Gaza,place,58,58,Gaza
 West Bank,place,56,56,West Bank
-Gaza,place,56,56,Gaza
-German,group,54,54,German
+Pentagon,organisation,55,55,Pentagon
+German,group,55,55,German
+Iranian,group,54,54,Iranian
+Australian,group,54,54,Australian
 Nigel Farage,person,53,24,Farage; Nigel Farage
-Pentagon,organisation,53,53,Pentagon
-Australian,group,52,52,Australian
-Pete Hegseth,person,52,28,Hegseth; Pete Hegseth
-Iranian,group,50,50,Iranian
-Tennessee,place,49,49,Tennessee
+Tennessee,place,51,51,Tennessee
+Christa Pike,person,49,49,Christa Pike; Pike
 Lindsay Clancy,person,49,44,Lindsay Clancy; Clancy
-Christa Pike,person,48,48,Christa Pike; Pike
+Anthropic,organisation,48,48,Anthropic
 Middle East,place,47,47,Middle East
-Palestinian,group,46,46,Palestinian
+Kansas,place,46,46,Kansas
 Nepal,place,46,46,Nepal
-Anthropic,organisation,46,46,Anthropic
+Palestinian,group,46,46,Palestinian
 Maine,place,44,44,Maine
-Kansas,place,43,43,Kansas
-Jeffrey Epstein,person,43,17,Epstein; Jeffrey Epstein
+FBI,organisation,44,44,FBI; F.B.I.
+JD Vance,person,44,32,JD Vance; Vance
+Japan,place,43,43,Japan
+New York Times,organisation,43,43,New York Times
 Palestinians,group,43,43,Palestinians
-F.B.I.,organisation,42,42,F.B.I.; FBI
+Jeffrey Epstein,person,43,17,Epstein; Jeffrey Epstein
 Georgia,place,42,42,Georgia
-New York Times,organisation,42,42,New York Times
-JD Vance,person,41,30,JD Vance; Vance
-Japan,place,41,41,Japan
-Nvidia,organisation,39,39,Nvidia
-Ken Paxton,person,39,33,Ken Paxton; Paxton
+Los Angeles,place,41,41,Los Angeles
+Ken Paxton,person,40,34,Ken Paxton; Paxton
+Mississippi,place,40,40,Mississippi
 Meta,organisation,38,38,Meta
+Treasury,organisation,38,38,Treasury; treasury
+Canadian,group,38,38,Canadian
+El Niño,event,38,38,El Niño
+Fed,organisation,37,37,Fed
 Google,organisation,37,37,Google
-Canadian,group,36,36,Canadian
-El Niño,event,36,36,El Niño
-Fed,organisation,36,36,Fed
-CNN,organisation,36,36,CNN
-Beijing,place,35,35,Beijing
-Iowa,place,35,35,Iowa
-Xi Jinping,person,35,35,Xi Jinping; Xi
