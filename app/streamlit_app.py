@@ -7,13 +7,13 @@ Run from the project folder:
 Layout follows the mockup in our project proposal (slide 4):
   left    filters (topic, sentiment, outlets, people/places, dates)
   middle  article cards (stories come later, when pipeline step 4 groups articles into stories)
-  right   "Why these labels?" for the selected article, sentiment over time, trending entities
-A second tab compares the outlets; a third explains every rule behind the labels (methods.py).
+  right   "Why these labels?" for the selected article, trending entities, sentiment over time
+Views (buttons at the top): Articles · People & places (one name's coverage, entity_view.py) ·
+Outlets compared · How the labels work (methods.py). Shared colours and HTML helpers: ui.py.
 
 The first version (app.py in the project folder, by Tala) stays as it is; ideas taken from it:
 the outlet filter, the keyword search and the charts of sentiment and articles over time.
 """
-import html
 from datetime import timedelta
 
 import altair as alt
@@ -21,14 +21,15 @@ import pandas as pd
 import streamlit as st
 
 import data
+import entity_view
 import methods
+from ui import (SENTIMENT_COLOURS, YELLOW, entity_chips, esc, heading, highlight, probability_bar,
+                sentiment_tag, word_chips)
 
 st.set_page_config(page_title="Global News Analyzer", page_icon="🌍", layout="wide")
 
-# Colours of the mockup: yellow accent, blue = positive, grey = neutral, orange = negative
-YELLOW = "#FFDE59"
-SENTIMENT_COLOURS = {"positive": "#6B9BFF", "neutral": "#8A8080", "negative": "#FF8A3D"}
 CARDS_PER_STEP = 20
+VIEWS = ["Articles", "People & places", "Outlets compared", "How the labels work"]
 
 st.markdown(f"""
 <style>
@@ -55,6 +56,12 @@ st.markdown(f"""
 [class*="st-key-pick_"] {{ position:absolute !important; inset:0; width:auto !important; z-index:1; margin:0 !important; }}
 [class*="st-key-pick_"] div, [class*="st-key-pick_"] button {{ width:100% !important; height:100% !important; }}
 [class*="st-key-pick_"] button {{ opacity:0; cursor:pointer; }}
+/* the same for the rows of the trending list: a click opens the name's profile */
+[class*="st-key-trend_"] {{ position:relative; cursor:pointer; border-radius:6px; }}
+[class*="st-key-trend_"]:hover {{ background:#2A2323; }}
+[class*="st-key-open_"] {{ position:absolute !important; inset:0; width:auto !important; z-index:1; margin:0 !important; }}
+[class*="st-key-open_"] div, [class*="st-key-open_"] button {{ width:100% !important; height:100% !important; }}
+[class*="st-key-open_"] button {{ opacity:0; cursor:pointer; }}
 .lead {{ color:#BDB3AF; font-size:.9rem; margin:.25rem 0 .4rem 0; }}
 .chip {{ background:#2A2323; border-radius:999px; padding:2px 10px; font-size:.8rem;
          margin:0 6px 6px 0; display:inline-block; }}
@@ -80,65 +87,6 @@ if missing:
     st.stop()
 
 articles, entities = load()
-esc = html.escape   # every text from the outlets goes through this before it is put into HTML
-
-
-# ---- small helpers that build HTML ---------------------------------------------------------------------
-def sentiment_tag(label, score):
-    if label == "not analysed":
-        return '<span class="tag tag-not">Not analysed</span>'
-    return f'<span class="tag tag-{label}">{label.capitalize()} · {score:+.2f}</span>'
-
-
-def entity_chips(article_entities, limit=6):
-    chips = [f'<span class="chip"><b>{row.tag}</b>{esc(row.entity)}</span>'
-             for row in article_entities.head(limit).itertuples()]
-    return "".join(chips)
-
-
-def highlight(headline, words):
-    """Colour the driving words in the headline: orange pulls towards negative, blue towards positive."""
-    effects = dict(words)
-    out = []
-    for token in headline.split():
-        word = token.strip(".,:;!?'\"()[]")   # the same rule as words_of() in pipeline/sentiment.py
-        if word in effects:
-            effect = effects.pop(word)          # highlight only the first time the word appears
-            colour = SENTIMENT_COLOURS["negative"] if effect < 0 else SENTIMENT_COLOURS["positive"]
-            strength = min(0.25 + abs(effect), 0.9)
-            out.append(f'<span class="word" style="background:{colour}{int(strength * 255):02x}">{esc(token)}</span>')
-        else:
-            out.append(esc(token))
-    return " ".join(out)
-
-
-def word_chips(words):
-    chips = []
-    for word, effect in words:
-        label = "negative" if effect < 0 else "positive"
-        chips.append(f'<span class="tag tag-{label}">{esc(word)} {effect:+.2f}</span>')
-    return " ".join(chips) or '<span class="muted">no word changes the score much</span>'
-
-
-def probability_bar(probs, label):
-    """One bar split into negative / neutral / positive, as wide as RoBERTa's probability for each."""
-    parts = []
-    for name, p in probs.items():
-        text = f"{p:.0%}" if p >= 0.10 else ""          # only the number; too narrow parts stay empty
-        weight = "700" if name == label else "400"      # the label's part in bold, nothing else stands out
-        parts.append(f'<div title="{name} {p:.0%}" style="width:{p * 100:.1f}%;background:{SENTIMENT_COLOURS[name]}40;'
-                     f'color:#EDE6E3;font-size:.7rem;font-weight:{weight};display:flex;align-items:center;'
-                     f'justify-content:center;white-space:nowrap;overflow:hidden">{text}</div>')
-    legend = " · ".join(f"<b>{n} {p:.0%}</b>" if n == label else f"{n} {p:.0%}" for n, p in probs.items())
-    return (f'<div style="display:flex;height:16px;border-radius:4px;overflow:hidden;margin:.2rem 0">'
-            f'{"".join(parts)}</div><p class="muted">{legend}</p>')
-
-
-def heading(text, note=""):
-    st.markdown(f'<p class="gna-h">{text}</p>' + (f'<p class="muted">{note}</p>' if note else ""),
-                unsafe_allow_html=True)
-
-
 # ---- filters (left sidebar) --------------------------------------------------------------------------
 with st.sidebar:
     heading("Filters")
@@ -172,7 +120,7 @@ with st.sidebar:
 title_col, search_col, info_col = st.columns([1.5, 1.6, 1.4], vertical_alignment="center")
 title_col.markdown('<span class="gna-title">GLOBAL NEWS ANALYZER</span>', unsafe_allow_html=True)
 query = search_col.text_input("Search", placeholder="🔍  Search headlines, people, places...",
-                              label_visibility="collapsed")
+                              label_visibility="collapsed", key="query")
 info = info_col.empty()   # filled in below, when we know how many articles are left
 
 
@@ -200,15 +148,26 @@ else:                       # while the user is still picking the second date
     start, end = dates[0], last_day
 shown = base[(base["date"] >= start) & (base["date"] <= end)]
 
+# the People & places view measures the tone itself, so it ignores the sentiment, name and search filters
+scope_all_dates = articles[articles["outlet"].isin(outlets)]
+if only_news:
+    scope_all_dates = scope_all_dates[scope_all_dates["content_type"] == "news"]
+if topics:
+    scope_all_dates = scope_all_dates[scope_all_dates["topic"].isin(topics)]
+scope = scope_all_dates[(scope_all_dates["date"] >= start) & (scope_all_dates["date"] <= end)]
+
 info.markdown(f'<span class="muted">{len(shown):,} articles · {shown["outlet"].nunique()} sources · '
               f'{start:%d %b} – {end:%d %b %Y}</span> &nbsp; <span class="badge">PIPELINE DATA</span>',
               unsafe_allow_html=True)
 
 
-# ---- tab 1: articles ---------------------------------------------------------------------------------
-tab_articles, tab_outlets, tab_methods = st.tabs(["Articles", "Outlets compared", "How the labels work"])
+# ---- navigation: buttons instead of tabs, so a click elsewhere (a trending name) can switch the view ----
+st.session_state.setdefault("view", "Articles")
+view = st.segmented_control("View", VIEWS, key="view", label_visibility="collapsed") or "Articles"
 
-with tab_articles:
+
+# ---- view 1: articles --------------------------------------------------------------------------------
+if view == "Articles":
     middle, right = st.columns([2, 1.15], gap="large")
 
     with middle:
@@ -328,12 +287,16 @@ with tab_articles:
             trend = trend.sort_values(["growth", "now"], ascending=False).head(6)
             if trend.empty:
                 st.caption("Not enough articles in this week.")
-            for name, row in trend.iterrows():
+            for i, (name, row) in enumerate(trend.iterrows()):
                 change = "new" if row.before == 0 else f"{(row.now / row.before - 1) * 100:+.0f}%"
                 width = int(100 * row.now / trend["now"].max())
-                st.markdown(f'<div class="row"><span><span class="chip"><b>{entity_types[name]}</b>{esc(name)}</span></span>'
-                            f'<span><span class="muted">{int(row.now)} art.</span><span class="bar"><span style="width:{width}%"></span></span>'
-                            f'<b style="color:{YELLOW}">{change}</b></span></div>', unsafe_allow_html=True)
+                with st.container(key=f"trend_{i}"):     # a click anywhere on the row opens the profile
+                    st.markdown(f'<div class="row"><span><span class="chip"><b>{entity_types[name]}</b>{esc(name)}</span></span>'
+                                f'<span><span class="muted">{int(row.now)} art.</span><span class="bar"><span style="width:{width}%"></span></span>'
+                                f'<b style="color:{YELLOW}">{change}</b></span></div>', unsafe_allow_html=True)
+                    st.button("Open profile", key=f"open_{i}", on_click=entity_view.open_entity, args=(name,))
+            if not trend.empty:
+                st.caption("Click a name to see its whole coverage (People & places).")
 
         # -- sentiment over time --
         with st.container(border=True):
@@ -357,13 +320,18 @@ with tab_articles:
                 st.altair_chart(chart, width="stretch")
 
 
-# ---- tab 2: outlets compared -------------------------------------------------------------------------
-# ---- tab 3: how the labels work (written before tab 2, because tab 2 can stop the script) ---------------
-with tab_methods:
+# ---- view 2: people & places --------------------------------------------------------------------------
+elif view == "People & places":
+    entity_view.show(scope, scope_all_dates, entities, entity_types, end)
+
+
+# ---- view 4: how the labels work ----------------------------------------------------------------------
+elif view == "How the labels work":
     methods.show(articles, entities, SENTIMENT_COLOURS)
 
 
-with tab_outlets:
+# ---- view 3: outlets compared -------------------------------------------------------------------------
+elif view == "Outlets compared":
     analysed = shown[shown["roberta_label"] != "not analysed"]
     if analysed.empty:
         st.info("No articles match the filters.")
