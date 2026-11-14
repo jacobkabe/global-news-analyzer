@@ -109,6 +109,10 @@ Details of the rules and commands: the top of `ner.py`. The transformer model ne
 - Adjectives and countries stay separate on purpose: "Russian" (group) is not "Russia" (place).
 
 ## 5. Dashboard (`app/streamlit_app.py`)
+**To only look at it (teammates):** put the 4 data files from OneDrive (`Semestral project - TA/dashboard-data`)
+into `dataaw\outputs\` and double-click **`run_dashboard.bat`**. The first time it installs only streamlit and
+pandas (`requirements-dashboard.txt`, about a minute) into `.venv-dashboard`; it then opens the browser.
+
 `streamlit run app\streamlit_app.py` (opens in the browser; only this computer can see it).
 Reads the outputs of steps 1-3; `app/data.py` loads and joins them. Layout from the mockup in our proposal (slide 4):
 filters on the left, article cards in the middle (they scroll; click a card to explain it), and on the right "Why these labels?" (the 3 sentiment models,

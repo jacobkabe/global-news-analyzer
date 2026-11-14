@@ -41,6 +41,10 @@ if not exist ".venv-dashboard\Scripts\python.exe" (
     )
 )
 
-echo Starting the dashboard... it opens in your browser. Close this window to stop it.
-".venv-dashboard\Scripts\python.exe" -m streamlit run app\streamlit_app.py --browser.gatherUsageStats false
+echo Starting the dashboard... it opens in your browser in a few seconds: http://localhost:8501
+echo Close this window to stop the dashboard.
+rem headless: Streamlit would otherwise ask for an e-mail address on its first start and wait;
+rem so the browser is opened here, 5 seconds later
+start "" /min cmd /c "timeout /t 5 /nobreak >nul & start http://localhost:8501"
+".venv-dashboard\Scripts\python.exe" -m streamlit run app\streamlit_app.py --server.headless true --server.port 8501 --browser.gatherUsageStats false
 pause
