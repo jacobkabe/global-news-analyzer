@@ -24,8 +24,8 @@ Israeli,group,144,144,Israeli
 Nvidia,organisation,143,143,Nvidia; NVIDIA
 European Union,organisation,137,17,EU; European Union; E.U.
 Chinese,group,133,133,Chinese
-House,organisation,119,119,House
 ICE,organisation,119,119,ICE
+House,organisation,119,119,House
 American,group,118,118,American
 Washington,place,116,116,Washington
 Jensen Huang,person,114,107,Jensen Huang; Huang
@@ -40,16 +40,16 @@ Ukrainian,group,96,96,Ukrainian
 Benjamin Netanyahu,person,94,53,Netanyahu; Benjamin Netanyahu
 New York,place,92,92,New York
 Reform UK,organisation,92,26,Reform; Reform UK; Reform U.K.
-Michigan,place,89,89,Michigan
 Kyiv,place,89,89,Kyiv
+Michigan,place,89,89,Michigan
 England,place,88,88,England
 French,group,86,86,French
 Vladimir Putin,person,86,25,Putin; Vladimir Putin
 Supreme Court,organisation,83,83,Supreme Court; supreme court; Supreme court
-Trump administration,organisation,82,82,Trump administration; Trump Administration
 Moscow,place,82,82,Moscow
-Elon Musk,person,79,64,Elon Musk; Musk
+Trump administration,organisation,82,82,Trump administration; Trump Administration
 OpenAI,organisation,79,79,OpenAI
+Elon Musk,person,79,64,Elon Musk; Musk
 Australia,place,77,77,Australia
 European,group,76,76,European
 Alaska,place,75,75,Alaska
@@ -63,15 +63,15 @@ Brazil,place,69,69,Brazil
 Guardian,organisation,69,69,Guardian
 India,place,67,67,India
 Spain,place,66,66,Spain
-John Healey,person,63,36,John Healey; Healey
 Abdul El-Sayed,person,63,52,Abdul El-Sayed; El-Sayed; Abdul
+John Healey,person,63,36,John Healey; Healey
 Conservatives,group,62,7,Tory; Tories; Conservative; Conservatives
 Mississippi,place,62,62,Mississippi
-Germany,place,61,61,Germany
 Gaza,place,61,61,Gaza
+Germany,place,61,61,Germany
 Pentagon,organisation,58,58,Pentagon
-German,group,58,58,German
 Iranian,group,58,58,Iranian
+German,group,58,58,German
 West Bank,place,56,56,West Bank
 Anthropic,organisation,55,55,Anthropic
 Australian,group,54,54,Australian
@@ -82,20 +82,20 @@ Tennessee,place,51,51,Tennessee
 Lindsay Clancy,person,50,45,Lindsay Clancy; Clancy
 Christa Pike,person,49,49,Christa Pike; Pike
 New York Times,organisation,49,49,New York Times
-JD Vance,person,48,34,JD Vance; Vance
 Maine,place,48,48,Maine
-Middle East,place,47,47,Middle East
-Palestinian,group,47,47,Palestinian
+JD Vance,person,48,34,JD Vance; Vance
 Japan,place,47,47,Japan
-Nepal,place,46,46,Nepal
+Palestinian,group,47,47,Palestinian
+Middle East,place,47,47,Middle East
 F.B.I.,organisation,46,46,F.B.I.; FBI
+Nepal,place,46,46,Nepal
 Jeffrey Epstein,person,45,18,Epstein; Jeffrey Epstein
 Los Angeles,place,45,45,Los Angeles
 Black,group,44,44,Black
-Palestinians,group,43,43,Palestinians
-Ken Paxton,person,43,37,Ken Paxton; Paxton
 Fed,organisation,43,43,Fed
+Ken Paxton,person,43,37,Ken Paxton; Paxton
+Palestinians,group,43,43,Palestinians
+El Niño,event,41,41,El Niño
 Google,organisation,41,41,Google
 Treasury,organisation,41,41,Treasury; treasury
-El Niño,event,41,41,El Niño
-Iowa,place,40,40,Iowa
+Marco Rubio,person,40,22,Rubio; Marco Rubio
