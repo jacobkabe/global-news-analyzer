@@ -28,3 +28,22 @@ only URL, title, summary and date. Full text is downloaded only if the teacher a
 
 The Guardian (Open Platform) and the NYT (Article Search API) are accessed through their official APIs
 with our own API keys, so they do not need scraping. Check their API terms before publishing anything.
+
+### The News API (`thenewsapi.com`)
+
+Checked on 2026-11-07, updated 2026-11-12. Collector: `src/collect/thenewsapi.py` (key `THENEWSAPI_API_KEY` in `.env`).
+
+- **What we get:** title, description, a ~60-character snippet, URL, date, categories, and the outlet as a
+  domain (`source`, e.g. `cbsnews.com`). No full text. We save the domain in our `source` column.
+- **Which outlets:** the collector asks for 8 outlets one by one with the `domains=` filter:
+  `abcnews.go.com`, `cbsnews.com`, `nbcnews.com`, `cnbc.com`, `time.com`, `dw.com`, `washingtontimes.com`,
+  `theconversation.com`. Older rows may still have other domains (`cnn.com`, `cbc.ca`) or `thenewsapi`.
+- **Free plan:** 100 requests a day, 3 articles per request. The collector uses at most 80 requests per run
+  (15 pages per outlet, so up to 45 articles per outlet) and stops when the API answers "limit reached" (HTTP 429).
+  Outlets are asked in a fixed order, so on a day with a second run the last outlets in the list may get nothing.
+- **Terms:** the Terms of Service (`thenewsapi.com/tos`, last updated 2021-07-08) are written for the website,
+  not the API: "granted a limited license to access and use the Site ... solely for your personal,
+  non-commercial use". They say nothing about storing API results, research use or attribution.
+  **Unclear**, so ask the teacher. The articles still belong to the original outlets, so their terms
+  in the table above apply too (CBS News and Deutsche Welle forbid scraping their websites; we only get
+  title and description through the API, not their pages).
