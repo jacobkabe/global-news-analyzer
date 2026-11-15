@@ -131,6 +131,11 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
   *(dashboard, Outlets compared)*
 - **The same day is not the same story, and outlets cover different topics** (CNBC is mostly business), so a difference
   can come from the topic mix and not from the tone. RoBERTa is also more accurate on some outlets than others.
+- **For the NYT the gap is not the topic mix:** on the same days and within the same topic, the NYT is less often
+  negative in 5 of 6 topics with 50+ articles each (US 29% vs 42%, World 38% vs 48%, Business 22% vs 38%,
+  Technology 21% vs 35%, Environment 34% vs 38%; Science equal at 21%). Weighted to the NYT's topic mix, the Guardian
+  is still 42% negative vs the NYT's 30%. Part of it can still be model error: RoBERTa is more accurate on NYT headlines
+  (84%) than on Guardian ones (58%) in our hand labels. *(15 Nov 2026, articles_clean.csv + sentiment.csv)*
 
 ## Not built: story clustering (future work)
 - **Planned:** group the articles about the same event into "stories" and compare each outlet with the story average
