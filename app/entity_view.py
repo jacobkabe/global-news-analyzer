@@ -91,11 +91,11 @@ def summary(name, mine, neg, neg_all, now, before, earlier, together):
 
     difference = (neg - neg_all) * 100        # percentage points
     if difference >= 5:
-        text += f"The headlines are <b>more often negative</b> than average ({neg:.0%} vs {neg_all:.0%}). "
+        text += f"<b>More of its headlines are negative</b> than on average ({neg:.0%} vs {neg_all:.0%}). "
     elif difference <= -5:
-        text += f"The headlines are <b>less often negative</b> than average ({neg:.0%} vs {neg_all:.0%}). "
+        text += f"<b>Fewer of its headlines are negative</b> than on average ({neg:.0%} vs {neg_all:.0%}). "
     else:
-        text += f"The headlines are about as often negative as the average headline ({neg:.0%}). "
+        text += f"About as many of its headlines are negative as on average ({neg:.0%}). "
 
     if now and not earlier:
         text += f"It is <b>new</b>: first mentioned in the last 7 days ({articles_text(now)}). "

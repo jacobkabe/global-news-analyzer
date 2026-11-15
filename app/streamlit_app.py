@@ -414,8 +414,8 @@ elif view == "Outlets compared":
                 # 95% interval of the difference of two shares: if it includes 0, the difference may be chance
                 margin = 1.96 * np.sqrt(neg * (1 - neg) / len(mine) + neg_ref * (1 - neg_ref) / len(same_days))
                 row.update(negative=neg, guardian=neg_ref, verdict=(
-                    "more often negative" if neg - neg_ref > margin else
-                    "less often negative" if neg_ref - neg > margin else "no clear difference"))
+                    "more negative headlines" if neg - neg_ref > margin else
+                    "fewer negative headlines" if neg_ref - neg > margin else "no clear difference"))
             else:
                 if len(same_days):
                     row["guardian"] = (same_days["roberta_label"] == "negative").mean()   # shown in the details table
@@ -456,8 +456,8 @@ elif view == "Outlets compared":
 
     # the result in plain words (only outlets with enough articles)
     sentences = []
-    for verdict, text in [("less often negative", "**Less often negative** than the Guardian on the same days"),
-                          ("more often negative", "**More often negative** than the Guardian on the same days"),
+    for verdict, text in [("fewer negative headlines", "**Fewer negative headlines** than the Guardian on the same days"),
+                          ("more negative headlines", "**More negative headlines** than the Guardian on the same days"),
                           ("no clear difference", "**No clear difference** (the gap may be chance)")]:
         part = enough[enough["verdict"] == verdict]
         if len(part):
@@ -467,7 +467,7 @@ elif view == "Outlets compared":
         st.markdown("\n".join(f"- {t}" for t in sentences))
     st.caption("Why the Guardian: it is the only outlet we have for every day, and the outlets were collected in "
                "different weeks, so each one is compared with the Guardian on the days we have both. Still careful: "
-               "outlets cover different topics (for the NYT we checked: it is less often negative within the same "
+               "outlets cover different topics (for the NYT we checked: it has fewer negative headlines within the same "
                "topics too, e.g. US news 29% vs 42%), the same day is not the same story (matching stories is "
                "future work), and "
                "RoBERTa is more accurate on some outlets than others (on our hand labels: NYT 84%, Fox News 55%).")
