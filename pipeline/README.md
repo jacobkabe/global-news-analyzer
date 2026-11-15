@@ -97,7 +97,7 @@ Details of the rules and commands: the top of `ner.py`. The transformer model ne
 - **Name normalisation** (trf output -> `entities.csv`, column `how` says which rule decided):
   clean ("President Trump's" -> "Trump"), our alias list `pipeline/entity_aliases.csv` ("U.S." -> "United States"),
   one type per name, short name -> full name in the same article, surname -> the dominant full name in all articles.
-  Result: "Donald Trump" is found in 1,406 articles; the exact name "Donald Trump" alone appears in only 74.
+  Result: "Donald Trump" is found in 1,537 articles; the exact name "Donald Trump" alone appears in only 76.
   Top 100 entities with their variants: `results/ner_top_entities.csv`.
 - **Evaluation (needs our labels):** `python pipeline\ner.py sheets` makes two sheets in `data/sample/`:
   - `ner_to_label_types.xlsx`: every name either model found in 100 headlines (from the 150 random sentiment
