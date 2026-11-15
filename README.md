@@ -8,6 +8,9 @@ event in every outlet) was planned but not built: why, in `docs/findings.md`.
 Team: Adriana Talavera, Jakub Kabele, Klaudie Polednová, Matylda Smolová, Sára Košelíková
 Course: Text Analytics 2, VŠE Prague
 
+![Dashboard: Articles view](screenshots/1-articles.png)
+More screenshots: `screenshots/`.
+
 ## Main results
 Hand-labelled evaluation (details and limits: `docs/findings.md`; all numbers: `results/`).
 
