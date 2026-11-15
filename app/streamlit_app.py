@@ -6,7 +6,7 @@ Run from the project folder:
 
 Layout follows the mockup in our project proposal (slide 4):
   left    filters (topic, sentiment, outlets, people/places, dates)
-  middle  article cards (stories come later, when pipeline step 4 groups articles into stories)
+  middle  article cards (story cards were planned; story clustering is future work)
   right   "Why these labels?" for the selected article, trending entities, sentiment over time
 Views (buttons at the top): Articles · People & places (one name's coverage, entity_view.py) ·
 Outlets compared · How the labels work (methods.py). Shared colours and HTML helpers: ui.py.
@@ -17,6 +17,7 @@ the outlet filter, the keyword search and the charts of sentiment and articles o
 from datetime import timedelta
 
 import altair as alt
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -29,7 +30,9 @@ from ui import (SENTIMENT_COLOURS, YELLOW, entity_chips, esc, heading, highlight
 st.set_page_config(page_title="Global News Analyzer", page_icon="🌍", layout="wide")
 
 CARDS_PER_STEP = 20
-LIST_HEIGHT = 1310   # px: the article list ends about where the right column ("Sentiment over time") ends
+REFERENCE_OUTLET = "The Guardian"   # Outlets compared: the only outlet collected on every day
+MIN_OUTLET_ARTICLES = 30            # Outlets compared: fewer articles give too wide intervals
+LIST_HEIGHT = 1410   # px: the article list ends about where the right column ("Sentiment over time") ends
 VIEWS = ["Articles", "People & places", "Outlets compared", "How the labels work"]
 
 st.markdown(f"""
@@ -100,7 +103,7 @@ with st.sidebar:
                       help="Nothing selected = all topics. The topic comes from the outlet's section.")
     sentiments = st.pills("Sentiment (RoBERTa)", ["positive", "neutral", "negative"], selection_mode="multi",
                           format_func=str.capitalize,
-                          help="Nothing selected = all. Used in Articles and Outlets compared. Careful with "
+                          help="Nothing selected = all. Used in Articles (Outlets compared measures the tone itself). Careful with "
                                "Positive: on our hand labels only about 4 in 10 are really good news.")
 
     st.markdown("**Sources**")
@@ -289,7 +292,7 @@ if view == "Articles":
                     st.markdown('<p class="sec">ENTITIES · spaCy transformer</p>'
                                 + "".join(lines), unsafe_allow_html=True)
 
-                limits = ["The models read only the headline, not the article.",
+                limits = ["The sentiment models read only the headline, not the article.",
                           "Positive labels are often wrong: about 4 in 10 are really good news "
                           "(positive words ≠ good news).",
                           "Driving words show what moved the score; two words that say the same thing both look weak."]
@@ -301,9 +304,13 @@ if view == "Articles":
 
         # -- trending entities: the last 7 days of the range vs the 7 days before --
         with st.container(border=True):
-            heading("Trending entities", f"Articles in the 7 days to {end:%d %b} vs the 7 days before")
-            week = base[(base["date"] > end - timedelta(days=7)) & (base["date"] <= end)]
-            before = base[(base["date"] > end - timedelta(days=14)) & (base["date"] <= end - timedelta(days=7))]
+            # only outlets we have for both weeks: a newly collected outlet would otherwise look like a trend
+            both_weeks, kept = entity_view.comparable(base, end)
+            heading("Trending entities", f"Articles in the 7 days to {end:%d %b} vs the 7 days before · "
+                                         f"only outlets we have for both weeks ({', '.join(kept) or 'none'})")
+            week = both_weeks[(both_weeks["date"] > end - timedelta(days=7)) & (both_weeks["date"] <= end)]
+            before = both_weeks[(both_weeks["date"] > end - timedelta(days=14))
+                                & (both_weeks["date"] <= end - timedelta(days=7))]
             now_counts = entities[entities["article_id"].isin(week["article_id"])]["entity"].value_counts()
             old_counts = entities[entities["article_id"].isin(before["article_id"])]["entity"].value_counts()
             trend = pd.DataFrame({"now": now_counts, "before": old_counts}).fillna(0)
@@ -325,24 +332,28 @@ if view == "Articles":
 
         # -- sentiment over time --
         with st.container(border=True):
-            heading("Sentiment over time", "Articles per day, RoBERTa label")
-            per_day = (shown[shown["roberta_label"] != "not analysed"]
-                       .groupby(["date", "roberta_label"]).size().reset_index(name="articles"))
-            if per_day.empty:
+            # shares per week, not counts: the outlets were collected in different weeks, so the number of
+            # articles per day would mostly show which outlets we had, not the news
+            heading("Sentiment over time", "Share of headlines per week, RoBERTa label · hover for the numbers")
+            dated = shown[shown["roberta_label"] != "not analysed"]
+            per_week = (dated.assign(week=pd.to_datetime(dated["date"]).dt.to_period("W").dt.start_time)
+                        .groupby(["week", "roberta_label"]).size().reset_index(name="articles"))
+            if per_week.empty:
                 st.caption("No articles.")
             else:
-                per_day["date"] = pd.to_datetime(per_day["date"])
                 order = ["positive", "neutral", "negative"]
-                chart = alt.Chart(per_day).mark_bar().encode(
-                    x=alt.X("date:T", title=None),
-                    y=alt.Y("articles:Q", title=None),
+                chart = alt.Chart(per_week).mark_bar(size=18).encode(
+                    x=alt.X("week:T", title=None),
+                    y=alt.Y("articles:Q", title=None, stack="normalize", axis=alt.Axis(format="%")),
                     color=alt.Color("roberta_label:N", title=None, sort=order,
                                     scale=alt.Scale(domain=order, range=[SENTIMENT_COLOURS[s] for s in order]),
-                                    legend=alt.Legend(orient="bottom")),
+                                    legend=alt.Legend(orient="top", direction="horizontal")),
                     order=alt.Order("order:Q"),
-                    tooltip=["date:T", "roberta_label:N", "articles:Q"],
+                    tooltip=[alt.Tooltip("week:T", title="week of"), "roberta_label:N", "articles:Q"],
                 ).transform_calculate(order=f"indexof({order}, datum.roberta_label)").properties(height=200)
                 st.altair_chart(chart, width="stretch")
+                st.caption("Shares, not counts: the outlets were collected in different weeks. "
+                           "The last week may be incomplete.")
 
 
 # ---- view 2: people & places --------------------------------------------------------------------------
@@ -357,43 +368,106 @@ elif view == "How the labels work":
 
 # ---- view 3: outlets compared -------------------------------------------------------------------------
 elif view == "Outlets compared":
-    analysed = shown[shown["roberta_label"] != "not analysed"]
+    # Outlets were collected over different periods (RSS only in October, The News API only in November), so an
+    # outlet is compared with the Guardian on the SAME days: the Guardian is the only outlet we have for every day.
+    # The sentiment filter is not used here (it would make the shares meaningless); topic, names and dates are.
+    pool = articles[articles["roberta_label"] != "not analysed"]
+    if only_news:
+        pool = pool[pool["content_type"] == "news"]
+    if topics:
+        pool = pool[pool["topic"].isin(topics)]
+    for name in chosen_entities:
+        pool = pool[pool["article_id"].isin(entities.loc[entities["entity"] == name, "article_id"])]
+    pool = pool[(pool["date"] >= start) & (pool["date"] <= end)]
+    reference = pool[pool["outlet"] == REFERENCE_OUTLET]
+    analysed = pool[pool["outlet"].isin(outlets)]
     if analysed.empty:
         st.info("No articles match the filters.")
         st.stop()
 
-    heading("Sentiment mix per outlet", "Share of headlines per RoBERTa label (with the current filters)")
-    mix = analysed.groupby(["outlet", "roberta_label"]).size().reset_index(name="articles")
-    order = ["negative", "neutral", "positive"]
-    chart = alt.Chart(mix).mark_bar().encode(
-        y=alt.Y("outlet:N", title=None, axis=alt.Axis(labelLimit=220), sort=list(analysed["outlet"].value_counts().index)),
-        x=alt.X("articles:Q", stack="normalize", title=None, axis=alt.Axis(format="%")),
-        color=alt.Color("roberta_label:N", title=None, sort=order,
-                        scale=alt.Scale(domain=order, range=[SENTIMENT_COLOURS[s] for s in order]),
-                        legend=alt.Legend(orient="bottom")),
-        order=alt.Order("order:Q"),
-        tooltip=["outlet:N", "roberta_label:N", "articles:Q"],
-    ).transform_calculate(order=f"indexof({order}, datum.roberta_label)").properties(height=45 * mix["outlet"].nunique())
-    st.altair_chart(chart, width="stretch")
-
-    average = analysed["roberta_score"].mean()
-    table = analysed.groupby("outlet").agg(articles=("article_id", "size"), avg_score=("roberta_score", "mean"))
-    table["gap_from_all"] = table["avg_score"] - average
-    table = table.sort_values("articles", ascending=False).rename_axis("Outlet")
-    st.dataframe(table, column_config={
-        "articles": "Articles",
-        "avg_score": st.column_config.NumberColumn("Average score", format="%+.2f"),
-        "gap_from_all": st.column_config.NumberColumn(f"Gap from all outlets ({average:+.2f})", format="%+.2f"),
-    })
-    st.caption("Careful: outlets cover different topics, so a gap here can come from the topic mix, not the tone. "
-               "The fair comparison (the same story in every outlet) comes with pipeline step 4. "
-               "Outlets with few articles (RSS only started in October) give unreliable numbers. "
-               "RoBERTa is also more accurate on some outlets than others (on our hand labels: NYT 84%, "
-               "Fox News 55%), so part of a gap can be model error.")
-
-    heading("Most mentioned per outlet", "Share of the outlet's articles that mention the name")
-    columns = {}
+    # one row per outlet: its dates, its share of negative headlines, and the Guardian's on the same days
+    rows = []
     for outlet, group in analysed.groupby("outlet"):
+        same_days = reference[reference["date"].isin(set(group["date"]))]
+        neg = (group["roberta_label"] == "negative").mean()
+        row = {"outlet": outlet, "articles": len(group), "negative": neg, "guardian": None, "verdict": "",
+               "period": f"{group['date'].min():%d %b} – {group['date'].max():%d %b}", "days": group["date"].nunique()}
+        if outlet != REFERENCE_OUTLET and len(same_days) >= MIN_OUTLET_ARTICLES:
+            neg_ref = (same_days["roberta_label"] == "negative").mean()
+            # 95% interval of the difference of two shares: if it includes 0, the difference may be chance
+            margin = 1.96 * np.sqrt(neg * (1 - neg) / len(group) + neg_ref * (1 - neg_ref) / len(same_days))
+            row["guardian"] = neg_ref
+            row["verdict"] = ("more often negative" if neg - neg_ref > margin else
+                              "less often negative" if neg_ref - neg > margin else "no clear difference")
+        rows.append(row)
+    stats = pd.DataFrame(rows).sort_values("articles", ascending=False)
+    stats["label"] = [f"{o}  ·  {p}  ·  {n:,}" for o, p, n in zip(stats["outlet"], stats["period"], stats["articles"])]
+    enough = stats[stats["articles"] >= MIN_OUTLET_ARTICLES]
+    few = stats[stats["articles"] < MIN_OUTLET_ARTICLES]
+
+    order = ["negative", "neutral", "positive"]
+
+    def mix_chart(part):
+        """Stacked bars per outlet; a white tick = the Guardian's share of negative headlines on the same days."""
+        mix = analysed[analysed["outlet"].isin(part["outlet"])].groupby(["outlet", "roberta_label"]).size() \
+            .reset_index(name="articles").merge(part[["outlet", "label"]], on="outlet")
+        y = alt.Y("label:N", title=None, sort=list(part["label"]), axis=alt.Axis(labelLimit=330))
+        bars = alt.Chart(mix).mark_bar().encode(
+            y=y, x=alt.X("articles:Q", stack="normalize", title=None, axis=alt.Axis(format="%"),
+                         scale=alt.Scale(domain=[0, 1])),
+            color=alt.Color("roberta_label:N", title=None, sort=order,
+                            scale=alt.Scale(domain=order, range=[SENTIMENT_COLOURS[s] for s in order]),
+                            legend=alt.Legend(orient="bottom")),
+            order=alt.Order("order:Q"),
+            tooltip=["outlet:N", "roberta_label:N", "articles:Q"],
+        ).transform_calculate(order=f"indexof({order}, datum.roberta_label)")
+        ticks = alt.Chart(part.dropna(subset=["guardian"])).mark_tick(color="#FFFFFF", thickness=3, size=30).encode(
+            y=y, x="guardian:Q",
+            tooltip=[alt.Tooltip("outlet:N", title="outlet"),
+                     alt.Tooltip("negative:Q", format=".0%", title="negative"),
+                     alt.Tooltip("guardian:Q", format=".0%", title="Guardian, same days")])
+        return alt.layer(bars, ticks).properties(height=42 * len(part) + 40)
+
+    heading("Sentiment mix per outlet",
+            "Share of headlines per RoBERTa label. Next to each name: the dates we have for it and its number of "
+            "articles. White line: how often the Guardian's headlines were negative on those same days.")
+    if len(enough):
+        st.altair_chart(mix_chart(enough), width="stretch")
+    if len(few):
+        st.markdown(f'<div class="sec">FEW ARTICLES (FEWER THAN {MIN_OUTLET_ARTICLES}) · READ WITH CARE</div>',
+                    unsafe_allow_html=True)
+        st.altair_chart(mix_chart(few), width="stretch")
+
+    # the result in plain words (only outlets with enough articles)
+    sentences = []
+    for verdict, text in [("less often negative", "**Less often negative** than the Guardian on the same days"),
+                          ("more often negative", "**More often negative** than the Guardian on the same days"),
+                          ("no clear difference", "**No clear difference** (too few articles to tell)")]:
+        part = enough[enough["verdict"] == verdict]
+        if len(part):
+            sentences.append(text + ": " + ", ".join(f"{r.outlet} ({r.negative:.0%} vs {r.guardian:.0%})"
+                                                     for r in part.itertuples()))
+    if sentences:
+        st.markdown("\n".join(f"- {t}" for t in sentences))
+    st.caption("Why the Guardian: it is the only outlet we have for every day, and the outlets were collected in "
+               "different weeks, so each one is compared with the Guardian on its own days. Still careful: outlets "
+               "cover different topics, the same day is not the same story (matching stories is future work), and "
+               "RoBERTa is more accurate on some outlets than others (on our hand labels: NYT 84%, Fox News 55%).")
+    with st.expander("Details: the numbers"):
+        st.dataframe(stats[["outlet", "period", "days", "articles", "negative", "guardian", "verdict"]], hide_index=True,
+                     column_config={
+                         "outlet": "Outlet", "period": "Dates", "days": "Days", "articles": "Articles",
+                         "negative": st.column_config.NumberColumn("Negative", format="percent"),
+                         "guardian": st.column_config.NumberColumn("Guardian, same days", format="percent"),
+                         "verdict": st.column_config.TextColumn(
+                             "Compared with the Guardian",
+                             help="Based on a 95% interval of the difference; 'no clear difference' = may be chance")})
+
+    heading("Most mentioned per outlet", "Share of the outlet's articles that mention the name "
+            f"(outlets with at least {MIN_OUTLET_ARTICLES} articles)")
+    columns = {}
+    big = analysed.groupby("outlet").filter(lambda g: len(g) >= MIN_OUTLET_ARTICLES)
+    for outlet, group in big.groupby("outlet"):
         counts = entities[entities["article_id"].isin(group["article_id"])]["entity"].value_counts().head(10)
         columns[f"{outlet} ({len(group)})"] = [f"{name} ({n / len(group):.0%})" for name, n in counts.items()]
     st.dataframe(pd.DataFrame({k: pd.Series(v) for k, v in columns.items()}), hide_index=True)

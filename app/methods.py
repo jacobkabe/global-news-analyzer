@@ -22,6 +22,7 @@ def pipeline_diagram(articles):
     """Graphviz DOT text: every box is a script or a file, every arrow says what flows along it."""
     n = articles["source"].value_counts()
     rss = sum(n.get(s, 0) for s in ["bbc", "aljazeera", "npr", "foxnews"])
+    newsapi = n.drop(["guardian", "nyt", "bbc", "aljazeera", "npr", "foxnews"], errors="ignore")
     n_gold = len(pd.read_csv(GOLD, keep_default_na=False))
     return f"""
 digraph pipeline {{
@@ -42,11 +43,11 @@ headline + abstract
 NPR, Fox News
 {rss:,} articles" fillcolor="#2E2F5E"];
     newsapi [label="The News API
-8 more outlets
-(coming)" fillcolor="#2E2F5E" style="rounded,filled,dashed"];
+{len(newsapi)} more outlets
+{newsapi.sum():,} articles" fillcolor="#2E2F5E"];
   }}
   collect [label="2 · COLLECT
-collect.py, twice a day
+collect.py
 ↓
 news.db (SQLite)
 {len(articles):,} articles" fillcolor="#3A2F1F"];
@@ -70,21 +71,21 @@ zero-shot"];
 baseline"];
   }}
   stories [label="4c · STORIES
-(later)" style="rounded,filled,dashed"];
+(future work)" style="rounded,filled,dashed"];
 
   explain [label="driving words
 why this label?"];
   norm [label="name rules
 'Trump' → Donald Trump"];
   subgraph cluster_eval {{ label="5 · EVALUATE";
-    gold [label="{n_gold} hand labels
-(codebook)" shape=note fillcolor="#1C2E52"];
+    gold [label="{n_gold} hand labels (codebook)
++ teammates' check" shape=note fillcolor="#1C2E52"];
     evaluate [label="accuracy · macro-F1
 tuned cut-offs" fillcolor="#1C2E52"];
   }}
   dash [label="6 · DASHBOARD" fillcolor="{YELLOW}" fontcolor="#2E2A55" fontname="Helvetica-Bold" fontsize=17];
 
-  guardian -> collect; nyt -> collect; rss -> collect; newsapi -> collect [style=dashed];
+  guardian -> collect; nyt -> collect; rss -> collect; newsapi -> collect;
   collect -> clean;
   clean -> vader [lhead=cluster_sentiment];
   clean -> sm [lhead=cluster_entities];
@@ -92,6 +93,7 @@ tuned cut-offs" fillcolor="#1C2E52"];
   roberta -> explain; vader -> explain;
   trf -> norm;
   bart -> evaluate [ltail=cluster_sentiment label="scores"];
+  sm -> evaluate [ltail=cluster_entities label="names"];
   gold -> evaluate;
   roberta -> dash [label="label"];
   explain -> dash; norm -> dash;
@@ -117,7 +119,7 @@ def section(title, note=""):
 # ---- the page ------------------------------------------------------------------------------------------
 def show(articles, entities, colours):
     section("How it works", "From the news outlets to every label on this dashboard. Each box is one of our scripts "
-            "or files; each arrow says what flows along it. Dashed = planned.")
+            "or files; each arrow says what flows along it. Dashed = not built (future work).")
     st.graphviz_chart(pipeline_diagram(articles), width="stretch")
 
     all_metrics = pd.read_csv(RESULTS / "sentiment_metrics.csv")
@@ -134,24 +136,33 @@ def show(articles, entities, colours):
 
     # ---- 1-3 sources, collect, clean ----
     section("1–3 · Sources, collecting, cleaning")
-    counts = articles["outlet"].value_counts()
-    first = articles.groupby("outlet")["date"].min()
-    text_kind = {"The Guardian": "full text (API)", "The New York Times": "headline + abstract (API)"}
-    for col, (outlet, count) in zip(st.columns(len(counts)), counts.items()):
+    # one box per way of collecting; each lists its outlets with their number of articles and their dates
+    channels = [("The Guardian · API", ["guardian"], "full text"),
+                ("The New York Times · API", ["nyt"], "headline + abstract"),
+                ("RSS feeds", ["bbc", "aljazeera", "foxnews", "npr"], "title + summary"),
+                ("The News API", None, "title + description")]
+    known = {src for _, sources, _ in channels if sources for src in sources}
+    for col, (title, sources, text) in zip(st.columns(len(channels)), channels):
+        part = articles[articles["source"].isin(sources)] if sources else articles[~articles["source"].isin(known)]
+        if part.empty:
+            continue
+        lines = [f"<b>{len(part):,} articles</b> · {part['date'].min():%d %b} – {part['date'].max():%d %b}", text]
+        if part["outlet"].nunique() > 1:
+            lines += [f"{outlet} · {n:,}" for outlet, n in part["outlet"].value_counts().items()]
         with col:
-            card(outlet, [f"{count:,} articles", f"since {first[outlet]:%d %b}",
-                          text_kind.get(outlet, "title + summary (RSS)")])
+            card(title, lines)
     with st.expander("Details: what each step does"):
         st.markdown("""
-- **Collect** (`src/collect/collect.py`, twice a day): the Guardian and NYT APIs fetch everything since the newest
-  article we have, so a missed day is filled in; RSS feeds only show the latest items, so a missed day is lost.
+- **Collect** (`src/collect/collect.py`, run on one team computer): the Guardian and NYT APIs fetch everything since
+  the newest article we have, so a missed day is filled in; RSS feeds and The News API (free plan) only give recent
+  items, so a missed day is lost. That is why the outlets cover different dates (see the boxes above).
   Everything goes into one SQLite table (`news.db`): dates in UTC, URLs without tracking parameters, each URL once.
 - **We do not scrape outlet websites:** their terms forbid it or are unclear (`docs/data-sources.md`).
   Only the Guardian API gives full text; for the others we have the headline and a summary.
 - **Clean** (`pipeline/clean.py`): the **headline** the models read has no HTML, no Guardian "| Author" ending,
   no series labels ("LIVE:", "Ukraine war briefing:"), and straight quotes (VADER needs them).
   Each article gets a **topic** (the outlet's section, merged: "U.S." and "US news" -> US) and an **article type**
-  (news, opinion, briefing, letter, live...). "Only news" on the dashboard hides everything that is not news.
+  (news, opinion, briefing, letter, live blog, media such as video pages...). "Only news" on the dashboard hides everything that is not news.
 """)
 
     # ---- 4 sentiment models ----
@@ -184,7 +195,7 @@ def show(articles, entities, colours):
             f"accuracy {acc('bart_mnli', 'tuned')} (own rule {acc('bart_mnli', 'default')})",
             "why: an independent third opinion"])
 
-    st.markdown('<p class="muted" style="margin-top:.6rem"><b>Why can BART say "Neutral" at −0.92?</b> '
+    st.markdown('<p class="muted" style="margin-top:.6rem"><b>Why can BART say "Neutral" at −0.85?</b> '
                 "Each model's score has its own scale. BART puts almost every news headline near −1, so on our hand "
                 f"labels only scores at {b_low:+.2f} or lower were really negative. The yellow lines are the cut-offs "
                 "we tuned on our labels (RoBERTa has none: it uses its own label).</p>", unsafe_allow_html=True)
@@ -254,7 +265,7 @@ def show(articles, entities, colours):
 - **Tuned cut-offs:** neutral if the score is between two cut-offs, chosen to match our labels best (best macro-F1).
   The "tuned" results use 5-fold cross-validation: cut-offs are always tested on headlines they were not tuned on.
   The dashboard uses cut-offs tuned on all {len(gold)} labelled headlines.
-- **The {len(random)} "random" headlines are spread evenly over outlets** (20 each for the small RSS outlets), while
+- **The {len(random)} "random" headlines are spread evenly over outlets** (15–20 each for the small RSS outlets), while
   most of our data is from the Guardian and the NYT.
 - **Our labels:** one annotator (plus teammates for the second check), then a second pass against the codebook
   (12 Nov 2026) changed {changed} labels,
@@ -270,8 +281,9 @@ def show(articles, entities, colours):
     w1, w2 = st.columns(2)
     with w1:
         card("RoBERTa: hide one word, score again", [
-            "“flood disaster” scores −0.62; “flood &lt;mask&gt;” scores −0.20",
-            "so “disaster” = −0.62 − (−0.20) = <b>−0.42</b>: it pushed the headline towards negative",
+            "“US workers facing deadly heat borrow from tomato pickers to win key protections” scores −0.10",
+            "with “win” replaced by &lt;mask&gt; it scores −0.46",
+            "so “win” = −0.10 − (−0.46) = <b>+0.36</b>: it pushed the headline towards positive",
             "orange = towards negative, blue = towards positive"])
     with w2:
         card("VADER: its word list", [
@@ -329,8 +341,10 @@ def show(articles, entities, colours):
     with st.expander("Other parts of the dashboard: trending, outlets compared"):
         st.markdown("""
 - **Trending entities:** articles mentioning a name in the 7 days up to the end of the date range, against the
-  7 days before. At least 3 articles; "new" = not mentioned the week before.
-- **Outlets compared:** an outlet's average RoBERTa score minus the average of all outlets. A gap can come from the
-  topics an outlet covers, and RoBERTa is more accurate on some outlets than others. The fair comparison, the same
-  story in every outlet, comes with story clustering.
+  7 days before, counted only in outlets we have for both weeks (the outlets were collected in different weeks, so a
+  newly collected outlet would look like a trend). At least 3 articles; "new" = not mentioned the week before.
+- **Outlets compared:** each outlet's share of negative headlines against the Guardian's on the same days
+  (the outlets were collected over different periods; the Guardian is the only one we have for every day), with a
+  95% interval; only outlets with at least 30 articles. A gap can still come from the topics an outlet covers, and
+  RoBERTa is more accurate on some outlets than others. Comparing the same story in every outlet is future work.
 """)

@@ -50,6 +50,16 @@ def articles_text(n):
     return f"{n:,} article" if n == 1 else f"{n:,} articles"
 
 
+def comparable(frame, end):
+    """Keep only the outlets that have articles both in the 7 days to `end` and in the 7 days before.
+    The outlets were collected in different weeks (e.g. The News API only from 10 Nov), so without this a new
+    outlet would look like rising coverage. Returns the rows and the outlets kept."""
+    now = frame[(frame["date"] > end - timedelta(days=7)) & (frame["date"] <= end)]
+    before = frame[(frame["date"] > end - timedelta(days=14)) & (frame["date"] <= end - timedelta(days=7))]
+    keep = sorted(set(now["outlet"]) & set(before["outlet"]))
+    return frame[frame["outlet"].isin(keep)], keep
+
+
 def summary(name, mine, neg, neg_all, now, before, earlier, together):
     """One plain sentence that says what the numbers below show (built from the numbers, no AI text)."""
     n = len(mine)
@@ -74,11 +84,11 @@ def summary(name, mine, neg, neg_all, now, before, earlier, together):
     elif not now:
         text += "No articles in the last 7 days. "
     elif now >= 1.5 * max(before, 1):
-        text += f"Coverage is <b>rising</b>: {articles_text(now)} in the last 7 days, {before} the week before. "
+        text += f"Coverage is <b>rising</b>: {articles_text(now)} in the last 7 days, {before} the week before (same outlets). "
     elif now <= before / 1.5:
-        text += f"Coverage is <b>falling</b>: {articles_text(now)} in the last 7 days, {before} the week before. "
+        text += f"Coverage is <b>falling</b>: {articles_text(now)} in the last 7 days, {before} the week before (same outlets). "
     else:
-        text += f"Coverage is steady ({articles_text(now)} in the last 7 days). "
+        text += f"Coverage is steady ({articles_text(now)} in the last 7 days, same outlets as the week before). "
 
     if len(together):
         text += f"Most often mentioned together with {esc(together.index[0])}."
@@ -114,7 +124,8 @@ def show(scope, scope_all_dates, entities, entity_types, end):
     neg, neg_all = (analysed["roberta_label"] == "negative").mean(), (everyone["roberta_label"] == "negative").mean()
     score, score_all = analysed["roberta_score"].mean(), everyone["roberta_score"].mean()
     all_ids = entities.loc[entities["entity"] == name, "article_id"]    # also outside the date range
-    dated = scope_all_dates[scope_all_dates["article_id"].isin(all_ids)]
+    same_outlets, kept = comparable(scope_all_dates, end)
+    dated = same_outlets[same_outlets["article_id"].isin(all_ids)]
     now = ((dated["date"] > end - timedelta(days=7)) & (dated["date"] <= end)).sum()
     before = ((dated["date"] > end - timedelta(days=14)) & (dated["date"] <= end - timedelta(days=7))).sum()
     earlier = (dated["date"] <= end - timedelta(days=7)).sum()          # anything before the last 7 days
@@ -133,9 +144,10 @@ def show(scope, scope_all_dates, entities, entity_types, end):
     k3.metric("Average tone", f"{score:+.2f}", f"{score - score_all:+.2f} vs all articles",
               help="RoBERTa's score (positive − negative), from −1 to +1, averaged over the headlines.")
     k4.metric("Last 7 days", f"{now}", "new" if now and not earlier else f"{now - before:+d} vs the 7 days before",
-              help=f"Articles in the 7 days to {end:%d %b}.")
+              help=f"Articles in the 7 days to {end:%d %b}, counted only in outlets we have for both weeks "
+                   f"({', '.join(kept) or 'none'}), so that a newly collected outlet does not look like a rise.")
 
-    # ---- coverage over time | outlets ----
+    # ---- coverage over time | mentioned together with ----
     left, right = st.columns([1.3, 1], gap="large")
     with left:
         heading("Coverage over time", "Articles per week, coloured by RoBERTa's label")
@@ -147,13 +159,41 @@ def show(scope, scope_all_dates, entities, entity_types, end):
             y=alt.Y("articles:Q", title=None),
             color=alt.Color("roberta_label:N", title=None, sort=order,
                             scale=alt.Scale(domain=order, range=[SENTIMENT_COLOURS[s] for s in order]),
-                            legend=alt.Legend(orient="bottom")),
+                            legend=alt.Legend(orient="top", direction="horizontal")),
             order=alt.Order("order:Q"),
             tooltip=[alt.Tooltip("week:T", title="week of"), "roberta_label:N", "articles:Q"],
         ).transform_calculate(order=f"indexof({order}, datum.roberta_label)").properties(height=230), width="stretch")
+        st.caption("The height of a week also depends on which outlets we have for it (they were collected "
+                   "in different weeks).")
 
     with right:
-        heading("Who covers it, and how", "Share = how many of the outlet's articles mention the name")
+        heading("Mentioned together with", "In the same articles · click a name to open its profile")
+        if together.empty:
+            st.caption("No other name appears often enough.")
+        else:
+            st.pills("together", together.index.tolist(), key="together_pick", label_visibility="collapsed",
+                     format_func=lambda e: f"{e} · {together[e]}",
+                     on_change=open_together)
+
+    # ---- most negative | most positive headlines ----
+    heading("Its most negative and most positive headlines", "Click “Why?” to see the explanation in Articles")
+    columns = st.columns(2, gap="large")
+    for col, (title, part) in zip(columns, [("Most negative", analysed.nsmallest(TOP_HEADLINES, "roberta_score")),
+                                            ("Most positive", analysed.nlargest(TOP_HEADLINES, "roberta_score"))]):
+        with col:
+            st.markdown(f'<p class="sec">{title.upper()}</p>', unsafe_allow_html=True)
+            for a in part.itertuples():
+                text_col, button_col = st.columns([6, 1], vertical_alignment="center")
+                text_col.markdown(f'{sentiment_tag(a.roberta_label, a.roberta_score)}'
+                                  f'<span class="muted">{esc(a.outlet)} · {a.date:%d %b}</span><br>'
+                                  f'{highlight(a.headline, a.roberta_words)}', unsafe_allow_html=True)
+                button_col.button("Why?", key=f"why_{title}_{a.article_id}", type="tertiary",
+                                  on_click=open_article, args=(a.article_id, name))
+    st.caption("⚠ Positive labels are often wrong: about 4 in 10 are really good news. A name's most positive "
+               "headline can still be neutral or negative news.")
+
+    # ---- outlets (details) ----
+    with st.expander("Details: which outlets mention it"):
         per_outlet = scope.groupby("outlet").size().rename("all")
         table = analysed.groupby("outlet").agg(articles=("article_id", "size"),
                                                negative=("roberta_label", lambda s: (s == "negative").mean()),
@@ -170,30 +210,6 @@ def show(scope, scope_all_dates, entities, entity_types, end):
             "negative": st.column_config.NumberColumn("Negative", format="%.0f%%"),
             "tone": st.column_config.NumberColumn("Tone", format="%+.2f"),
         }, width="stretch")
-        st.caption(f"Share is left empty for outlets with fewer than {MIN_OUTLET_ARTICLES} articles in the filters "
-                   "(one mention would look big). Outlets also cover different topics.")
-
-    # ---- together with | headlines ----
-    left, right = st.columns([1, 1.3], gap="large")
-    with left:
-        heading("Mentioned together with", "In the same articles · click a name to open its profile")
-        if together.empty:
-            st.caption("No other name appears often enough.")
-        else:
-            st.pills("together", together.index.tolist(), key="together_pick", label_visibility="collapsed",
-                     format_func=lambda e: f"{e} · {together[e]}",
-                     on_change=open_together)
-
-    with right:
-        heading("Most negative and most positive headlines", "Click “Why?” to see the explanation in Articles")
-        for title, part in [("Most negative", analysed.nsmallest(TOP_HEADLINES, "roberta_score")),
-                            ("Most positive", analysed.nlargest(TOP_HEADLINES, "roberta_score"))]:
-            st.markdown(f'<p class="muted" style="margin-top:.4rem">{title.upper()}</p>', unsafe_allow_html=True)
-            for a in part.itertuples():
-                text_col, button_col = st.columns([6, 1], vertical_alignment="center")
-                text_col.markdown(f'{sentiment_tag(a.roberta_label, a.roberta_score)}'
-                                  f'<span class="muted">{esc(a.outlet)} · {a.date:%d %b}</span><br>'
-                                  f'{highlight(a.headline, a.roberta_words)}', unsafe_allow_html=True)
-                button_col.button("Why?", key=f"why_{title}_{a.article_id}", type="tertiary",
-                                  on_click=open_article, args=(a.article_id, name))
-        st.caption("⚠ Positive labels are often wrong: about 4 in 10 are really good news.")
+        st.caption(f"Share = how many of the outlet's articles mention the name; left empty for outlets with fewer "
+                   f"than {MIN_OUTLET_ARTICLES} articles (one mention would look big). Outlets were collected in "
+                   "different weeks and cover different topics, so compare them with care.")

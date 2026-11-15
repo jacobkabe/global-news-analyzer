@@ -11,8 +11,8 @@ Run each step from the project folder, in this order:
 | 1. Clean | `python pipeline\clean.py` | `articles_clean.csv` | done |
 | 2. Sentiment | `python pipeline\sentiment.py run` / `evaluate` / `explain` | `sentiment.csv`, `sentiment_explain.csv`, `results/sentiment_*` | done |
 | 3. Entities | `python pipeline\ner.py run` / `normalise` / `sheets` / `evaluate` | `entities.csv`, `results/ner_*` | done (2 of 4 team files back) |
-| 4. Stories | `python pipeline\cluster.py ...` (same event across outlets) | `stories.csv` | later |
-| 5. Dashboard | `streamlit run app\streamlit_app.py` | (reads the files above) | v2 built; stories come with step 4 |
+| 4. Stories | (same event across outlets) | – | not built: future work, see `docs/findings.md` |
+| 5. Dashboard | `streamlit run app\streamlit_app.py` | (reads the files above) | done |
 
 ## 1. Clean (`clean.py`)
 Reads `data/raw/news.db` (or `--input news.csv`) and writes one row per article:
@@ -29,7 +29,7 @@ Reads `data/raw/news.db` (or `--input news.csv`) and writes one row per article:
 - `lead` (summary), `n_text_chars` (length of the full text; only the Guardian has it), `date`, `url`.
 
 ## 2. Sentiment (`sentiment.py`)
-Headline only (full text is for the story summary). Gold labels: `data/sample/sentiment_gold.csv`
+Headline only (the only text every outlet has). Gold labels: `data/sample/sentiment_gold.csv`
 (codebook in `data/sample/README.md`). Details of the models and commands: the top of `sentiment.py`.
 
 **Results on the 150 random headlines** (`results/sentiment_metrics.csv`; "tuned" = neutral cut-offs tuned
@@ -97,7 +97,7 @@ Details of the rules and commands: the top of `ner.py`. The transformer model ne
 - **Name normalisation** (trf output -> `entities.csv`, column `how` says which rule decided):
   clean ("President Trump's" -> "Trump"), our alias list `pipeline/entity_aliases.csv` ("U.S." -> "United States"),
   one type per name, short name -> full name in the same article, surname -> the dominant full name in all articles.
-  Result: "Donald Trump" is found in 1,406 articles; the exact name "Donald Trump" alone appears in only 74.
+  Result: "Donald Trump" is found in 1,537 articles; the exact name "Donald Trump" alone appears in only 76.
   Top 100 entities with their variants: `results/ner_top_entities.csv`.
 - **Evaluation (needs our labels):** `python pipeline\ner.py sheets` makes two sheets in `data/sample/`:
   - `ner_to_label_types.xlsx`: every name either model found in 100 headlines (from the 150 random sentiment
@@ -137,7 +137,7 @@ RoBERTa's driving words highlighted in the headline, VADER's word values, each e
 trending entities (click one to open its profile) and sentiment over time. **People & places** (`app/entity_view.py`):
 the coverage of one person, place or organisation (articles, tone vs all articles, coverage per week, which outlets
 mention it and in which tone, names mentioned together with it, its most negative and positive headlines with a link
-to their explanation). A further view compares the outlets (sentiment mix, gap from the
-average, most mentioned names). A third tab, "How the labels work" (`app/methods.py`), explains every rule
+to their explanation). A further view compares the outlets (share of negative headlines against the Guardian on the same days,
+sentiment mix, most mentioned names). A third tab, "How the labels work" (`app/methods.py`), explains every rule
 behind the labels and why we chose it, with the numbers read from `results/`. Tala's first demo (`app.py` in the project folder) stays as it is.
-Story cards and the per-story comparison come when step 4 exists.
+Outlets compared: each outlet against the Guardian on the same days (outlets were collected over different periods); story clustering is future work.
