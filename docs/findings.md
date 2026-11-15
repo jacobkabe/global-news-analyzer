@@ -125,14 +125,15 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
   kept running), The News API outlets only 10 – 14 Nov, Deutsche Welle 1 article. Comparing outlets over "all
   dates" would mix different news weeks. *(data/raw/news.db; dashboard header, Sources)*
 - **So the dashboard compares each outlet with the Guardian on the same days** (the Guardian is the only outlet we have
-  for every day), with a 95% interval, and only outlets with at least 30 articles. The Guardian's headlines are the most
-  often negative: on the same days, the NYT is 11 points less often negative (30% vs 41%, 76 days), ABC News 20 and
-  CBS News 15 points less; Fox News (+13), Al Jazeera and The Conversation show no clear difference (too few articles).
+  for every day), with a 95% interval, and only outlets with at least 30 articles. The Guardian has the largest share of
+  negative headlines: on the same days, the NYT has 11 points fewer negative headlines (30% vs 41%, 76 days), ABC News
+  20 and CBS News 15 points fewer; Fox News (+13), Al Jazeera and The Conversation show no clear difference (the gap
+  may be chance with so few articles).
   *(dashboard, Outlets compared)*
 - **The same day is not the same story, and outlets cover different topics** (CNBC is mostly business), so a difference
   can come from the topic mix and not from the tone. RoBERTa is also more accurate on some outlets than others.
-- **For the NYT the gap is not the topic mix:** on the same days and within the same topic, the NYT is less often
-  negative in 5 of 6 topics with 50+ articles each (US 29% vs 42%, World 38% vs 48%, Business 22% vs 38%,
+- **For the NYT the gap is not the topic mix:** on the same days and within the same topic, the NYT has fewer
+  negative headlines in 5 of 6 topics with 50+ articles each (US 29% vs 42%, World 38% vs 48%, Business 22% vs 38%,
   Technology 21% vs 35%, Environment 34% vs 38%; Science equal at 21%). Weighted to the NYT's topic mix, the Guardian
   is still 42% negative vs the NYT's 30%. Part of it can still be model error: RoBERTa is more accurate on NYT headlines
   (84%) than on Guardian ones (58%) in our hand labels. *(15 Nov 2026, articles_clean.csv + sentiment.csv)*
