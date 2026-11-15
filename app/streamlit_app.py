@@ -32,7 +32,7 @@ st.set_page_config(page_title="Global News Analyzer", page_icon="🌍", layout="
 CARDS_PER_STEP = 20
 REFERENCE_OUTLET = "The Guardian"   # Outlets compared: the only outlet collected on every day
 MIN_OUTLET_ARTICLES = 30            # Outlets compared: fewer articles give too wide intervals
-LIST_HEIGHT = 1310   # px: the article list ends about where the right column ("Sentiment over time") ends
+LIST_HEIGHT = 1410   # px: the article list ends about where the right column ("Sentiment over time") ends
 VIEWS = ["Articles", "People & places", "Outlets compared", "How the labels work"]
 
 st.markdown(f"""
@@ -292,7 +292,7 @@ if view == "Articles":
                     st.markdown('<p class="sec">ENTITIES · spaCy transformer</p>'
                                 + "".join(lines), unsafe_allow_html=True)
 
-                limits = ["The models read only the headline, not the article.",
+                limits = ["The sentiment models read only the headline, not the article.",
                           "Positive labels are often wrong: about 4 in 10 are really good news "
                           "(positive words ≠ good news).",
                           "Driving words show what moved the score; two words that say the same thing both look weak."]
@@ -332,24 +332,28 @@ if view == "Articles":
 
         # -- sentiment over time --
         with st.container(border=True):
-            heading("Sentiment over time", "Articles per day, RoBERTa label")
-            per_day = (shown[shown["roberta_label"] != "not analysed"]
-                       .groupby(["date", "roberta_label"]).size().reset_index(name="articles"))
-            if per_day.empty:
+            # shares per week, not counts: the outlets were collected in different weeks, so the number of
+            # articles per day would mostly show which outlets we had, not the news
+            heading("Sentiment over time", "Share of headlines per week, RoBERTa label · hover for the numbers")
+            dated = shown[shown["roberta_label"] != "not analysed"]
+            per_week = (dated.assign(week=pd.to_datetime(dated["date"]).dt.to_period("W").dt.start_time)
+                        .groupby(["week", "roberta_label"]).size().reset_index(name="articles"))
+            if per_week.empty:
                 st.caption("No articles.")
             else:
-                per_day["date"] = pd.to_datetime(per_day["date"])
                 order = ["positive", "neutral", "negative"]
-                chart = alt.Chart(per_day).mark_bar().encode(
-                    x=alt.X("date:T", title=None),
-                    y=alt.Y("articles:Q", title=None),
+                chart = alt.Chart(per_week).mark_bar(size=18).encode(
+                    x=alt.X("week:T", title=None),
+                    y=alt.Y("articles:Q", title=None, stack="normalize", axis=alt.Axis(format="%")),
                     color=alt.Color("roberta_label:N", title=None, sort=order,
                                     scale=alt.Scale(domain=order, range=[SENTIMENT_COLOURS[s] for s in order]),
-                                    legend=alt.Legend(orient="bottom")),
+                                    legend=alt.Legend(orient="top", direction="horizontal")),
                     order=alt.Order("order:Q"),
-                    tooltip=["date:T", "roberta_label:N", "articles:Q"],
+                    tooltip=[alt.Tooltip("week:T", title="week of"), "roberta_label:N", "articles:Q"],
                 ).transform_calculate(order=f"indexof({order}, datum.roberta_label)").properties(height=200)
                 st.altair_chart(chart, width="stretch")
+                st.caption("Shares, not counts: the outlets were collected in different weeks. "
+                           "The last week may be incomplete.")
 
 
 # ---- view 2: people & places --------------------------------------------------------------------------
