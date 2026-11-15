@@ -1,7 +1,7 @@
 # Global News Analyzer
 
 University text-analytics team project (5 students, beginners with Python and Git).
-Goal and design: read `docs/solution-idea.md` first.
+Overview and results: `README.md`. The first plan (Oct 2026) is in `archive/solution-idea-oct-2026.md`.
 
 **In short:** collect news from several outlets, group articles about the same event into
 "stories", and show on a dashboard how the outlets differ (sentiment vs. the story average,
@@ -48,7 +48,7 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 ## NLP pipeline (`pipeline/`) and dashboard
 - `pipeline/`: the current NLP version (clean -> sentiment -> entities -> stories). Steps, commands and results:
   `pipeline/README.md`. Full outputs go to `data/raw/outputs/` (ignored), small results to `results/` and `failures/`.
-- `nlp/`: the first NLP version; kept as it is.
+- `archive/`: earlier versions (first NLP scripts in `archive/nlp-first-version/`, first results, first plan); not used.
 - `app.py` (Tala): first Streamlit demo on the old outputs. The final dashboard reads the `pipeline/` outputs.
 
 ## Course rules (must follow)

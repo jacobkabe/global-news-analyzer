@@ -1,6 +1,6 @@
 # Pipeline (upgraded NLP version)
 
-The new NLP pipeline. The first version in `nlp/` stays as it is.
+The NLP pipeline. The first version is in `archive/nlp-first-version/` (not used any more).
 Every step reads and writes CSV files in `data/raw/outputs/` (ignored by Git), joined by `article_id`.
 Only small results (metrics, plots, samples) are committed, to `results/`, `failures/` and `data/sample/`.
 
@@ -127,8 +127,7 @@ Details of the rules and commands: the top of `ner.py`. The transformer model ne
 
 ## 5. Dashboard (`app/streamlit_app.py`)
 **To only look at it (teammates):** put the 4 data files from OneDrive (`Semestral project - TA/dashboard-data`)
-into `data
-aw\outputs\` and double-click **`run_dashboard.bat`**. The first time it installs only streamlit and
+into `data\raw\outputs\` and double-click **`run_dashboard.bat`**. The first time it installs only streamlit and
 pandas (`requirements-dashboard.txt`, about a minute) into `.venv-dashboard`; it then opens the browser.
 
 `streamlit run app\streamlit_app.py` (opens in the browser; only this computer can see it).
