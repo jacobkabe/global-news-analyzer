@@ -304,9 +304,13 @@ if view == "Articles":
 
         # -- trending entities: the last 7 days of the range vs the 7 days before --
         with st.container(border=True):
-            heading("Trending entities", f"Articles in the 7 days to {end:%d %b} vs the 7 days before")
-            week = base[(base["date"] > end - timedelta(days=7)) & (base["date"] <= end)]
-            before = base[(base["date"] > end - timedelta(days=14)) & (base["date"] <= end - timedelta(days=7))]
+            # only outlets we have for both weeks: a newly collected outlet would otherwise look like a trend
+            both_weeks, kept = entity_view.comparable(base, end)
+            heading("Trending entities", f"Articles in the 7 days to {end:%d %b} vs the 7 days before · "
+                                         f"only outlets we have for both weeks ({', '.join(kept) or 'none'})")
+            week = both_weeks[(both_weeks["date"] > end - timedelta(days=7)) & (both_weeks["date"] <= end)]
+            before = both_weeks[(both_weeks["date"] > end - timedelta(days=14))
+                                & (both_weeks["date"] <= end - timedelta(days=7))]
             now_counts = entities[entities["article_id"].isin(week["article_id"])]["entity"].value_counts()
             old_counts = entities[entities["article_id"].isin(before["article_id"])]["entity"].value_counts()
             trend = pd.DataFrame({"now": now_counts, "before": old_counts}).fillna(0)

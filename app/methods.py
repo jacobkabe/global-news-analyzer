@@ -341,7 +341,8 @@ def show(articles, entities, colours):
     with st.expander("Other parts of the dashboard: trending, outlets compared"):
         st.markdown("""
 - **Trending entities:** articles mentioning a name in the 7 days up to the end of the date range, against the
-  7 days before. At least 3 articles; "new" = not mentioned the week before.
+  7 days before, counted only in outlets we have for both weeks (the outlets were collected in different weeks, so a
+  newly collected outlet would look like a trend). At least 3 articles; "new" = not mentioned the week before.
 - **Outlets compared:** each outlet's share of negative headlines against the Guardian's on the same days
   (the outlets were collected over different periods; the Guardian is the only one we have for every day), with a
   95% interval; only outlets with at least 30 articles. A gap can still come from the topics an outlet covers, and
