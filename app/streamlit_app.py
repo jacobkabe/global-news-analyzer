@@ -129,10 +129,23 @@ with st.sidebar:
 # ---- header ------------------------------------------------------------------------------------------
 title_col, search_col, info_col = st.columns([1.5, 1.6, 1.4], vertical_alignment="center")
 title_col.markdown('<span class="gna-title">GLOBAL NEWS ANALYZER</span>', unsafe_allow_html=True)
-in_articles = st.session_state.get("view", "Articles") == "Articles"
+current_view = st.session_state.get("view", "Articles")
+
+
+def search_entity():
+    """In People & places the search bar opens a name's profile instead of filtering the articles:
+    the text is handed to entity_view and the bar is emptied, so it does not filter Articles later."""
+    if st.session_state.get("view") == "People & places" and st.session_state.get("query", "").strip():
+        st.session_state["entity_search"] = st.session_state["query"].strip()
+        st.session_state["query"] = ""
+
+
+placeholders = {"Articles": "🔍  Search headlines, people, places...",
+                "People & places": "🔍  Find a person, place or organisation, then Enter"}
 query = search_col.text_input(
-    "Search", label_visibility="collapsed", key="query", disabled=not in_articles,
-    placeholder="🔍  Search headlines, people, places..." if in_articles else "Search works in the Articles view")
+    "Search", label_visibility="collapsed", key="query", disabled=current_view not in placeholders,
+    on_change=search_entity,
+    placeholder=placeholders.get(current_view, "Search works in Articles and People & places"))
 info = info_col.empty()   # filled in below, when we know how many articles are left
 
 

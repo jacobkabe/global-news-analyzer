@@ -103,6 +103,11 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
 - **The small spaCy model depends on capital letters:** NYT Title Case headlines give mistakes such as "Trump Says"
   as an organisation; the transformer model reads the whole sentence. *(pipeline/README.md)*
 - **Name normalisation matters:** "Donald Trump" is found in 1,537 articles, but the exact text "Donald Trump" in only 76.
+- **The 80% rule keeps unclear surnames apart, sometimes too strictly:** "Biden" stayed a separate entity because the
+  full names were split between "Joe Biden" (5), "Joseph R. Biden Jr." (7, the NYT's style) and "Hunter Biden" (2).
+  After adding the NYT spelling to our alias list, Joe Biden has 12 of 14 full names and "Biden" becomes Joe Biden
+  (28 articles); Hunter Biden stays separate. Found by searching the dashboard (15 Nov 2026).
+  *(pipeline/entity_aliases.csv)*
   *(results/ner_top_entities.csv)*
 - **The transformer model finds names much better:** on 85 names in 50 headlines labelled by teammates, F1 (name and
   type right) 0.84 for en_core_web_trf vs 0.68 for en_core_web_sm; name only 0.92 vs 0.79; 26 vs 52 mistakes.

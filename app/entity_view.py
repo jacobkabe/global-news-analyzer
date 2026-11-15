@@ -50,6 +50,24 @@ def articles_text(n):
     return f"{n:,} article" if n == 1 else f"{n:,} articles"
 
 
+def find_entity(text, options, mentions):
+    """The name a search text means. `options` are sorted by number of articles, so the most covered wins.
+    1. the exact name ("iran")  2. the exact text as written in an article ("US" -> United States, "Biden")
+    3. a word of the name that starts with the text ("trum" -> Donald Trump; "us" does not match "Russia")"""
+    q = text.strip().lower()
+    for name in options:
+        if name.lower() == q:
+            return name
+    written = mentions[mentions["text"].str.lower() == q]["entity"].value_counts()
+    for name in written.index:
+        if name in options:
+            return name
+    for name in options:
+        if any(word.startswith(q) for word in name.lower().split()) or name.lower().startswith(q):
+            return name
+    return None
+
+
 def comparable(frame, end):
     """Keep only the outlets that have articles both in the 7 days to `end` and in the 7 days before.
     The outlets were collected in different weeks (e.g. The News API only from 10 Nov), so without this a new
@@ -103,13 +121,22 @@ def show(scope, scope_all_dates, entities, entity_types, end):
     if not options:
         st.info("No name has enough articles with the current filters.")
         return
+    wanted = st.session_state.pop("entity_search", None)     # typed into the search bar at the top
+    if wanted:
+        found = find_entity(wanted, options, in_scope)
+        if found:
+            st.session_state["entity"] = found
+        else:
+            st.warning(f"No person, place or organisation matching “{wanted}” with at least {MIN_ARTICLES} "
+                       "articles in the current filters.")
     if st.session_state.get("entity") not in options:
         st.session_state["entity"] = options[0]
 
     pick_col, info_col = st.columns([1.2, 2], vertical_alignment="bottom")
     pick_col.selectbox("Person, place or organisation", options, key="entity",
                        format_func=lambda e: f"{e} ({entity_types[e]}, {counts[e]} articles)",
-                       help="Type to search. Uses the sidebar filters for outlets, topic, 'only news' and dates.")
+                       help="Click and type to search the list, or use the search bar at the top. "
+                            "Uses the sidebar filters for outlets, topic, 'only news' and dates.")
     name = st.session_state["entity"]
 
     ids = in_scope.loc[in_scope["entity"] == name, "article_id"]
