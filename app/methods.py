@@ -120,8 +120,14 @@ def show(articles, entities, colours):
             "or files; each arrow says what flows along it. Dashed = planned.")
     st.graphviz_chart(pipeline_diagram(articles), width="stretch")
 
-    metrics = pd.read_csv(RESULTS / "sentiment_metrics.csv")
-    metrics = metrics[metrics["eval_set"] == "random150"].set_index(["model", "labels"])
+    all_metrics = pd.read_csv(RESULTS / "sentiment_metrics.csv")
+    metrics = all_metrics[all_metrics["eval_set"] == "random150"].set_index(["model", "labels"])
+    team = all_metrics[(all_metrics["eval_set"] == "team_random") & (all_metrics["model"] == "roberta")
+                       & (all_metrics["labels"] == "default")]
+    agreement = RESULTS / "sentiment_agreement.csv"
+    agreement = pd.read_csv(agreement) if agreement.exists() else pd.DataFrame()
+    people = agreement[(agreement.get("annotator_1") != "reviewed gold") & (agreement.get("annotator_2") != "reviewed gold")] \
+        if len(agreement) else agreement
     cutoffs = pd.read_csv(RESULTS / "sentiment_cutoffs.csv").set_index("model")
     gold = pd.read_csv(GOLD, keep_default_na=False)
     random = gold[gold["sample"] == "random"]
@@ -229,6 +235,17 @@ def show(articles, entities, colours):
 - **Positive labels are unreliable:** good news is rare ({(random['my_label'] == 'positive').sum()} of {len(random)})
   and models confuse positive *words* with good *news* ("Who's Winning the Race for Congress?").
 """)
+    if len(team) and len(people):
+        t = team.iloc[0]
+        labels = pd.read_csv(GOLD.parent / "sentiment_team.csv", keep_default_na=False)
+        team_neutral = (labels.loc[labels["sample"] == "random_2", "label"] == "neutral").mean()
+        st.markdown(f"""
+- **Second check by teammates:** {int(t.n)} new random headlines, labelled by teammates and never used for tuning:
+  RoBERTa is right on **{t.accuracy:.0%}** (always "neutral": {team_neutral:.0%}). Lower than above, but people disagree too: two teammates gave the same
+  label to only **{people['agreement'].mean():.0%}** of {int(people['n'].iloc[0])} shared headlines
+  (Cohen's kappa {people['cohen_kappa'].mean():.2f}). Most misses: bad news in calm words, which the team
+  called negative and RoBERTa neutral ("Houthis seize key Yemeni port of Mocha…").
+""")
     with st.expander("Details: the full results table, the cut-offs, our labels"):
         full = metrics.reset_index()[["model", "labels", "accuracy", "macro_f1", "f1_negative", "f1_neutral", "f1_positive"]]
         st.dataframe(full.style.format({c: "{:.2f}" for c in full.columns[2:]}), hide_index=True)
@@ -239,7 +256,8 @@ def show(articles, entities, colours):
   The dashboard uses cut-offs tuned on all {len(gold)} labelled headlines.
 - **The {len(random)} "random" headlines are spread evenly over outlets** (20 each for the small RSS outlets), while
   most of our data is from the Guardian and the NYT.
-- **Our labels:** one annotator, then a second pass against the codebook (12 Nov 2026) changed {changed} labels,
+- **Our labels:** one annotator (plus teammates for the second check), then a second pass against the codebook
+  (12 Nov 2026) changed {changed} labels,
   mostly war, violence and threats that had been labelled neutral. The old label is kept in
   `data/sample/sentiment_gold.csv`; the codebook is in `data/sample/README.md`.
 - {len(gold) - len(random)} more headlines were picked because a model called them positive (to test the positive
@@ -281,6 +299,8 @@ def show(articles, entities, colours):
             "spaCy's transformer model finds names in the headline + summary; our rules then give the same person or "
             "place always the same name. The \"Why these labels?\" box shows the rule for each name.")
     how = entities["how"].value_counts()
+    ner = RESULTS / "ner_metrics.csv"
+    ner = pd.read_csv(ner).set_index(["task", "method", "match"]) if ner.exists() else None
     steps = [("found as written", "same", "“Yemen”"),
              ("our alias list", "alias", "“US” → United States"),
              ("full name in the same article", "article", "“Trump” → Donald Trump"),
@@ -296,7 +316,14 @@ def show(articles, entities, colours):
 - The alias list (`pipeline/entity_aliases.csv`) wins over the other rules. "Surname → full name" is used only if
   one full name has at least 80% of the mentions (so "Trump" is Donald Trump, not Melania Trump).
 - Compared with the small spaCy model, which relies on capitals (NYT Title Case gives "Trump Says" as an organisation).
-  The evaluation on our hand labels is still to come.
+""")
+        if ner is not None:
+            f1 = lambda m, match: ner.loc[("entities in headlines", m, match), "f1"]
+            n_gold = int(ner.loc[("entities in headlines", "trf", "name and type"), "n_gold"])
+            st.markdown(f"""
+- **Checked on {n_gold} names labelled by teammates** (F1, name and type right): transformer **{f1('trf', 'name and type'):.2f}**,
+  small model {f1('sm', 'name and type'):.2f}. Name only: {f1('trf', 'name only'):.2f} vs {f1('sm', 'name only'):.2f}.
+  Most remaining "errors" are type questions people also disagree on ("Kyiv" as a place or the government).
 """)
 
     with st.expander("Other parts of the dashboard: trending, outlets compared"):

@@ -1,0 +1,79 @@
+model,error,article_id,name,type
+sm,"wrong (not an entity, wrong span or type)",68,trump,organisation
+sm,"wrong (not an entity, wrong span or type)",289,britannia shield',organisation
+sm,"wrong (not an entity, wrong span or type)",289,iron dome,organisation
+sm,"wrong (not an entity, wrong span or type)",1121,australian,group
+sm,"wrong (not an entity, wrong span or type)",1121,us,place
+sm,"wrong (not an entity, wrong span or type)",1165,rubio,organisation
+sm,"wrong (not an entity, wrong span or type)",1168,south africans,group
+sm,"wrong (not an entity, wrong span or type)",1173,zelenskyy,organisation
+sm,"wrong (not an entity, wrong span or type)",1176,social security,organisation
+sm,"wrong (not an entity, wrong span or type)",1182,socialist,group
+sm,"wrong (not an entity, wrong span or type)",1215,guatemalan,organisation
+sm,"wrong (not an entity, wrong span or type)",2234,ferris bueller gone bad,person
+sm,"wrong (not an entity, wrong span or type)",2238,the postal service could refuse,organisation
+sm,"wrong (not an entity, wrong span or type)",3450,expel cornell,organisation
+sm,"wrong (not an entity, wrong span or type)",3881,the midterm senate fight spreads,organisation
+sm,"wrong (not an entity, wrong span or type)",4167,the plague research labs,organisation
+sm,"wrong (not an entity, wrong span or type)",4249,reach,organisation
+sm,"wrong (not an entity, wrong span or type)",4406,emi martinez,organisation
+sm,"wrong (not an entity, wrong span or type)",4429,first us,organisation
+sm,"wrong (not an entity, wrong span or type)",5027,patriots,organisation
+sm,"wrong (not an entity, wrong span or type)",5617,bank,organisation
+sm,"wrong (not an entity, wrong span or type)",5617,burnham,organisation
+sm,"wrong (not an entity, wrong span or type)",6147,ai,place
+sm,missed,68,trump,person
+sm,missed,289,conservatives,group
+sm,missed,1119,trump,person
+sm,missed,1121,australian,place
+sm,missed,1136,ukrainian,group
+sm,missed,1165,rubio,person
+sm,missed,1165,uzbekistan,place
+sm,missed,1168,apaartheid,event
+sm,missed,1168,south africans,place
+sm,missed,1173,zelenskyy,person
+sm,missed,1182,socialist,organisation
+sm,missed,1200,houthis,group
+sm,missed,1209,ww1,event
+sm,missed,1215,guatemalan,group
+sm,missed,1241,canadian forces base wainwright,place
+sm,missed,1693,trump,person
+sm,missed,2238,the postal service,organisation
+sm,missed,3219,mississippi,place
+sm,missed,3450,cornell,organisation
+sm,missed,3881,senate,organisation
+sm,missed,4072,leo,person
+sm,missed,4406,emi martinez,person
+sm,missed,4429,us military,organisation
+sm,missed,4682,sadiq khan,person
+sm,missed,5027,kyiv,place
+sm,missed,5504,plantwatch,other
+sm,missed,5617,burnham,person
+sm,missed,6348,dengue fever,other
+sm,missed,6688,gypsy rose blanchard,person
+trf,"wrong (not an entity, wrong span or type)",1121,australian,group
+trf,"wrong (not an entity, wrong span or type)",1121,us,place
+trf,"wrong (not an entity, wrong span or type)",1168,south africans,group
+trf,"wrong (not an entity, wrong span or type)",1176,social security,organisation
+trf,"wrong (not an entity, wrong span or type)",1182,albania,group
+trf,"wrong (not an entity, wrong span or type)",1182,socialist,group
+trf,"wrong (not an entity, wrong span or type)",4167,the plague research labs,place
+trf,"wrong (not an entity, wrong span or type)",4249,nations,organisation
+trf,"wrong (not an entity, wrong span or type)",4429,us,place
+trf,"wrong (not an entity, wrong span or type)",5027,eu,place
+trf,"wrong (not an entity, wrong span or type)",5027,kyiv,organisation
+trf,"wrong (not an entity, wrong span or type)",5617,bank,organisation
+trf,missed,1121,australian,place
+trf,missed,1168,apaartheid,event
+trf,missed,1168,south africans,place
+trf,missed,1182,albania,place
+trf,missed,1182,socialist,organisation
+trf,missed,1209,church,organisation
+trf,missed,1241,canadian,group
+trf,missed,4072,pope leo's,person
+trf,missed,4429,us military,organisation
+trf,missed,4682,khan,person
+trf,missed,5027,eu,organisation
+trf,missed,5027,kyiv,place
+trf,missed,5504,plantwatch,other
+trf,missed,6348,dengue fever,other

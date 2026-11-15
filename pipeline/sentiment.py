@@ -63,6 +63,7 @@ ARTICLES = ROOT / "data" / "raw" / "outputs" / "articles_clean.csv"
 OUTPUT = ROOT / "data" / "raw" / "outputs" / "sentiment.csv"
 EXPLAIN = ROOT / "data" / "raw" / "outputs" / "sentiment_explain.csv"
 GOLD = ROOT / "data" / "sample" / "sentiment_gold.csv"
+TEAM_LABELS = ROOT / "data" / "sample" / "sentiment_team.csv"   # labels by the team (pipeline/labels.py collect)
 RESULTS = ROOT / "results"
 FAILURES = ROOT / "failures"
 
@@ -371,6 +372,14 @@ def evaluate():
     if not models:
         sys.exit("No predictions yet. Run: python pipeline\\sentiment.py run --gold-only")
 
+    # held-out test: the team's new headlines (not the 30 shared ones, which are already in the gold file).
+    # The cut-offs are tuned on the 230 gold headlines only, so these headlines were never used for tuning.
+    team = None
+    if TEAM_LABELS.exists():
+        team = pd.read_csv(TEAM_LABELS, keep_default_na=False)
+        team = team[(team["sample"] != "shared") & ~team["id"].isin(gold["id"])]
+        team = team.drop_duplicates("id")[["id", "sample", "label"]].rename(columns={"label": "team_label"})
+
     rng = np.random.default_rng(42)
     table, by_outlet, cutoffs = [], [], []
     fig, axes = plt.subplots(1, len(models), figsize=(4.2 * len(models), 4))
@@ -395,6 +404,15 @@ def evaluate():
                 by_outlet.append({"model": name, "labels": variant, "source": source, "n": len(part),
                                   "accuracy": (labels[part.index] == g[part.index]).mean()})
         data[f"{name}_score"] = score
+
+        t = team.merge(pred[pred["model"] == name], left_on="id", right_on="article_id") if team is not None else []
+        if len(t) and len(t) == len(team):   # DistilBERT only scored the 230 gold headlines: skipped
+            tg = t["team_label"].to_numpy()
+            for variant, labels in {"default": t["label"].to_numpy(),
+                                    "tuned": labels_from_score(t["score"].to_numpy(), low, high)}.items():
+                for eval_set, mask in [("team_random", t["sample"] == "random_2"), ("team_all", t["sample"] != "")]:
+                    row = metrics(tg[mask.to_numpy()], labels[mask.to_numpy()], rng)
+                    table.append({"model": name, "labels": variant, "eval_set": eval_set, **row})
 
         # confusion matrix: tuned labels on the random 150
         m = (p["sample"] == "random").to_numpy()
@@ -437,6 +455,10 @@ def evaluate():
                                                     "macro_f1_ci_low", "macro_f1_ci_high",
                                                     "f1_negative", "f1_neutral", "f1_positive"]]
     print("\nRandom 150 headlines (main result):\n" + show.to_string(index=False))
+    if team is not None and len(team):
+        show = table[(table["eval_set"] == "team_random") & (table["labels"] == "tuned")]
+        print("\nHeld-out test, the team's random headlines (cut-offs tuned on the 230 only):\n"
+              + show[["model", "n", "accuracy", "macro_f1", "macro_f1_ci_low", "macro_f1_ci_high"]].to_string(index=False))
     print(f"\nsaved: results/sentiment_metrics.csv, sentiment_by_outlet.csv, sentiment_cutoffs.csv, "
           f"sentiment_confusion.png; failures/sentiment_gold_vs_models.csv")
 

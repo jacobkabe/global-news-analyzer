@@ -11,6 +11,12 @@ Small anonymised sample of collected articles and outputs.
   The 80 positive candidates were picked by `nlp/sentiment/make_label_sheet_extra.py` (not a random sample: say so in the report).
   Codebook review (12 Nov 2026): all 230 were labelled again against the codebook without seeing the first labels;
   30 clear mistakes were corrected (first label in `label_before_review`, reason in `note`).
+- `sentiment_team.csv`: labels by teammates (`python pipeline\labels.py collect`), one row per label with `annotator`
+  and `sample`: `shared` (30 headlines from the 230 above that everyone labels, for agreement), `random_2` (new random
+  headlines, in proportion to our data, used as a held-out test), `positive_candidates_2` (new model-picked positives).
+- `ner_gold_types.csv`, `ner_gold_same.csv`: the teammates' entity labels (types of names in headlines; the real
+  entity behind a mention), input for `python pipeline\ner.py evaluate`. Two pre-filled names left unchanged by
+  mistake are corrected (old value in `real_entity_before_review`, reason in `note`).
 
 ## How to label (our codebook)
 Ask one question: "Reading only this headline, is it reporting something bad, something good, or neither?"

@@ -1,0 +1,4 @@
+annotator_1,annotator_2,n,agreement,cohen_kappa
+Adriana,Klaudie,30,0.7,0.504
+Adriana,reviewed gold,30,0.8,0.675
+Klaudie,reviewed gold,30,0.767,0.619

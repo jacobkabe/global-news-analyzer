@@ -27,6 +27,7 @@ The Excel files contain headlines and summaries, so they stay in data/raw/ (igno
 """
 import argparse
 import sys
+from difflib import get_close_matches
 from itertools import combinations
 from pathlib import Path
 
@@ -47,6 +48,12 @@ N_RANDOM = 25          # new random headlines per person
 N_CANDIDATES = 15      # new "a model says positive" headlines per person
 SENTIMENT_CHOICES = ["negative", "neutral", "positive"]
 TYPE_CHOICES = ["person", "organisation", "place", "group", "event", "other", "no"]
+# Reviewed by Jakub: "Same entity" rows where the pre-filled name was left unchanged although the guide says
+# otherwise. (article_id, mention) -> (real entity, reason). Shown in the "note" column of ner_gold_same.csv.
+SAME_CORRECTIONS = {
+    (3187, "Trump"): ("Donald Trump", "pre-filled name left unchanged; 'Trump-Xi State Dinner' is Donald Trump"),
+    (230, "Zack Polanski's"): ("Zack Polanski", "pre-filled name left unchanged; the guide says to drop 's"),
+}
 
 
 # ---- make ---------------------------------------------------------------------------------------------
@@ -148,6 +155,23 @@ def write_file(path, sentiment, types, same):
 
 
 # ---- collect ------------------------------------------------------------------------------------------
+def fix_label(text):
+    """Accept small typos: 'neagtive' -> 'negative' (the closest of the three words, if it is close enough)."""
+    text = str(text).strip().lower()
+    return (get_close_matches(text, SENTIMENT_CHOICES, n=1, cutoff=0.75) or [text])[0]
+
+
+def fix_missed(t):
+    """Keep only our columns. If someone wrote the type of a missed name into the next column
+    ('DENGUE FEVER' | 'other') instead of 'DENGUE FEVER (other)', join the two."""
+    extra = [c for c in t.columns if c not in ("article_id", "headline", "mention", "my_type", "missed")]
+    if extra:
+        nxt = t[extra[0]].astype(str).str.strip().str.lower().replace("organization", "organisation")
+        join = (t["missed"].str.strip() != "") & ~t["missed"].str.contains(r"\(") & nxt.isin(TYPE_CHOICES[:6])
+        t.loc[join, "missed"] = t.loc[join, "missed"].str.strip() + " (" + nxt[join] + ")"
+    return t[["article_id", "headline", "mention", "my_type", "missed"]]
+
+
 def cmd_collect(a):
     from sklearn.metrics import cohen_kappa_score
     folder = Path(a.folder) if a.folder else RETURNED
@@ -159,7 +183,7 @@ def cmd_collect(a):
     for f in files:
         name = f.stem.removeprefix("labelling_")
         s = pd.read_excel(f, sheet_name="1 Sentiment", dtype=str).fillna("")
-        s["my_label"] = s["my_label"].astype(str).str.strip().str.lower()
+        s["my_label"] = s["my_label"].map(fix_label)
         bad = s[~s["my_label"].isin(SENTIMENT_CHOICES)]
         if len(bad):
             problems.append(f"{name}: {len(bad)} sentiment rows without a valid label (rows {bad['row'].tolist()[:10]})")
@@ -167,8 +191,8 @@ def cmd_collect(a):
         s["id"] = s["id"].astype(int)
         sentiment.append(s[s["my_label"].isin(SENTIMENT_CHOICES)])
 
-        t = pd.read_excel(f, sheet_name="2 Entity types", dtype=str).fillna("")
-        t["my_type"] = t["my_type"].astype(str).str.strip().str.lower()
+        t = fix_missed(pd.read_excel(f, sheet_name="2 Entity types", dtype=str).fillna(""))
+        t["my_type"] = t["my_type"].astype(str).str.strip().str.lower().replace("organization", "organisation")
         bad = t[(t["mention"] != "") & ~t["my_type"].isin(TYPE_CHOICES)]
         if len(bad):
             problems.append(f"{name}: {len(bad)} entity-type rows without a valid type")
@@ -176,7 +200,12 @@ def cmd_collect(a):
 
         m = pd.read_excel(f, sheet_name="3 Same entity", dtype=str).fillna("")
         m = m[m["real_entity"].astype(str).str.strip().str.lower() != "no"]   # not a real name: left out
-        same.append(m)
+        m["annotator"], m["real_entity_before_review"], m["note"] = name, m["real_entity"], ""
+        for i, r in m.iterrows():
+            fix = SAME_CORRECTIONS.get((int(r["article_id"]), r["mention"]))
+            if fix:
+                m.loc[i, ["real_entity", "note"]] = fix
+        same.append(m.drop(columns=["lead"]))   # the summary is not needed and stays out of the public repo
 
     print("\n".join(problems) if problems else "all files complete")
     sentiment = pd.concat(sentiment).merge(key, left_on=["annotator", "id"], right_on=["annotator", "id"], how="left")

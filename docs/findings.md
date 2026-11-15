@@ -4,7 +4,7 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
 "Evaluation", "Failure analysis" and "Limitations" parts of the report. Newest findings at the end of each section.
 
 ## Data
-- **Most of our data comes from two outlets:** 98% of the 6,140 articles are from the Guardian and the NYT; the RSS
+- **Most of our data comes from two outlets:** 93% of the 9,536 articles (to 14 Nov) are from the Guardian and the NYT; the RSS
   outlets (BBC, Al Jazeera, Fox News, NPR) only started in mid-October with a few articles a day, so their numbers
   rest on very few articles. *(dashboard, "How the labels work")*
 - **Only the Guardian gives full text**, so every model reads the headline (sentiment) or headline + summary
@@ -32,8 +32,17 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
 - **Good news is rare:** 11 of the 150 random headlines are positive. *(sentiment_gold.csv)*
 - **The 80 "positive candidates" were picked by the models**, so they are not random and are not used for the main
   numbers (16 of them are really positive). *(data/sample/README.md)*
-- **Team labelling (Nov 2026):** 4 people label 30 shared headlines (agreement), 100 new random headlines and 60 new
-  positive candidates, plus the entity sheets. *(pipeline/labels.py, docs/labelling-guide.md; results to come)*
+- **Team labelling (Nov 2026):** 4 people each label 30 shared headlines (agreement), 25 new random headlines and 15
+  new positive candidates, plus the entity sheets. 2 of 4 files are back (Adriana, Klaudie, 15 Nov).
+  *(pipeline/labels.py, docs/labelling-guide.md)*
+- **Two teammates agree on 70% of the shared headlines** (Cohen's kappa 0.50, moderate): the same level as the first
+  and second pass of our own labels (kappa 0.52). Each agrees with our reviewed labels more often (80% and 77%,
+  kappa 0.68 and 0.62). People differ in how strict they are: of the same 30 headlines Adriana called 14 negative,
+  Klaudie 10. *(results/sentiment_agreement.csv)*
+- **The returned files had small slips:** a typo ("neagtive"), the types of missed names in an extra column, the guide
+  pasted next to the table, and 2 pre-filled names left unchanged ("Trump" in "Trump-Xi State Dinner", "Zack
+  Polanski's"). labels.py collect fixes the first three; the last two are corrected with a reason in the `note`
+  column of data/sample/ner_gold_same.csv. *(pipeline/labels.py)*
 
 ## Sentiment models
 - **No model is significantly better than the others:** RoBERTa 71%, VADER-tuned 71%, BART-tuned 70% accuracy on the
@@ -60,6 +69,16 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
   than on our sentence-case version (74%), so it reads the original. *(audit, 12 Nov 2026)*
 - **A finer cut-off grid is not worth it:** it improves macro-F1 by at most 0.03, even measured on the headlines it
   was tuned on. *(audit, 12 Nov 2026)*
+- **On the teammates' labels the models score lower (held-out test):** 50 new random headlines (in proportion
+  to our data: 29 Guardian, 21 NYT), labelled by teammates and never used for tuning: RoBERTa 58% (tuned cut-offs
+  62%), VADER-tuned 56%, BART-tuned 54%, always "neutral" 52%; RoBERTa macro-F1 0.41 (0.32-0.50), and only 3 of the
+  50 are positive. So the 71-73% on our own labels is partly fitted to one person's way of labelling.
+  *(results/sentiment_metrics.csv, eval_set team_random)*
+- **RoBERTa agrees with a person about as often as two people agree:** on the 30 shared headlines it agrees with
+  Adriana on 70% and with Klaudie on 73%; Adriana and Klaudie agree on 70%. *(results/sentiment_agreement.csv)*
+- **Its main miss is bad news told in calm words:** the team calls it negative, RoBERTa neutral (10 of the 21
+  negative held-out headlines with tuned cut-offs), e.g. "Houthis seize key Yemeni port of Mocha in drive to take control of Red Sea
+  coast", "UK households have paid extra £13,961 on bills since 2021 amid soaring inflation". *(sentiment_team.csv)*
 
 ## Explanations ("why this label")
 - **Deleting a word to measure its effect can break the sentence:** "US workers facing deadly heat borrow…" without
@@ -83,9 +102,17 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
 ## Entities
 - **The small spaCy model depends on capital letters:** NYT Title Case headlines give mistakes such as "Trump Says"
   as an organisation; the transformer model reads the whole sentence. *(pipeline/README.md)*
-- **Name normalisation matters:** "Donald Trump" is found in 957 articles, but the exact text "Donald Trump" in only 48.
+- **Name normalisation matters:** "Donald Trump" is found in 1,406 articles, but the exact text "Donald Trump" in only 74.
   *(results/ner_top_entities.csv)*
-- **The entity evaluation is still to come** (team labels). *(pipeline/labels.py)*
+- **The transformer model finds names much better:** on 85 names in 50 headlines labelled by teammates, F1 (name and
+  type right) 0.84 for en_core_web_trf vs 0.68 for en_core_web_sm; name only 0.92 vs 0.79; 26 vs 52 mistakes.
+  *(results/ner_metrics.csv, failures/ner_errors.csv)*
+- **Many of the transformer's remaining "errors" are type questions people disagree on:** "Kyiv books in 1,000
+  Patriots" (Kyiv = the government, an organisation, or a place?), "EU" (place or organisation), "Australian" labelled
+  as a place although the guide says group. So the type F1 is a lower bound. *(failures/ner_errors.csv)*
+- **The name-rule check is too small to show much:** on 76 labelled mentions, pairs of mentions of the same entity
+  score F1 0.994 before our rules and 1.000 after; the sample has few name variants (mostly 13 × "Trump"), so the
+  better evidence for the rules is the count above. *(results/ner_metrics.csv)*
 
 ## Dashboard and comparison of outlets
 - **Outlet differences are not fair yet:** outlets cover different topics, so a gap in average sentiment can come from

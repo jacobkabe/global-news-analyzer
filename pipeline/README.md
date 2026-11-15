@@ -10,7 +10,7 @@ Run each step from the project folder, in this order:
 |---|---|---|---|
 | 1. Clean | `python pipeline\clean.py` | `articles_clean.csv` | done |
 | 2. Sentiment | `python pipeline\sentiment.py run` / `evaluate` / `explain` | `sentiment.csv`, `sentiment_explain.csv`, `results/sentiment_*` | done |
-| 3. Entities | `python pipeline\ner.py run` / `normalise` / `sheets` / `evaluate` | `entities.csv`, `results/ner_*` | built; waiting for labels |
+| 3. Entities | `python pipeline\ner.py run` / `normalise` / `sheets` / `evaluate` | `entities.csv`, `results/ner_*` | done (2 of 4 team files back) |
 | 4. Stories | `python pipeline\cluster.py ...` (same event across outlets) | `stories.csv` | later |
 | 5. Dashboard | `streamlit run app\streamlit_app.py` | (reads the files above) | v2 built; stories come with step 4 |
 
@@ -44,6 +44,12 @@ while most of our data is Guardian + NYT. Labels after the codebook review of 12
 | BART-MNLI zero-shot | own / tuned | 45% / 70% | 0.36 / 0.59 (0.50-0.67) |
 | DistilBERT SST-2 (failure example) | own / tuned | 42% / 54% | 0.30 / 0.47 |
 
+**Held-out check on the team's labels** (`eval_set` `team_random`; cut-offs tuned on the 230 only): 50 new random
+headlines labelled by teammates (29 Guardian, 21 NYT). RoBERTa 58% (tuned 62%), VADER-tuned 56%, BART-tuned 54%,
+always "neutral" 52%. Lower than above: two teammates agree with each other on only 70% of 30 shared headlines
+(kappa 0.50), and RoBERTa agrees with each of them about as often (70%, 73%). Main miss: bad news in calm words
+("Houthis seize key Yemeni port of Mocha…": team negative, RoBERTa neutral).
+
 **Which model does what, and why**
 - **No model is significantly better than the others** (the intervals overlap; a paired bootstrap of RoBERTa
   against VADER-tuned gives a difference that can be zero). All three are well above "always neutral".
@@ -76,7 +82,8 @@ corrections did not simply favour the models.
   (`python pipeline\sentiment.py compare-explain` -> `results/sentiment_explain_comparison.csv`): masking finds the
   more important words in 44% of headlines, deleting in 25% (tie 31%); its top word is "nonsense" in 3.5% vs 11%.
   Our own filler list now shows "not", "no", "never", "without" (about 5% of headlines show one of them).
-- One annotator plus one codebook review; a second team member should label a sample blind.
+- The 230 have one annotator plus one codebook review; the team check above (2 annotators so far) shows how much
+  people differ (`results/sentiment_agreement.csv`, `data/sample/sentiment_team.csv`).
 - All failures with every model's label and driving words: `failures/sentiment_gold_vs_models.csv`.
 
 ## 3. Entities (`ner.py`)
@@ -90,7 +97,7 @@ Details of the rules and commands: the top of `ner.py`. The transformer model ne
 - **Name normalisation** (trf output -> `entities.csv`, column `how` says which rule decided):
   clean ("President Trump's" -> "Trump"), our alias list `pipeline/entity_aliases.csv` ("U.S." -> "United States"),
   one type per name, short name -> full name in the same article, surname -> the dominant full name in all articles.
-  Result: "Donald Trump" is found in 957 articles; the exact name "Donald Trump" alone appears in only 48.
+  Result: "Donald Trump" is found in 1,406 articles; the exact name "Donald Trump" alone appears in only 74.
   Top 100 entities with their variants: `results/ner_top_entities.csv`.
 - **Evaluation (needs our labels):** `python pipeline\ner.py sheets` makes two sheets in `data/sample/`:
   - `ner_to_label_types.xlsx`: every name either model found in 100 headlines (from the 150 random sentiment
@@ -101,7 +108,17 @@ Details of the rules and commands: the top of `ner.py`. The transformer model ne
     pre-filled with the name as found; change it to the full real-world name when needed ("Trump" -> "Donald Trump",
     "US" -> "United States"), so that the same thing always has the same text. Scores pairs of mentions
     (precision: mentions we joined are really the same; recall: same mentions we joined) before and after normalisation.
-  Save each labelled sheet as CSV (`ner_gold_types.csv`, `ner_gold_same.csv`), then run `evaluate`.
+  The team labels these in their Excel files; `python pipeline\labels.py collect` writes `ner_gold_types.csv` and
+  `ner_gold_same.csv`, then run `evaluate`.
+- **Results** (85 names in 50 headlines, labelled by teammates; `results/ner_metrics.csv`):
+
+  | Model | F1 name and type | F1 name only | Mistakes |
+  |---|---|---|---|
+  | `en_core_web_sm` | 0.68 | 0.79 | 52 |
+  | `en_core_web_trf` | 0.84 | 0.92 | 26 |
+
+  Many trf "mistakes" are type questions people disagree on (Kyiv as a place or the government, "EU"). The name-rule
+  check (76 mentions) gives F1 0.994 before and 1.000 after the rules, but the sample has few variants.
 
 **Known limits**
 - "Trump" is always taken to be Donald Trump unless another Trump is named in the same article.
@@ -110,7 +127,8 @@ Details of the rules and commands: the top of `ner.py`. The transformer model ne
 
 ## 5. Dashboard (`app/streamlit_app.py`)
 **To only look at it (teammates):** put the 4 data files from OneDrive (`Semestral project - TA/dashboard-data`)
-into `dataaw\outputs\` and double-click **`run_dashboard.bat`**. The first time it installs only streamlit and
+into `data
+aw\outputs\` and double-click **`run_dashboard.bat`**. The first time it installs only streamlit and
 pandas (`requirements-dashboard.txt`, about a minute) into `.venv-dashboard`; it then opens the browser.
 
 `streamlit run app\streamlit_app.py` (opens in the browser; only this computer can see it).
