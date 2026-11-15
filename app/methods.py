@@ -70,7 +70,7 @@ zero-shot"];
 baseline"];
   }}
   stories [label="4c · STORIES
-(later)" style="rounded,filled,dashed"];
+(future work)" style="rounded,filled,dashed"];
 
   explain [label="driving words
 why this label?"];
@@ -117,7 +117,7 @@ def section(title, note=""):
 # ---- the page ------------------------------------------------------------------------------------------
 def show(articles, entities, colours):
     section("How it works", "From the news outlets to every label on this dashboard. Each box is one of our scripts "
-            "or files; each arrow says what flows along it. Dashed = planned.")
+            "or files; each arrow says what flows along it. Dashed = not built (future work).")
     st.graphviz_chart(pipeline_diagram(articles), width="stretch")
 
     all_metrics = pd.read_csv(RESULTS / "sentiment_metrics.csv")
@@ -330,7 +330,8 @@ def show(articles, entities, colours):
         st.markdown("""
 - **Trending entities:** articles mentioning a name in the 7 days up to the end of the date range, against the
   7 days before. At least 3 articles; "new" = not mentioned the week before.
-- **Outlets compared:** an outlet's average RoBERTa score minus the average of all outlets. A gap can come from the
-  topics an outlet covers, and RoBERTa is more accurate on some outlets than others. The fair comparison, the same
-  story in every outlet, comes with story clustering.
+- **Outlets compared:** each outlet's share of negative headlines against the Guardian's on the same days
+  (the outlets were collected over different periods; the Guardian is the only one we have for every day), with a
+  95% interval; only outlets with at least 30 articles. A gap can still come from the topics an outlet covers, and
+  RoBERTa is more accurate on some outlets than others. Comparing the same story in every outlet is future work.
 """)

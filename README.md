@@ -2,7 +2,8 @@
 
 Collects news from several outlets, labels every headline with its sentiment and the people, places and
 organisations it mentions, and shows on a dashboard how coverage and tone differ between outlets and over time.
-Every label can be explained on the dashboard ("Why these labels?").
+Every label can be explained on the dashboard ("Why these labels?"). Grouping articles into stories (the same
+event in every outlet) was planned but not built: why, in `docs/findings.md`.
 
 Team: Adriana Talavera, Jakub Kabele, Klaudie Polednová, Matylda Smolová, Sára Košelíková
 Course: Text Analytics 2, VŠE Prague
@@ -60,5 +61,6 @@ Raw articles are not published (terms of use of the outlets): `data/raw/` is ign
 We publish the collection code, the schema (`src/collect/db.py`) and our hand-labelled headlines in `data/sample/`.
 
 ## Status
-Working towards the prefinal hand-in (26 Nov 2026); the `prefinal` tag will mark that version. Story clustering (the same event
-across outlets) is not built yet.
+Working towards the prefinal hand-in (26 Nov 2026); the `prefinal` tag will mark that version.
+The outlets were collected over different periods, so the dashboard compares each outlet with the Guardian on the
+same days (`docs/findings.md`).

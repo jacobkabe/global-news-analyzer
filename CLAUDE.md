@@ -3,9 +3,9 @@
 University text-analytics team project (5 students, beginners with Python and Git).
 Overview and results: `README.md`. The first plan (Oct 2026) is in `archive/solution-idea-oct-2026.md`.
 
-**In short:** collect news from several outlets, group articles about the same event into
-"stories", and show on a dashboard how the outlets differ (sentiment vs. the story average,
-entities, headlines, coverage). Every label must be explainable ("why this label").
+**In short:** collect news from several outlets, label sentiment and entities, and show on a dashboard how
+coverage and tone differ between outlets and over time. Every label must be explainable ("why this label").
+Story clustering (the same event across outlets) was planned but is future work (`docs/findings.md`).
 
 ## Environment
 - Windows + PowerShell, VS Code, Python virtual environment in `.venv` (activate with `.venv\Scripts\Activate.ps1`).
@@ -46,7 +46,7 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 - Be polite to websites: wait ~1 second between requests, respect robots.txt (full-text downloads only).
 
 ## NLP pipeline (`pipeline/`) and dashboard
-- `pipeline/`: the current NLP version (clean -> sentiment -> entities -> stories). Steps, commands and results:
+- `pipeline/`: the current NLP version (clean -> sentiment -> entities; stories are future work). Steps, commands and results:
   `pipeline/README.md`. Full outputs go to `data/raw/outputs/` (ignored), small results to `results/` and `failures/`.
 - `archive/`: earlier versions (first NLP scripts in `archive/nlp-first-version/`, first results, first plan); not used.
 - `app.py` (Tala): first Streamlit demo on the old outputs. The final dashboard reads the `pipeline/` outputs.

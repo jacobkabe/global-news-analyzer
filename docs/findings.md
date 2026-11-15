@@ -115,8 +115,29 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
   better evidence for the rules is the count above. *(results/ner_metrics.csv)*
 
 ## Dashboard and comparison of outlets
-- **Outlet differences are not fair yet:** outlets cover different topics, so a gap in average sentiment can come from
-  the topic mix; the fair comparison (the same story in every outlet) needs story clustering. *(dashboard, Outlets tab)*
+- **Each outlet was collected over a different period:** Guardian 31 Aug – 14 Nov, NYT 1 Sep – 3 Nov (daily API
+  limit; catch-up running), BBC, Al Jazeera, Fox News and NPR only about 11 – 18 Oct (the RSS collection was not
+  kept running), The News API outlets only 10 – 14 Nov, Deutsche Welle 1 article. Comparing outlets over "all
+  dates" would mix different news weeks. *(data/raw/news.db; dashboard header, Sources)*
+- **So the dashboard compares each outlet with the Guardian on the same days** (the Guardian is the only outlet we have
+  for every day), with a 95% interval, and only outlets with at least 30 articles. The Guardian's headlines are the most
+  often negative: on the same days, the NYT is 11 points less often negative (30% vs 42%, 64 days), ABC News 20 and
+  CBS News 15 points less; Fox News (+13), Al Jazeera and The Conversation show no clear difference (too few articles).
+  *(dashboard, Outlets compared)*
+- **The same day is not the same story, and outlets cover different topics** (CNBC is mostly business), so a difference
+  can come from the topic mix and not from the tone. RoBERTa is also more accurate on some outlets than others.
+
+## Not built: story clustering (future work)
+- **Planned:** group the articles about the same event into "stories" and compare each outlet with the story average
+  (`archive/solution-idea-oct-2026.md`). This would be the fairest outlet comparison.
+- **Why we did not build it:** (1) our data has little overlap between outlets: on only 9 of 76 days do three or more
+  outlets have at least 5 news articles, and all outlets except the Guardian and the NYT together are 6.5% of the news
+  articles, so most "stories" would contain one or two outlets; (2) a clustering needs its own hand labels (pairs of
+  articles: same event or not) and two approaches to compare, which we could not also do well in the time; (3) we
+  chose to spend the time on evaluating and explaining the labels we show (hand labels, label review, team check,
+  driving words), because every label on the dashboard must be explainable. *(news.db; this file)*
+- **What it would need:** collect the same outlets over the same weeks, then TF-IDF vs sentence embeddings with about
+  100 labelled article pairs.
 
 ## Reproducibility
 - **The model versions are pinned** (Hugging Face commit ids in sentiment.py, package versions in requirements.txt),
