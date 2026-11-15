@@ -377,69 +377,83 @@ elif view == "Outlets compared":
         st.info("No articles match the filters.")
         st.stop()
 
-    heading(f"Compared with {REFERENCE_OUTLET} on the same days",
-            "Share of negative headlines (RoBERTa): each outlet against the Guardian's headlines from the days that "
-            "outlet was collected. Line: 95% interval. If it crosses 0, the difference may be chance.")
-    rows, too_few = [], []
+    # one row per outlet: its dates, its share of negative headlines, and the Guardian's on the same days
+    rows = []
     for outlet, group in analysed.groupby("outlet"):
-        if outlet == REFERENCE_OUTLET:
-            continue
-        if len(group) < MIN_OUTLET_ARTICLES:
-            too_few.append(f"{outlet} ({len(group)})")
-            continue
         same_days = reference[reference["date"].isin(set(group["date"]))]
-        if len(same_days) < MIN_OUTLET_ARTICLES:
-            too_few.append(f"{outlet} (only {len(same_days)} Guardian articles on its days)")
-            continue
-        neg, neg_ref = (group["roberta_label"] == "negative").mean(), (same_days["roberta_label"] == "negative").mean()
-        diff = neg - neg_ref
-        # 95% interval of a difference of two shares (normal approximation)
-        margin = 1.96 * np.sqrt(neg * (1 - neg) / len(group) + neg_ref * (1 - neg_ref) / len(same_days))
-        verdict = ("more often negative" if diff - margin > 0 else
-                   "less often negative" if diff + margin < 0 else "no clear difference")
-        rows.append({"Outlet": outlet, "Period": f"{group['date'].min():%d %b} – {group['date'].max():%d %b}",
-                     "Days": group["date"].nunique(), "Articles": len(group), "Negative": neg,
-                     "Guardian, same days": neg_ref, "Difference": diff * 100,
-                     "low": (diff - margin) * 100, "high": (diff + margin) * 100, "Verdict": verdict})
-    if rows:
-        table = pd.DataFrame(rows).sort_values("Articles", ascending=False)
-        points = alt.Chart(table).encode(
-            y=alt.Y("Outlet:N", title=None, sort=list(table["Outlet"]), axis=alt.Axis(labelLimit=220)),
-            tooltip=["Outlet", "Period", "Articles", alt.Tooltip("Negative:Q", format=".0%"),
-                     alt.Tooltip("Guardian, same days:Q", format=".0%"),
-                     alt.Tooltip("Difference:Q", format="+.0f", title="Difference (points)"), "Verdict"])
-        chart = alt.layer(
-            alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(color="#8A8080", strokeDash=[4, 4]).encode(x="x:Q"),
-            points.mark_rule(color="#EDE6E3").encode(x=alt.X("low:Q", title="difference in negative share "
-                                                              "(percentage points)"), x2="high:Q"),
-            points.mark_point(filled=True, size=90, color=YELLOW).encode(x="Difference:Q"),
-        ).properties(height=42 * len(table) + 30)
-        st.altair_chart(chart, width="stretch")
-        st.dataframe(table.drop(columns=["low", "high"]), hide_index=True, column_config={
-            "Negative": st.column_config.ProgressColumn(format="percent", min_value=0, max_value=1),
-            "Guardian, same days": st.column_config.ProgressColumn(format="percent", min_value=0, max_value=1),
-            "Difference": st.column_config.NumberColumn("Difference (points)", format="%+.0f")})
-    if too_few:
-        st.caption(f"Not compared (fewer than {MIN_OUTLET_ARTICLES} articles with these filters): "
-                   + ", ".join(too_few) + ".")
-    st.caption("Still careful: outlets cover different topics (a gap can come from the topic mix, not the tone), "
-               "the same day is not the same story (matching stories is future work), and RoBERTa is more accurate "
-               "on some outlets than others (on our hand labels: NYT 84%, Fox News 55%).")
+        neg = (group["roberta_label"] == "negative").mean()
+        row = {"outlet": outlet, "articles": len(group), "negative": neg, "guardian": None, "verdict": "",
+               "period": f"{group['date'].min():%d %b} – {group['date'].max():%d %b}", "days": group["date"].nunique()}
+        if outlet != REFERENCE_OUTLET and len(same_days) >= MIN_OUTLET_ARTICLES:
+            neg_ref = (same_days["roberta_label"] == "negative").mean()
+            # 95% interval of the difference of two shares: if it includes 0, the difference may be chance
+            margin = 1.96 * np.sqrt(neg * (1 - neg) / len(group) + neg_ref * (1 - neg_ref) / len(same_days))
+            row["guardian"] = neg_ref
+            row["verdict"] = ("more often negative" if neg - neg_ref > margin else
+                              "less often negative" if neg_ref - neg > margin else "no clear difference")
+        rows.append(row)
+    stats = pd.DataFrame(rows).sort_values("articles", ascending=False)
+    stats["label"] = [f"{o}  ·  {p}  ·  {n:,}" for o, p, n in zip(stats["outlet"], stats["period"], stats["articles"])]
+    enough = stats[stats["articles"] >= MIN_OUTLET_ARTICLES]
+    few = stats[stats["articles"] < MIN_OUTLET_ARTICLES]
 
-    heading("Sentiment mix per outlet", "Share of headlines per RoBERTa label, each outlet over its own period "
-            "(see the table above)")
-    mix = analysed.groupby(["outlet", "roberta_label"]).size().reset_index(name="articles")
     order = ["negative", "neutral", "positive"]
-    chart = alt.Chart(mix).mark_bar().encode(
-        y=alt.Y("outlet:N", title=None, axis=alt.Axis(labelLimit=220), sort=list(analysed["outlet"].value_counts().index)),
-        x=alt.X("articles:Q", stack="normalize", title=None, axis=alt.Axis(format="%")),
-        color=alt.Color("roberta_label:N", title=None, sort=order,
-                        scale=alt.Scale(domain=order, range=[SENTIMENT_COLOURS[s] for s in order]),
-                        legend=alt.Legend(orient="bottom")),
-        order=alt.Order("order:Q"),
-        tooltip=["outlet:N", "roberta_label:N", "articles:Q"],
-    ).transform_calculate(order=f"indexof({order}, datum.roberta_label)").properties(height=45 * mix["outlet"].nunique())
-    st.altair_chart(chart, width="stretch")
+
+    def mix_chart(part):
+        """Stacked bars per outlet; a white tick = the Guardian's share of negative headlines on the same days."""
+        mix = analysed[analysed["outlet"].isin(part["outlet"])].groupby(["outlet", "roberta_label"]).size() \
+            .reset_index(name="articles").merge(part[["outlet", "label"]], on="outlet")
+        y = alt.Y("label:N", title=None, sort=list(part["label"]), axis=alt.Axis(labelLimit=330))
+        bars = alt.Chart(mix).mark_bar().encode(
+            y=y, x=alt.X("articles:Q", stack="normalize", title=None, axis=alt.Axis(format="%"),
+                         scale=alt.Scale(domain=[0, 1])),
+            color=alt.Color("roberta_label:N", title=None, sort=order,
+                            scale=alt.Scale(domain=order, range=[SENTIMENT_COLOURS[s] for s in order]),
+                            legend=alt.Legend(orient="bottom")),
+            order=alt.Order("order:Q"),
+            tooltip=["outlet:N", "roberta_label:N", "articles:Q"],
+        ).transform_calculate(order=f"indexof({order}, datum.roberta_label)")
+        ticks = alt.Chart(part.dropna(subset=["guardian"])).mark_tick(color="#FFFFFF", thickness=3, size=30).encode(
+            y=y, x="guardian:Q",
+            tooltip=[alt.Tooltip("outlet:N", title="outlet"),
+                     alt.Tooltip("negative:Q", format=".0%", title="negative"),
+                     alt.Tooltip("guardian:Q", format=".0%", title="Guardian, same days")])
+        return alt.layer(bars, ticks).properties(height=42 * len(part) + 40)
+
+    heading("Sentiment mix per outlet",
+            "Share of headlines per RoBERTa label. Next to each name: the dates we have for it and its number of "
+            "articles. White line: how often the Guardian's headlines were negative on those same days.")
+    if len(enough):
+        st.altair_chart(mix_chart(enough), width="stretch")
+    if len(few):
+        st.markdown(f'<div class="sec">FEW ARTICLES (FEWER THAN {MIN_OUTLET_ARTICLES}) · READ WITH CARE</div>',
+                    unsafe_allow_html=True)
+        st.altair_chart(mix_chart(few), width="stretch")
+
+    # the result in plain words (only outlets with enough articles)
+    sentences = []
+    for verdict, text in [("less often negative", "**Less often negative** than the Guardian on the same days"),
+                          ("more often negative", "**More often negative** than the Guardian on the same days"),
+                          ("no clear difference", "**No clear difference** (too few articles to tell)")]:
+        part = enough[enough["verdict"] == verdict]
+        if len(part):
+            sentences.append(text + ": " + ", ".join(f"{r.outlet} ({r.negative:.0%} vs {r.guardian:.0%})"
+                                                     for r in part.itertuples()))
+    if sentences:
+        st.markdown("\n".join(f"- {t}" for t in sentences))
+    st.caption("Why the Guardian: it is the only outlet we have for every day, and the outlets were collected in "
+               "different weeks, so each one is compared with the Guardian on its own days. Still careful: outlets "
+               "cover different topics, the same day is not the same story (matching stories is future work), and "
+               "RoBERTa is more accurate on some outlets than others (on our hand labels: NYT 84%, Fox News 55%).")
+    with st.expander("Details: the numbers"):
+        st.dataframe(stats[["outlet", "period", "days", "articles", "negative", "guardian", "verdict"]], hide_index=True,
+                     column_config={
+                         "outlet": "Outlet", "period": "Dates", "days": "Days", "articles": "Articles",
+                         "negative": st.column_config.NumberColumn("Negative", format="percent"),
+                         "guardian": st.column_config.NumberColumn("Guardian, same days", format="percent"),
+                         "verdict": st.column_config.TextColumn(
+                             "Compared with the Guardian",
+                             help="Based on a 95% interval of the difference; 'no clear difference' = may be chance")})
 
     heading("Most mentioned per outlet", "Share of the outlet's articles that mention the name "
             f"(outlets with at least {MIN_OUTLET_ARTICLES} articles)")
