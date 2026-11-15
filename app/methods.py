@@ -319,7 +319,7 @@ def show(articles, entities, colours):
              ("most common full name overall", "corpus", "“Trump” → Donald Trump")]
     for col, (title, key, example) in zip(st.columns(4), steps):
         with col:
-            card(title, [example, f"{how.get(key, 0):,} names"])
+            card(title, [example, f"{how.get(key, 0):,} mentions (a name counted once per article)"])
     with st.expander("Details: entity types and rules"):
         st.markdown("""
 - Types: **PER** person · **LOC** place (countries, cities, buildings) · **ORG** organisation ·
@@ -343,8 +343,9 @@ def show(articles, entities, colours):
 - **Trending entities:** articles mentioning a name in the 7 days up to the end of the date range, against the
   7 days before, counted only in outlets we have for both weeks (the outlets were collected in different weeks, so a
   newly collected outlet would look like a trend). At least 3 articles; "new" = not mentioned the week before.
-- **Outlets compared:** each outlet's share of negative headlines against the Guardian's on the same days
-  (the outlets were collected over different periods; the Guardian is the only one we have for every day), with a
-  95% interval; only outlets with at least 30 articles. A gap can still come from the topics an outlet covers, and
-  RoBERTa is more accurate on some outlets than others. Comparing the same story in every outlet is future work.
+- **Outlets compared:** each outlet's share of negative headlines against the Guardian's, only on the days we have
+  both (the outlets were collected over different periods; the Guardian is the only one we have for every day), with
+  a 95% interval; outlets with fewer than 30 articles get no verdict. A gap can come from the topics an outlet covers
+  (for the NYT we checked: it has fewer negative headlines within the same topics too), and RoBERTa is more accurate
+  on some outlets than others. Comparing the same story in every outlet is future work.
 """)
