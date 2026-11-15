@@ -134,17 +134,26 @@ def show(articles, entities, colours):
 
     # ---- 1-3 sources, collect, clean ----
     section("1–3 · Sources, collecting, cleaning")
-    counts = articles["outlet"].value_counts()
-    first = articles.groupby("outlet")["date"].min()
-    text_kind = {"The Guardian": "full text (API)", "The New York Times": "headline + abstract (API)"}
-    for col, (outlet, count) in zip(st.columns(len(counts)), counts.items()):
+    # one box per way of collecting; each lists its outlets with their number of articles and their dates
+    channels = [("The Guardian · API", ["guardian"], "full text"),
+                ("The New York Times · API", ["nyt"], "headline + abstract"),
+                ("RSS feeds", ["bbc", "aljazeera", "foxnews", "npr"], "title + summary"),
+                ("The News API", None, "title + description")]
+    known = {src for _, sources, _ in channels if sources for src in sources}
+    for col, (title, sources, text) in zip(st.columns(len(channels)), channels):
+        part = articles[articles["source"].isin(sources)] if sources else articles[~articles["source"].isin(known)]
+        if part.empty:
+            continue
+        lines = [f"<b>{len(part):,} articles</b> · {part['date'].min():%d %b} – {part['date'].max():%d %b}", text]
+        if part["outlet"].nunique() > 1:
+            lines += [f"{outlet} · {n:,}" for outlet, n in part["outlet"].value_counts().items()]
         with col:
-            card(outlet, [f"{count:,} articles", f"since {first[outlet]:%d %b}",
-                          text_kind.get(outlet, "title + summary (RSS)")])
+            card(title, lines)
     with st.expander("Details: what each step does"):
         st.markdown("""
-- **Collect** (`src/collect/collect.py`, twice a day): the Guardian and NYT APIs fetch everything since the newest
-  article we have, so a missed day is filled in; RSS feeds only show the latest items, so a missed day is lost.
+- **Collect** (`src/collect/collect.py`, run on one team computer): the Guardian and NYT APIs fetch everything since
+  the newest article we have, so a missed day is filled in; RSS feeds and The News API (free plan) only give recent
+  items, so a missed day is lost. That is why the outlets cover different dates (see the boxes above).
   Everything goes into one SQLite table (`news.db`): dates in UTC, URLs without tracking parameters, each URL once.
 - **We do not scrape outlet websites:** their terms forbid it or are unclear (`docs/data-sources.md`).
   Only the Guardian API gives full text; for the others we have the headline and a summary.
