@@ -1,7 +1,7 @@
 # Global News Analyzer
 
 University text-analytics team project (5 students, beginners with Python and Git).
-Goal and design: read `docs/solution-idea.md` first.
+Overview and results: `README.md`. The first plan (Oct 2026) is in `archive/solution-idea-oct-2026.md`.
 
 **In short:** collect news from several outlets, group articles about the same event into
 "stories", and show on a dashboard how the outlets differ (sentiment vs. the story average,
@@ -10,7 +10,7 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 ## Environment
 - Windows + PowerShell, VS Code, Python virtual environment in `.venv` (activate with `.venv\Scripts\Activate.ps1`).
 - Dependencies in `requirements.txt`; add new packages there.
-- API keys live in `.env` (`GUARDIAN_API_KEY`, `NYT_API_KEY`), loaded with `python-dotenv`. Never print or commit them.
+- API keys live in `.env` (`GUARDIAN_API_KEY`, `NYT_API_KEY`, `THENEWSAPI_API_KEY`), loaded with `python-dotenv`. Never print or commit them.
 
 ## Data collection (`src/collect/`)
 - `db.py`: SQLite database at `data/raw/news.db`, table `articles`
@@ -24,6 +24,12 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 - `nyt.py`: NYT Article Search (`python src\collect\nyt.py 14` = last 14 days, saved day by day) or Archive
   (`--archive 2026 9` = a whole month). Keeps only type "News" in World, U.S., Politics, Business, Science,
   Climate, Health, Technology. Headline + abstract + lead paragraph only; waits 12 s between requests (rate limit).
+- `thenewsapi.py` (maintained by Tala): The News API (`python src\collect\thenewsapi.py 2` = last 2 days; `collect.py`
+  fetches the last day). Asks for 8 outlets one by one (`SOURCES`, filter `domains=`): ABC News, CBS News, NBC News,
+  CNBC, TIME, Deutsche Welle, The Washington Times, The Conversation. `source` is the outlet's domain (`cbsnews.com`).
+  Title + description only. Free plan: 100 requests/day, 3 articles each; the script uses at most 80 requests per run
+  (`MAX_REQUESTS`) and 15 pages per outlet, 1 s apart, and stops early when the daily limit is reached (HTTP 429).
+- `export_csv.py`: the `articles` table as `data/raw/news.csv` (opens in Excel; `--no-text` without full text).
 - `collect.py`: runs all sources (`python src\collect\collect.py`, or only some: `... guardian nyt`).
   Guardian and NYT fetch everything since the newest article we already have (at least yesterday + today),
   so a missed day or week is filled in on the next run. Long gaps are filled in steps (NYT 14 days, Guardian 90 days per run).
@@ -32,11 +38,18 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 - `save_articles()` stores dates as UTC (`2026-10-17T14:28:07Z`) and URLs without tracking parameters.
   `python src\collect\db.py` applies this to old rows.
 - Error messages must never contain the API key: raise short messages (see `guardian.py`, `nyt.py`), not `raise_for_status()`.
-- Sources: Guardian (API, full text) is the only source with full text. NYT is headline + abstract only.
+- Sources: Guardian (API, full text) is the only source with full text. NYT is headline + abstract only;
+  The News API and RSS are headline + summary only.
 - No outlet clearly allows scraping (BBC, Al Jazeera, Fox News: not allowed; NPR: unclear).
-  Quotes and RSS URLs for 9 outlets: `docs/data-sources.md`. Check an outlet's terms of use before adding it.
+  Quotes and RSS URLs: `docs/data-sources.md`. We get headlines and summaries through APIs and RSS, not by scraping;
+  full-text downloads from outlet websites only after the teacher approves.
 - Be polite to websites: wait ~1 second between requests, respect robots.txt (full-text downloads only).
-- Collection runs once a day (RSS has no history).
+
+## NLP pipeline (`pipeline/`) and dashboard
+- `pipeline/`: the current NLP version (clean -> sentiment -> entities -> stories). Steps, commands and results:
+  `pipeline/README.md`. Full outputs go to `data/raw/outputs/` (ignored), small results to `results/` and `failures/`.
+- `archive/`: earlier versions (first NLP scripts in `archive/nlp-first-version/`, first results, first plan); not used.
+- `app.py` (Tala): first Streamlit demo on the old outputs. The final dashboard reads the `pipeline/` outputs.
 
 ## Course rules (must follow)
 - Never commit raw scraped data: `data/raw/`, `.env` and `.venv/` are in `.gitignore`.
@@ -49,3 +62,14 @@ entities, headlines, coverage). Every label must be explainable ("why this label
 - We are beginners: keep code simple and readable, explain changes in plain words.
 - Small steps: one script or feature at a time, then we run it and commit.
 - Ask before deleting files or changing the database schema.
+
+## Labelling, findings, combining data
+- Hand labels by the team: `python pipeline\labels.py make` (one Excel file per person in `data/raw/labelling/`),
+  then `... labels.py collect` (reads `data/raw/labelling/returned/`). Guide for the team: `docs/labelling-guide.md`.
+- `docs/findings.md`: every finding and limitation in one sentence with its evidence (raw material for the report).
+  Add new findings there; concrete failure cases also go in `failures/README.md`.
+- Articles collected on another computer: `python src\collect\merge_db.py their_news.db` (or their `news.csv`).
+  Always merge INTO the main `data/raw/news.db` (hand labels refer to its article ids); it makes a backup first.
+  Then re-run the pipeline steps; each one only does the new articles.
+- Never open or save our CSV exports in Excel (it adds ';;;' and breaks lines). If it happened anyway,
+  `merge_db.py` repairs such a file. New outlets need a readable name in `OUTLETS` in `pipeline/clean.py`.

@@ -1,0 +1,40 @@
+# Our own name list for ner.py normalise. alias = a name as spaCy finds it (capitals and dots do not matter),
+# entity = the name we show. An empty entity drops the name (not a real entity, or a common mistake).
+alias,entity
+US,United States
+United States,United States
+United States of America,United States
+USA,United States
+America,United States
+UK,United Kingdom
+United Kingdom,United Kingdom
+Britain,United Kingdom
+Great Britain,United Kingdom
+UN,United Nations
+United Nations,United Nations
+EU,European Union
+European Union,European Union
+Nato,Nato
+DoJ,Department of Justice
+Justice Department,Department of Justice
+Department of Justice,Department of Justice
+GOP,Republicans
+Republican,Republicans
+Republicans,Republicans
+Democrat,Democrats
+Democratic,Democrats
+Democrats,Democrats
+Tory,Conservatives
+Tories,Conservatives
+Conservative,Conservatives
+Conservatives,Conservatives
+Conservative party,Conservatives
+Labour party,Labour
+Reform UK,Reform UK
+Reform,Reform UK
+AI,
+A.I.,
+Zelensky,Volodymyr Zelenskyy
+Volodymyr Zelensky,Volodymyr Zelenskyy
+Houthi,Houthis
+Houthis,Houthis

@@ -232,3 +232,10 @@ __pycache__/
 # Old output folders: full results now go to data/raw/outputs/
 data/outputs/
 outputs/
+
+# Excel working files (labels are committed as CSV)
+data/sample/*.xlsx
+~$*
+
+# small environment made by run_dashboard.bat
+.venv-dashboard/
