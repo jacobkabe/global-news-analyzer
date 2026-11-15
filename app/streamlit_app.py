@@ -429,7 +429,7 @@ elif view == "Outlets compared":
     order = ["negative", "neutral", "positive"]
 
     def mix_chart(part):
-        """Stacked bars per outlet; a white tick = the Guardian's share of negative headlines on the same days."""
+        """Stacked bars per outlet: the share of each RoBERTa label."""
         mix = analysed[analysed["outlet"].isin(part["outlet"])].groupby(["outlet", "roberta_label"]).size() \
             .reset_index(name="articles").merge(part[["outlet", "label"]], on="outlet")
         y = alt.Y("label:N", title=None, sort=list(part["label"]), axis=alt.Axis(labelLimit=330))
@@ -442,16 +442,11 @@ elif view == "Outlets compared":
             order=alt.Order("order:Q"),
             tooltip=["outlet:N", "roberta_label:N", "articles:Q"],
         ).transform_calculate(order=f"indexof({order}, datum.roberta_label)")
-        ticks = alt.Chart(part.dropna(subset=["guardian"])).mark_tick(color="#FFFFFF", thickness=3, size=30).encode(
-            y=y, x="guardian:Q",
-            tooltip=[alt.Tooltip("outlet:N", title="outlet"),
-                     alt.Tooltip("negative:Q", format=".0%", title="negative"),
-                     alt.Tooltip("guardian:Q", format=".0%", title="Guardian, same days")])
-        return alt.layer(bars, ticks).properties(height=42 * len(part) + 40)
+        return bars.properties(height=42 * len(part) + 40)
 
     heading("Sentiment mix per outlet",
             "Share of headlines per RoBERTa label. Next to each name: the dates we have for it and its number of "
-            "articles. White line: how often the Guardian's headlines were negative on those same days.")
+            "articles. Below: each outlet compared with the Guardian on the same days.")
     if len(enough):
         st.altair_chart(mix_chart(enough), width="stretch")
     if len(few):
