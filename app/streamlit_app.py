@@ -401,17 +401,25 @@ elif view == "Outlets compared":
     # one row per outlet: its dates, its share of negative headlines, and the Guardian's on the same days
     rows = []
     for outlet, group in analysed.groupby("outlet"):
-        same_days = reference[reference["date"].isin(set(group["date"]))]
-        neg = (group["roberta_label"] == "negative").mean()
-        row = {"outlet": outlet, "articles": len(group), "negative": neg, "guardian": None, "verdict": "",
+        row = {"outlet": outlet, "articles": len(group), "negative": (group["roberta_label"] == "negative").mean(),
+               "guardian": None, "verdict": "",
                "period": f"{group['date'].min():%d %b} – {group['date'].max():%d %b}", "days": group["date"].nunique()}
-        if outlet != REFERENCE_OUTLET and len(same_days) >= MIN_OUTLET_ARTICLES:
-            neg_ref = (same_days["roberta_label"] == "negative").mean()
-            # 95% interval of the difference of two shares: if it includes 0, the difference may be chance
-            margin = 1.96 * np.sqrt(neg * (1 - neg) / len(group) + neg_ref * (1 - neg_ref) / len(same_days))
-            row["guardian"] = neg_ref
-            row["verdict"] = ("more often negative" if neg - neg_ref > margin else
-                              "less often negative" if neg_ref - neg > margin else "no clear difference")
+        if outlet != REFERENCE_OUTLET:
+            # compare only on days we have BOTH this outlet and the Guardian (e.g. no Guardian yet for the NYT's last day)
+            common = set(group["date"]) & set(reference["date"])
+            mine, same_days = group[group["date"].isin(common)], reference[reference["date"].isin(common)]
+            if len(mine) >= MIN_OUTLET_ARTICLES and len(same_days) >= MIN_OUTLET_ARTICLES:
+                neg = (mine["roberta_label"] == "negative").mean()
+                neg_ref = (same_days["roberta_label"] == "negative").mean()
+                # 95% interval of the difference of two shares: if it includes 0, the difference may be chance
+                margin = 1.96 * np.sqrt(neg * (1 - neg) / len(mine) + neg_ref * (1 - neg_ref) / len(same_days))
+                row.update(negative=neg, guardian=neg_ref, verdict=(
+                    "more often negative" if neg - neg_ref > margin else
+                    "less often negative" if neg_ref - neg > margin else "no clear difference"))
+            else:
+                if len(same_days):
+                    row["guardian"] = (same_days["roberta_label"] == "negative").mean()   # the white line only
+                row["verdict"] = f"too few articles (under {MIN_OUTLET_ARTICLES})"
         rows.append(row)
     stats = pd.DataFrame(rows).sort_values("articles", ascending=False)
     stats["label"] = [f"{o}  ·  {p}  ·  {n:,}" for o, p, n in zip(stats["outlet"], stats["period"], stats["articles"])]
@@ -455,7 +463,7 @@ elif view == "Outlets compared":
     sentences = []
     for verdict, text in [("less often negative", "**Less often negative** than the Guardian on the same days"),
                           ("more often negative", "**More often negative** than the Guardian on the same days"),
-                          ("no clear difference", "**No clear difference** (too few articles to tell)")]:
+                          ("no clear difference", "**No clear difference** (the gap may be chance)")]:
         part = enough[enough["verdict"] == verdict]
         if len(part):
             sentences.append(text + ": " + ", ".join(f"{r.outlet} ({r.negative:.0%} vs {r.guardian:.0%})"
@@ -463,8 +471,10 @@ elif view == "Outlets compared":
     if sentences:
         st.markdown("\n".join(f"- {t}" for t in sentences))
     st.caption("Why the Guardian: it is the only outlet we have for every day, and the outlets were collected in "
-               "different weeks, so each one is compared with the Guardian on its own days. Still careful: outlets "
-               "cover different topics, the same day is not the same story (matching stories is future work), and "
+               "different weeks, so each one is compared with the Guardian on the days we have both. Still careful: "
+               "outlets cover different topics (for the NYT we checked: it is less often negative within the same "
+               "topics too, e.g. US news 29% vs 42%), the same day is not the same story (matching stories is "
+               "future work), and "
                "RoBERTa is more accurate on some outlets than others (on our hand labels: NYT 84%, Fox News 55%).")
     with st.expander("Details: the numbers"):
         st.dataframe(stats[["outlet", "period", "days", "articles", "negative", "guardian", "verdict"]], hide_index=True,
@@ -481,6 +491,9 @@ elif view == "Outlets compared":
     columns = {}
     big = analysed.groupby("outlet").filter(lambda g: len(g) >= MIN_OUTLET_ARTICLES)
     for outlet, group in big.groupby("outlet"):
-        counts = entities[entities["article_id"].isin(group["article_id"])]["entity"].value_counts().head(10)
+        counts = entities[entities["article_id"].isin(group["article_id"])]["entity"].value_counts()
+        # an outlet naming itself ("CBS News" in CBS summaries) says nothing about what it covers
+        counts = counts[[name.lower() not in outlet.lower() and outlet.lower() not in name.lower()
+                         for name in counts.index]].head(10)
         columns[f"{outlet} ({len(group)})"] = [f"{name} ({n / len(group):.0%})" for name, n in counts.items()]
     st.dataframe(pd.DataFrame({k: pd.Series(v) for k, v in columns.items()}), hide_index=True)
