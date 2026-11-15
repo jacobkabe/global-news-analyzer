@@ -418,7 +418,7 @@ elif view == "Outlets compared":
                     "less often negative" if neg_ref - neg > margin else "no clear difference"))
             else:
                 if len(same_days):
-                    row["guardian"] = (same_days["roberta_label"] == "negative").mean()   # the white line only
+                    row["guardian"] = (same_days["roberta_label"] == "negative").mean()   # shown in the details table
                 row["verdict"] = f"too few articles (under {MIN_OUTLET_ARTICLES})"
         rows.append(row)
     stats = pd.DataFrame(rows).sort_values("articles", ascending=False)
