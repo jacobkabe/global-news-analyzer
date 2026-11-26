@@ -147,6 +147,8 @@ One sentence per finding, with where the evidence is. Keep this file up to date:
   articles: same event or not) and two approaches to compare, which we could not also do well in the time; (3) we
   chose to spend the time on evaluating and explaining the labels we show (hand labels, label review, team check,
   driving words), because every label on the dashboard must be explainable. *(news.db; this file)*
+- **A first try did not work well:** sentence embeddings + DBSCAN on 6,140 articles left 69% of them in no cluster,
+  and 16 of the 20 biggest clusters contain only Guardian or NYT articles. *(failures/clustering.ipynb)*
 - **What it would need:** collect the same outlets over the same weeks, then TF-IDF vs sentence embeddings with about
   100 labelled article pairs.
 

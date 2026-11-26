@@ -3,7 +3,7 @@
 Collects news from several outlets, labels every headline with its sentiment and the people, places and
 organisations it mentions, and shows on a dashboard how coverage and tone differ between outlets and over time.
 Every label can be explained on the dashboard ("Why these labels?"). Grouping articles into stories (the same
-event in every outlet) was planned but not built: why, in `docs/findings.md`.
+event in every outlet) was planned but not built: why, in `docs/findings.md` (a first try: `failures/clustering.ipynb`).
 
 Team: Adriana Talavera, Jakub Kabele, Klaudie Polednová, Matylda Smolová, Sára Košelíková
 Course: Text Analytics 2, VŠE Prague
@@ -34,19 +34,18 @@ Hand-labelled evaluation (details and limits: `docs/findings.md`; all numbers: `
 | `archive/` | Earlier versions (first NLP scripts, first plan), not used any more |
 | `app.py` | First dashboard demo (Tala), on the outputs of the first version |
 
-## Running the dashboard:
+## Running the dashboard
 The dashboard can be run independently of the data collection and NLP pipeline. No API keys or model downloads are required.
 
 Due to the data-sharing restrictions of the news outlets, the dashboard data is not included in this repository.
-
 For academic evaluation, please contact a team member to request access to the dashboard data through our university OneDrive.
 
-Put the pipeline outputs (4 CSV files, shared in the team folder) into `data\raw\outputs\`
+Put the pipeline outputs (4 CSV files, shared in the team folder) into `data\raw\outputs\`.
 
 **Windows:** double-click `run_dashboard.bat`. It installs only streamlit and pandas.
 
-**MacOS:** Python 3.12 recommended. Run following commands in the project folder:
-First time setup:
+**macOS:** Python 3.12 recommended. Run the following commands in the project folder.
+First-time setup:
 ```bash
 python3.12 -m venv .venv-dashboard
 .venv-dashboard/bin/python -m pip install -r requirements-dashboard.txt
@@ -79,12 +78,11 @@ python pipeline\ner.py normalise
 streamlit run app\streamlit_app.py         # the dashboard
 ```
 
-
 ## Data
 Raw articles are not published (terms of use of the outlets): `data/raw/` is ignored by Git.
 We publish the collection code, the schema (`src/collect/db.py`) and our hand-labelled headlines in `data/sample/`.
 
 ## Status
-Working towards the prefinal hand-in (26 Nov 2026); the `prefinal` tag will mark that version.
+Prefinal hand-in (26 Nov 2026): the `prefinal` tag marks that version.
 The outlets were collected over different periods, so the dashboard compares each outlet with the Guardian on the
 same days (`docs/findings.md`).
