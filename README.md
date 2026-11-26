@@ -42,7 +42,9 @@ Due to the data-sharing restrictions of the news outlets, the dashboard data is 
 For academic evaluation, please contact a team member to request access to the dashboard data through our university OneDrive.
 
 Put the pipeline outputs (4 CSV files, shared in the team folder) into `data\raw\outputs\`
+
 **Windows:** double-click `run_dashboard.bat`. It installs only streamlit and pandas.
+
 **MacOS:** Python 3.12 recommended. Run following commands in the project folder:
 First time setup:
 ```bash
