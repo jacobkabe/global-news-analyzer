@@ -82,6 +82,10 @@ streamlit run app\streamlit_app.py         # the dashboard
 Raw articles are not published (terms of use of the outlets): `data/raw/` is ignored by Git.
 We publish the collection code, the schema (`src/collect/db.py`) and our hand-labelled headlines in `data/sample/`.
 
+## Use of AI
+We used Claude Code (an AI coding assistant) to help write and review code and documentation.
+Design decisions, data collection, hand labelling and interpretation of results are the team's work.
+
 ## Status
 Prefinal hand-in (26 Nov 2026): the `prefinal` tag marks that version.
 The outlets were collected over different periods, so the dashboard compares each outlet with the Guardian on the
