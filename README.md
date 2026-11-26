@@ -34,6 +34,26 @@ Hand-labelled evaluation (details and limits: `docs/findings.md`; all numbers: `
 | `archive/` | Earlier versions (first NLP scripts, first plan), not used any more |
 | `app.py` | First dashboard demo (Tala), on the outputs of the first version |
 
+## Running the dashboard:
+The dashboard can be run independently of the data collection and NLP pipeline. No API keys or model downloads are required.
+
+Due to the data-sharing restrictions of the news outlets, the dashboard data is not included in this repository.
+
+For academic evaluation, please contact a team member to request access to the dashboard data through our university OneDrive.
+
+Put the pipeline outputs (4 CSV files, shared in the team folder) into `data\raw\outputs\`
+**Windows:** double-click `run_dashboard.bat`. It installs only streamlit and pandas.
+**MacOS:** Python 3.12 recommended. Run following commands in the project folder:
+First time setup:
+```bash
+python3.12 -m venv .venv-dashboard
+.venv-dashboard/bin/python -m pip install -r requirements-dashboard.txt
+```
+Starting the dashboard:
+```bash
+.venv-dashboard/bin/python -m streamlit run app/streamlit_app.py
+```
+
 ## Setup
 Windows PowerShell, Python 3.11, from the project folder:
 ```powershell
@@ -56,8 +76,7 @@ python pipeline\ner.py run
 python pipeline\ner.py normalise
 streamlit run app\streamlit_app.py         # the dashboard
 ```
-**Only to look at the dashboard:** put the pipeline outputs (4 CSV files, shared in the team folder) into
-`data\raw\outputs\` and double-click `run_dashboard.bat`. It installs only streamlit and pandas.
+
 
 ## Data
 Raw articles are not published (terms of use of the outlets): `data/raw/` is ignored by Git.
